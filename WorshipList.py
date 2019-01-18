@@ -21,4 +21,26 @@ def readSong(doc, name, key):
     print(lines)
     return doc
 
+def getKey(key):
+    # TODO: allow for lowercase key
+    # TODO: allow for sharp/flat keys
+    if key == "F":
+        return ["A", "Bb", "C", "D", "E", "F", "G"]
+    elif key == "C":
+        return ["A", "B", "C", "D", "E", "F", "G"]
+    elif key == "G":
+        return ["A", "B", "C", "D", "E", "F#", "G"]
+    elif key == "D":
+        return ["A", "B", "C#", "D", "E", "F#", "G"]
+    elif key == "A":
+        return ["A", "B", "C#", "D", "E", "F#", "G#"]
+    elif key == "E":
+        return ["A", "B", "C#", "D#", "E", "F#", "G#"]
+    elif key == "B":
+        return ["A#", "B", "C#", "D#", "E", "F#", "G#"]
+    else:
+        # TODO: Convert to formal exception
+        print("Wrong key")
+        exit()
+
 main()
