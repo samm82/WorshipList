@@ -1,0 +1,4 @@
+The Lion and the Lamb
+verse  I  ii  IV  |  vi  V  IV  |  V
+chorus I  V/F#  vi  |  V  IV  |  V
+bridge ii  I/III  IV  V  double
