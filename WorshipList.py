@@ -4,6 +4,8 @@
 #  @date 1/18/2019
 
 from docx import Document
+from docx.shared import Pt
+from docx.enum.text import WD_ALIGN_PARAGRAPH
 
 def main():
     doc = Document()
@@ -16,7 +18,18 @@ def readSong(doc, name, key):
     lines = infile.readlines()
     infile.close()
 
-    doc.add_heading(lines[0].strip(), 0)
+    p = doc.add_paragraph()
+    title = p.add_run(lines[0].strip() + " ")
+    title.font.name = 'Calibri'
+    title.font.size = Pt(36)
+    title.underline = True
+
+    titleKey = p.add_run("(" + key + ")")
+    titleKey.font.name = 'Calibri'
+    titleKey.font.size = Pt(20)
+    titleKey.underline = True
+
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
 
     print(lines)
     return doc
