@@ -29,16 +29,16 @@ def writeSong(doc, name, key):
 
     p = doc.add_paragraph()
     title = p.add_run(lines[0].strip() + " ")
-    title.font.name = 'Calibri'
     title.font.size = Pt(36)
     title.underline = True
 
     titleKey = p.add_run("(" + key + ")")
-    titleKey.font.name = 'Calibri'
     titleKey.font.size = Pt(20)
     titleKey.underline = True
 
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p.paragraph_format.space_after = Pt(0)
+    p.paragraph_format.space_before = Pt(0)
 
     # Writes chords
 
@@ -59,6 +59,9 @@ def writeSong(doc, name, key):
                 p.add_run(getChord(key, newChord) + "/")
             else:
                 p.add_run(getChord(key, chord) + "  ")
+
+        p.paragraph_format.space_after = Pt(0)
+        p.paragraph_format.space_before = Pt(0)
 
     return doc
 
