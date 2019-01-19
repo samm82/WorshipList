@@ -9,14 +9,16 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH
 
 def main():
     doc = Document()
-    doc = readSong(doc, "LionAndTheLamb", "G")
+    doc = writeSong(doc, "LionAndTheLamb", "G")
 
     doc.save('output.docx')
 
-def readSong(doc, name, key):
+def writeSong(doc, name, key):
     infile = open(name+".txt", "r")
     lines = infile.readlines()
     infile.close()
+
+    # Writes title
 
     p = doc.add_paragraph()
     title = p.add_run(lines[0].strip() + " ")
@@ -30,6 +32,16 @@ def readSong(doc, name, key):
     titleKey.underline = True
 
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+
+    # Writes chords
+
+    for i in lines[1:]:
+        line = i.split()
+
+        p = doc.add_paragraph()
+        pClass = p.add_run(line[0])
+        pClass.font.name = 'Calibri'
+        pClass.font.size = Pt(28)
 
     print(lines)
     return doc
