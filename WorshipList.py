@@ -18,6 +18,13 @@ def writeSong(doc, name, key):
     lines = infile.readlines()
     infile.close()
 
+    # Defines default style
+
+    style = doc.styles['Normal']
+    font = style.font
+    font.name = 'Calibri'
+    font.size = Pt(28)
+
     # Writes title
 
     p = doc.add_paragraph()
@@ -40,32 +47,73 @@ def writeSong(doc, name, key):
 
         p = doc.add_paragraph()
         pClass = p.add_run(line[0])
-        pClass.font.name = 'Calibri'
-        pClass.font.size = Pt(28)
 
-    print(lines)
+        for chord in line[1:]:
+            if chord == "|":
+                p.add_run("|  ")
+            elif chord == "double":
+                # Might need spaces after
+                p.add_run(" x 2")
+            elif "/" in chord:
+                newChord = chord[:-1]
+                p.add_run(getChord(key, newChord) + "/")
+            else:
+                p.add_run(getChord(key, chord) + "  ")
+
     return doc
 
-def getKey(key):
+def getChord(key, num):
+    # TODO: make more efficient
     # TODO: allow for lowercase key
     # TODO: allow for sharp/flat keys
     if key == "F":
-        return ["A", "Bb", "C", "D", "E", "F", "G"]
+        keyList = ["F", "G", "A", "Bb", "C", "D", "E"]
     elif key == "C":
-        return ["A", "B", "C", "D", "E", "F", "G"]
+        keyList = ["C", "D", "E", "F", "G", "A", "B"]
     elif key == "G":
-        return ["A", "B", "C", "D", "E", "F#", "G"]
+        keyList = ["G", "A", "B", "C", "D", "E", "F#"]
     elif key == "D":
-        return ["A", "B", "C#", "D", "E", "F#", "G"]
+        keyList = ["D", "E", "F#", "G", "A", "B", "C#"]
     elif key == "A":
-        return ["A", "B", "C#", "D", "E", "F#", "G#"]
+        keyList = ["A", "B", "C#", "D", "E", "F#", "G#"]
     elif key == "E":
-        return ["A", "B", "C#", "D#", "E", "F#", "G#"]
+        keyList = [ "E", "F#", "G#", "A", "B", "C#", "D#"]
     elif key == "B":
-        return ["A#", "B", "C#", "D#", "E", "F#", "G#"]
+        keyList = ["B", "C#", "D#", "E", "F#", "G#", "A#"]
     else:
         # TODO: Convert to formal exception
         print("Wrong key")
         exit()
+
+    minor = False
+    if num.islower():
+        minor = True
+
+    num = num.lower()
+
+    # TODO: make more efficient
+    if num == "i":
+        chord = keyList[0]
+    elif num == "ii":
+        chord = keyList[1]
+    elif num == "iii":
+        chord = keyList[2]
+    elif num == "iv":
+        chord = keyList[3]
+    elif num == "v":
+        chord = keyList[4]
+    elif num == "vi":
+        chord = keyList[5]
+    elif num == "vii":
+        chord = keyList[6]
+    else:
+        # TODO: Convert to formal exception
+        print("Wrong chord")
+        exit()
+
+    if minor:
+        chord += "m"
+
+    return chord
 
 main()
