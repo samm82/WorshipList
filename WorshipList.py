@@ -9,6 +9,12 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_TAB_ALIGNMENT
 
 def main():
     doc = Document()
+    
+    # Defines margins
+
+    section = doc.sections[0]
+    section.left_margin = Inches(1)
+    
     doc = writeSong(doc, "LionAndTheLamb", "G")
 
     doc.save('output.docx')
@@ -46,6 +52,8 @@ def writeSong(doc, name, key):
         line = i.split()
 
         p = doc.add_paragraph()
+
+        # Defines tab stops
         
         tab_stops = p.paragraph_format.tab_stops
         tab_stop = tab_stops.add_tab_stop(Inches(1.5), WD_TAB_ALIGNMENT.LEFT)
