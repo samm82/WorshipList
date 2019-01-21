@@ -4,8 +4,8 @@
 #  @date 1/18/2019
 
 from docx import Document
-from docx.shared import Pt
-from docx.enum.text import WD_ALIGN_PARAGRAPH
+from docx.shared import Inches, Pt
+from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_TAB_ALIGNMENT
 
 def main():
     doc = Document()
@@ -46,7 +46,11 @@ def writeSong(doc, name, key):
         line = i.split()
 
         p = doc.add_paragraph()
-        pClass = p.add_run(line[0])
+        
+        tab_stops = p.paragraph_format.tab_stops
+        tab_stop = tab_stops.add_tab_stop(Inches(1.5), WD_TAB_ALIGNMENT.LEFT)
+
+        p.add_run(line[0] + "\t")
 
         for chord in line[1:]:
             if chord == "|":
