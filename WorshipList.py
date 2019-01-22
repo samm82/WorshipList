@@ -14,13 +14,15 @@ def main():
 
     section = doc.sections[0]
     section.left_margin = Inches(1)
+    section.right_margin = Inches(1)
     
     doc = writeSong(doc, "LionAndTheLamb", "G")
+    doc = writeSong(doc, "GreatAreYouLord", "G")
 
     doc.save('output.docx')
 
 def writeSong(doc, name, key):
-    infile = open(name+".txt", "r")
+    infile = open("songs/"+name+".txt", "r")
     lines = infile.readlines()
     infile.close()
 
