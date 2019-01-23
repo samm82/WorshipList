@@ -5,7 +5,7 @@
 
 from docx import Document
 from docx.shared import Inches, Pt
-from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_TAB_ALIGNMENT
+from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_LINE_SPACING, WD_TAB_ALIGNMENT
 
 def main():
     doc = Document()
@@ -19,7 +19,7 @@ def main():
     doc = writeSong(doc, "LionAndTheLamb", "G")
     doc = writeSong(doc, "GreatAreYouLord", "G")
     doc = writeSong(doc, "HeavenCome", "E")
-    doc = writeSong(doc, "Resurrecting", "b")
+    doc = writeSong(doc, "Resurrecting", "B")
 
     doc.save('output.docx')
 
@@ -78,6 +78,7 @@ def writeSong(doc, name, key):
             else:
                 p.add_run(getChord(key, chord) + "  ")
 
+        p.paragraph_format.line_spacing = Pt(36)
         p.paragraph_format.space_after = Pt(0)
         p.paragraph_format.space_before = Pt(0)
 
