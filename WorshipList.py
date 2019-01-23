@@ -19,7 +19,7 @@ def main():
     doc = writeSong(doc, "LionAndTheLamb", "G")
     doc = writeSong(doc, "GreatAreYouLord", "G")
     doc = writeSong(doc, "HeavenCome", "E")
-    doc = writeSong(doc, "Resurrecting", "B")
+    doc = writeSong(doc, "Resurrecting", "b")
 
     doc.save('output.docx')
 
@@ -27,6 +27,8 @@ def writeSong(doc, name, key):
     infile = open("songs/"+name+".txt", "r")
     lines = infile.readlines()
     infile.close()
+
+    key = key.upper()
 
     # Defines default style
 
@@ -83,7 +85,6 @@ def writeSong(doc, name, key):
 
 def getChord(key, num):
     # TODO: make more efficient
-    # TODO: allow for lowercase key
     # TODO: allow for sharp/flat keys
     if key == "F":
         keyList = ["F", "G", "A", "Bb", "C", "D", "E"]
