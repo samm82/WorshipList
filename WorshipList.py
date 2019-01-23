@@ -1,7 +1,7 @@
 ## @file WorshipList.py
 #  @brief Generates a worship chart from specifies songs and keys.
 #  @author Samuel Crawford
-#  @date 1/18/2019
+#  @date 1/23/2019
 
 from docx import Document
 from docx.shared import Inches, Pt
@@ -18,6 +18,8 @@ def main():
     
     doc = writeSong(doc, "LionAndTheLamb", "G")
     doc = writeSong(doc, "GreatAreYouLord", "G")
+    doc = writeSong(doc, "HeavenCome", "E")
+    doc = writeSong(doc, "Resurrecting", "B")
 
     doc.save('output.docx')
 
