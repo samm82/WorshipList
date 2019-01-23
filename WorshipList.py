@@ -19,9 +19,9 @@ def main():
     section.right_margin = Inches(1)
     
     doc = writeSong(doc, "GloriousDay", "D")
-    doc = writeSong(doc, "GreatAreYouLord", "G")
-    doc = writeSong(doc, "HeavenCome", "E")
-    doc = writeSong(doc, "Resurrecting", "B")
+    doc = writeSong(doc, "WhoYouSayIAm", "F#")
+    doc = writeSong(doc, "LetThereBeLight", "C")
+    doc = writeSong(doc, "SpiritOfTheLivingGod", "B")
 
     doc.save('output.docx')
 
