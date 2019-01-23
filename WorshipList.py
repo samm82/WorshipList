@@ -18,7 +18,7 @@ def main():
     section.left_margin = Inches(1)
     section.right_margin = Inches(1)
     
-    doc = writeSong(doc, "LionAndTheLamb", "G")
+    doc = writeSong(doc, "GloriousDay", "D")
     doc = writeSong(doc, "GreatAreYouLord", "G")
     doc = writeSong(doc, "HeavenCome", "E")
     doc = writeSong(doc, "Resurrecting", "B")
@@ -66,11 +66,16 @@ def writeSong(doc, name, oldKey):
         # Defines tab stops
         
         tab_stops = p.paragraph_format.tab_stops
-        tab_stop = tab_stops.add_tab_stop(Inches(1.5), WD_TAB_ALIGNMENT.LEFT)
+        tab_stop = tab_stops.add_tab_stop(Inches(1.58), WD_TAB_ALIGNMENT.LEFT)
 
-        p.add_run(line[0] + "\t")
+        if line[0][-1] == ":":
+            p.add_run(line[0] + "\t")
+            chordStart = 1
+        else:
+            p.add_run(line[0] + " " + line[1] + "\t")
+            chordStart = 2
 
-        for chord in line[1:]:
+        for chord in line[chordStart:]:
             if chord == "|":
                 p.add_run("|  ")
             elif chord == "double":
