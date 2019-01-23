@@ -7,6 +7,8 @@ from docx import Document
 from docx.shared import Inches, Pt
 from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_LINE_SPACING, WD_TAB_ALIGNMENT
 
+from itertools import cycle
+
 def main():
     doc = Document()
     
@@ -23,12 +25,14 @@ def main():
 
     doc.save('output.docx')
 
-def writeSong(doc, name, key):
+def writeSong(doc, name, oldKey):
     infile = open("songs/"+name+".txt", "r")
     lines = infile.readlines()
     infile.close()
 
-    key = key.upper()
+    key = oldKey[0].upper()
+    if len(oldKey) > 1:
+        key += oldKey[1]
 
     # Defines default style
 
@@ -84,27 +88,30 @@ def writeSong(doc, name, key):
 
     return doc
 
+def getNotes(key, notes):
+    noteList = []
+    note = notes.index(key)
+    for i in list(range(7)):
+        noteList.append(notes[note])
+        if i == 2:
+            note += 1
+        else:
+            note += 2
+    return noteList
+
 def getChord(key, num):
-    # TODO: make more efficient
-    # TODO: allow for sharp/flat keys
-    if key == "F":
-        keyList = ["F", "G", "A", "Bb", "C", "D", "E"]
-    elif key == "C":
-        keyList = ["C", "D", "E", "F", "G", "A", "B"]
-    elif key == "G":
-        keyList = ["G", "A", "B", "C", "D", "E", "F#"]
-    elif key == "D":
-        keyList = ["D", "E", "F#", "G", "A", "B", "C#"]
-    elif key == "A":
-        keyList = ["A", "B", "C#", "D", "E", "F#", "G#"]
-    elif key == "E":
-        keyList = [ "E", "F#", "G#", "A", "B", "C#", "D#"]
-    elif key == "B":
-        keyList = ["B", "C#", "D#", "E", "F#", "G#", "A#"]
+    notesSharp = ['F','F#','G','G#','A','A#','B','C','C#','D','D#','E','F','F#','G','G#','A','A#','B','C','C#','D','D#','E']
+    notesFlat  = ['F','Gb','G','Ab','A','Bb','B','C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B','C','Db','D','Eb','E']
+
+    if len(key) > 1:
+        if key[1] == "#":
+            keyList = getNotes(key, notesSharp)
+        elif key[1] == "b":
+            keyList = getNotes(key, notesFlat)
+    elif key in ["C", "F"]:
+        keyList = getNotes(key, notesFlat)
     else:
-        # TODO: Convert to formal exception
-        print("Wrong key")
-        exit()
+        keyList = getNotes(key, notesSharp)
 
     minor = False
     if num.islower():
