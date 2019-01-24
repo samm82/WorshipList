@@ -9,6 +9,9 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_LINE_SPACING, WD_TAB_ALIGNMENT
 
 from itertools import cycle
 
+class FileError(Exception):
+    pass
+
 def main():
     doc = Document()
     
@@ -25,8 +28,8 @@ def main():
 
     doc.save('output.docx')
 
-def writeSong(doc, name, oldKey):
-    infile = open("songs/"+name+".txt", "r")
+def writeSong(doc, fileName, oldKey):
+    infile = open("songs/" + fileName + ".txt", "r")
     lines = infile.readlines()
     infile.close()
 
@@ -85,9 +88,9 @@ def writeSong(doc, name, oldKey):
                 p.add_run(" x 2")
             elif "/" in chord:
                 newChord = chord[:-1]
-                p.add_run(getChord(key, newChord) + "/")
+                p.add_run(getChord(key, newChord, fileName) + "/")
             else:
-                p.add_run(getChord(key, chord) + "  ")
+                p.add_run(getChord(key, chord, fileName) + "  ")
 
         p.paragraph_format.line_spacing = Pt(36)
         p.paragraph_format.space_after = Pt(0)
@@ -106,7 +109,7 @@ def getNotes(key, notes):
             note += 2
     return noteList
 
-def getChord(key, num):
+def getChord(key, num, fileName):
     notesSharp = ['F','F#','G','G#','A','A#','B','C','C#','D','D#','E','F','F#','G','G#','A','A#','B','C','C#','D','D#','E']
     notesFlat  = ['F','Gb','G','Ab','A','Bb','B','C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B','C','Db','D','Eb','E']
 
@@ -142,10 +145,7 @@ def getChord(key, num):
     elif num == "vii":
         chord = keyList[6]
     else:
-        # TODO: Convert to formal exception
-        print("Wrong chord")
-        exit()
-
+        raise FileError('The chord "' + num + '" in the ' + fileName + ' file isn\'t recognized.')
     if minor:
         chord += "m"
 
