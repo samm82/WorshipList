@@ -7,9 +7,10 @@ from docx import Document
 from docx.shared import Inches, Pt
 from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_LINE_SPACING, WD_TAB_ALIGNMENT
 
-from itertools import cycle
-
 class FileError(Exception):
+    pass
+
+class ParamError(Exception):
     pass
 
 def main():
@@ -110,8 +111,12 @@ def getNotes(key, notes):
     return noteList
 
 def getChord(key, num, fileName):
+    validKeys  = ['F','F#','Gb','G','G#','Ab','A','A#','Bb','B','C','C#','Db','D','D#','Eb','E']
     notesSharp = ['F','F#','G','G#','A','A#','B','C','C#','D','D#','E','F','F#','G','G#','A','A#','B','C','C#','D','D#','E']
     notesFlat  = ['F','Gb','G','Ab','A','Bb','B','C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B','C','Db','D','Eb','E']
+
+    if key not in validKeys:
+        raise ParamError("The key \"" + key + "\" isn't recognized.")
 
     if len(key) > 1:
         if key[1] == "#":
@@ -121,7 +126,7 @@ def getChord(key, num, fileName):
     elif key in ["C", "F"]:
         keyList = getNotes(key, notesFlat)
     else:
-        keyList = getNotes(key, notesSharp)
+        keyList = getNotes(key, notesSharp)        
 
     minor = False
     if num.islower():
@@ -145,7 +150,7 @@ def getChord(key, num, fileName):
     elif num == "vii":
         chord = keyList[6]
     else:
-        raise FileError('The chord "' + num + '" in the ' + fileName + ' file isn\'t recognized.')
+        raise FileError("The chord \"" + num + "\" in the " + fileName + " file isn't recognized.")
     if minor:
         chord += "m"
 
