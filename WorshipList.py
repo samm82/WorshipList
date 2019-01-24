@@ -78,6 +78,8 @@ def writeSong(doc, name, oldKey):
         for chord in line[chordStart:]:
             if chord == "|":
                 p.add_run("|  ")
+            elif chord == "new":
+                p.add_run("\n\t")
             elif chord == "double":
                 # Might need spaces after
                 p.add_run(" x 2")

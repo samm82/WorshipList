@@ -1,4 +1,4 @@
 Who You Say I Am
-Verse:  I  vi  V  I  |  vi  V  IV  double
+Verse:  I | vi  V  I | I | new  vi  V  IV  double
 Chorus: I | V | vi  V  IV | I
 Bridge: vi  V  I  IV
