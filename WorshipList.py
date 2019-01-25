@@ -87,10 +87,6 @@ def writeSong(doc, fileName, oldKey):
         for chord in line[chordStart:]:
             if chord == "|":
                 p.add_run("|  ")
-            elif chord == "(":
-                p.add_run("(")
-            elif chord == ")":
-                p.add_run(")")
             elif chord == "new":
                 p.add_run("\n\t")
             elif chord == "double":
@@ -100,6 +96,12 @@ def writeSong(doc, fileName, oldKey):
             elif "/" in chord:
                 newChord = chord[:-1]
                 p.add_run(getChord(key, newChord, fileName) + "/")
+            elif "(" in chord:
+                newChord = chord[1:]
+                p.add_run("(" + getChord(key, newChord, fileName) + "  ")
+            elif ")" in chord:
+                newChord = chord[:-1]
+                p.add_run(getChord(key, newChord, fileName) + ")  ")
             else:
                 p.add_run(getChord(key, chord, fileName) + "  ")
 
