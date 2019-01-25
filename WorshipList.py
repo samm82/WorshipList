@@ -23,9 +23,9 @@ def main():
     section.right_margin = Inches(1)
 
     doc = writeSong(doc, "ThePassion", "D")
-    doc = writeSong(doc, "WhoYouSayIAm", "F#")
-    doc = writeSong(doc, "LetThereBeLight", "C")
-    doc = writeSong(doc, "SpiritOfTheLivingGod", "B")
+    doc = writeSong(doc, "Anointing", "B")
+    doc = writeSong(doc, "OPraiseTheName", "B")
+    doc = writeSong(doc, "DeathWasArrested", "B")
     
     #doc = writeSong(doc, "GloriousDay", "D")
     #doc = writeSong(doc, "WhoYouSayIAm", "F#")
@@ -87,12 +87,16 @@ def writeSong(doc, fileName, oldKey):
         for chord in line[chordStart:]:
             if chord == "|":
                 p.add_run("|  ")
+            elif chord == "(":
+                p.add_run("(")
+            elif chord == ")":
+                p.add_run(")")
             elif chord == "new":
                 p.add_run("\n\t")
             elif chord == "double":
-                p.add_run(" x 2  ")
+                p.add_run("x 2  ")
             elif chord == "triple":
-                p.add_run(" x 3  ")
+                p.add_run("x 3  ")
             elif "/" in chord:
                 newChord = chord[:-1]
                 p.add_run(getChord(key, newChord, fileName) + "/")
