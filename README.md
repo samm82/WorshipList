@@ -20,13 +20,21 @@ The song files also contain some custom symbols, some of which correspond to exa
 |new|Splits a line into two lines, preserving tab stops|
 |/|Denotes a chord over a bass note (with proper spacing)|
 
+### Assumptions
+
+Some assumptions for how the song files are formatted:
+1) The first line in the file is the title of the song, properly formatted. (eg. "Lion and the Lamb")
+2) Each section (chorus, verse, bridge, etc.) is on a new line, with the first entry being the entry name and a colon. (eg. "V/Ch:")
+3) The longest section name (currently) is the length of "Bridge 2:" when implemented in Word.
+4) Any chord with a bass note has a space after the slash. (eg. "D/ F#")
+
 ## Contents
 
 **songs**
-    - Directory of songs, with chords stored as Roman numerals.
+: Directory of songs, with chords stored as Roman numerals.
 
 WorshipList.py
-    - The actual program that outputs the chord chart as `output.docx`.
+: The actual program that outputs the chord chart as `output.docx`.
 
 README.md
-    - This file.
+: This file.
