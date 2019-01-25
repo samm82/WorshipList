@@ -21,11 +21,16 @@ def main():
     section = doc.sections[0]
     section.left_margin = Inches(1)
     section.right_margin = Inches(1)
-    
-    doc = writeSong(doc, "GloriousDay", "D")
+
+    doc = writeSong(doc, "ThePassion", "D")
     doc = writeSong(doc, "WhoYouSayIAm", "F#")
     doc = writeSong(doc, "LetThereBeLight", "C")
     doc = writeSong(doc, "SpiritOfTheLivingGod", "B")
+    
+    #doc = writeSong(doc, "GloriousDay", "D")
+    #doc = writeSong(doc, "WhoYouSayIAm", "F#")
+    #doc = writeSong(doc, "LetThereBeLight", "C")
+    #doc = writeSong(doc, "SpiritOfTheLivingGod", "B")
 
     doc.save('output.docx')
 
@@ -85,8 +90,9 @@ def writeSong(doc, fileName, oldKey):
             elif chord == "new":
                 p.add_run("\n\t")
             elif chord == "double":
-                # Might need spaces after
-                p.add_run(" x 2")
+                p.add_run(" x 2  ")
+            elif chord == "triple":
+                p.add_run(" x 3  ")
             elif "/" in chord:
                 newChord = chord[:-1]
                 p.add_run(getChord(key, newChord, fileName) + "/")
