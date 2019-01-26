@@ -11,14 +11,17 @@ Each song is stored as a text file with chords represented as Roman numerals, wh
 
 ### Keywords
 
-The song files also contain some custom symbols, some of which correspond to exactly what they are, such as "|", "(", and ")". Others are shorthand for some key functions, as follows:
+The song files also contain some custom symbols that are shorthand for some key functions, as follows:
 
 | Keyword | Output |
 |---|---|
-|double|x 2|
-|triple|x 3|
+|\||"\|"|
+|double|"x 2"|
+|triple|"x 3"|
 |new|Splits a line into two lines, preserving tab stops|
 |/|Denotes a chord over a bass note (with proper spacing)|
+|(|"(" and denotes beginning of small text|
+|)|")" and denotes end of small text|
 
 ### Assumptions
 
@@ -27,6 +30,7 @@ Some assumptions for how the song files are formatted:
 2) Each section (chorus, verse, bridge, etc.) is on a new line, with the first entry being the entry name and a colon. (eg. "V/Ch:")
 3) The longest section name (currently) is the length of "Bridge 2:" when implemented in Word.
 4) Any chord with a bass note has a space after the slash. (eg. "D/ F#")
+5) Any chords wrapped in parentheses are meant to have a smaller text size.
 
 ## Contents
 

@@ -93,27 +93,41 @@ def writeSong(doc, lineCount, fileName, oldKey):
             p.add_run(line[0] + " " + line[1] + "\t")
             chordStart = 2
 
+        # small = 0 -> normal size
+        # small = 1 -> small size
+        # small = 2 -> last small size
+
+        small = 0
+
         for chord in line[chordStart:]:
             if chord == "|":
-                p.add_run("|  ")
+                run = p.add_run("|  ")
             elif chord == "new":
-                p.add_run("\n\t")
+                run = p.add_run("\n\t")
                 lineCount += 1
             elif chord == "double":
-                p.add_run("x 2  ")
+                run = p.add_run("x 2  ")
             elif chord == "triple":
-                p.add_run("x 3  ")
+                run = p.add_run("x 3  ")
             elif "/" in chord:
                 newChord = chord[:-1]
-                p.add_run(getChord(key, newChord, fileName) + "/")
+                run = p.add_run(getChord(key, newChord, fileName) + "/")
             elif "(" in chord:
                 newChord = chord[1:]
-                p.add_run("(" + getChord(key, newChord, fileName) + "  ")
+                run = p.add_run("(" + getChord(key, newChord, fileName) + "  ")
+                small = 1
             elif ")" in chord:
                 newChord = chord[:-1]
-                p.add_run(getChord(key, newChord, fileName) + ")  ")
+                run = p.add_run(getChord(key, newChord, fileName) + ")  ")
+                small = 2
             else:
-                p.add_run(getChord(key, chord, fileName) + "  ")
+                run = p.add_run(getChord(key, chord, fileName) + "  ")
+
+            if small == 1:
+                run.font.size = Pt(22)
+            if small == 2:
+                run.font.size = Pt(22)
+                small = 0
 
         p.paragraph_format.line_spacing = Pt(36)
         p.paragraph_format.space_after = Pt(0)
