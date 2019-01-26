@@ -1,7 +1,7 @@
-## @file WorshipList.py
-#  @brief Generates a worship chart from specifies songs and keys.
+## @file   WorshipList.py
+#  @brief  Generates a worship chart from specified songs and keys.
 #  @author Samuel Crawford
-#  @date 1/23/2019
+#  @date   1/25/2019
 
 from docx import Document
 from docx.shared import Inches, Pt
@@ -13,6 +13,7 @@ class FileError(Exception):
 class ParamError(Exception):
     pass
 
+## @brief The main function of the program that calls other programs.
 def main():
     doc = Document()
     
@@ -43,8 +44,14 @@ def main():
 
     doc.save('output.docx')
 
+## @brief               Writes a song to doc.
+#  @param[in] doc       The document being generated.
+#  @param[in] lineCount A counter of how many lines have been printed.
+#  @param[in] fileName  The name of the song file.
+#  @param[in] oldKey    The original key of the song (manipulated in function).
+#  @return              The document (doc) and line counter (lineCount).
 def writeSong(doc, lineCount, fileName, oldKey):
-    infile = open("songs/" + fileName + ".txt", "r")
+    infile = open("src/songs/" + fileName + ".txt", "r")
     lines = infile.readlines()
     infile.close()
 
@@ -135,6 +142,10 @@ def writeSong(doc, lineCount, fileName, oldKey):
 
     return doc, lineCount
 
+## @brief           Gets a list of notes in the given key.
+#  @param[in] key   The key of the song.
+#  @param[in] notes The list of all possible notes (either notesSharp or notesFlat).
+#  @return          A list of notes in the given key.
 def getNotes(key, notes):
     noteList = []
     note = notes.index(key)
@@ -146,7 +157,15 @@ def getNotes(key, notes):
             note += 2
     return noteList
 
+## @brief              Gets chord from Roman numeral based on key.
+#  @param[in] key      The key of the song.
+#  @param[in] num      The Roman numeral from the song file.
+#  @param[in] fileName The name of file with student information.
+#  @return             The chord converted from the Roman numeral.
+#  @throw              ParamError if the key isn't valid.
+#  @throw              FileError  if the chord isn't valid.
 def getChord(key, num, fileName):
+    # pull this step out to getNotes()
     validKeys  = ['F','F#','Gb','G','G#','Ab','A','A#','Bb','B','C','C#','Db','D','D#','Eb','E']
     notesSharp = ['F','F#','G','G#','A','A#','B','C','C#','D','D#','E','F','F#','G','G#','A','A#','B','C','C#','D','D#','E']
     notesFlat  = ['F','Gb','G','Ab','A','Bb','B','C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B','C','Db','D','Eb','E']

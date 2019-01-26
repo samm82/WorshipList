@@ -1,21 +1,21 @@
 PY = python
 PYFLAGS = 
-#DOC = doxygen
-#DOCFLAGS = 
-#DOCCONFIG = docConfig
+DOC = doxygen
+DOCFLAGS = 
+DOCCONFIG = 
 
-SRC = WorshipList.py
+SRC = src/WorshipList.py
 
-.PHONY: all test clean
+.PHONY: all test doc clean
 
 test: 
 	$(PY) $(PYFLAGS) $(SRC)
 
-#doc: 
-#    $(DOC) $(DOCFLAGS) $(DOCCONFIG)
-#    cd latex && $(MAKE)
+doc: 
+	$(DOC) $(DOCFLAGS) $(DOCCONFIG)
+	cd latex && $(MAKE)
 
-all: test #doc
+all: test doc
 
 clean:
 	rm output.docx
