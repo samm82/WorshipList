@@ -5,7 +5,7 @@
 
 from docx import Document
 from docx.shared import Inches, Pt
-from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_LINE_SPACING, WD_TAB_ALIGNMENT
+from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_BREAK, WD_LINE_SPACING, WD_TAB_ALIGNMENT
 
 class FileError(Exception):
     pass
@@ -22,19 +22,28 @@ def main():
     section.left_margin = Inches(1)
     section.right_margin = Inches(1)
 
-    doc = writeSong(doc, "ThePassion", "D")
-    doc = writeSong(doc, "Anointing", "B")
-    doc = writeSong(doc, "OPraiseTheName", "B")
-    doc = writeSong(doc, "DeathWasArrested", "B")
+    # Defines default style
+
+    style = doc.styles['Normal']
+    font = style.font
+    font.name = 'Calibri'
+    font.size = Pt(28)
+
+    lineCount = 0
+
+    doc, lineCount = writeSong(doc, lineCount, "ThePassion", "D")
+    doc, lineCount = writeSong(doc, lineCount, "Anointing", "B")
+    doc, lineCount = writeSong(doc, lineCount, "OPraiseTheName", "B")
+    doc, lineCount = writeSong(doc, lineCount, "DeathWasArrested", "B")
     
-    #doc = writeSong(doc, "GloriousDay", "D")
-    #doc = writeSong(doc, "WhoYouSayIAm", "F#")
-    #doc = writeSong(doc, "LetThereBeLight", "C")
-    #doc = writeSong(doc, "SpiritOfTheLivingGod", "B")
+    #doc, lineCount = writeSong(doc, lineCount, "GloriousDay", "D")
+    #doc, lineCount = writeSong(doc, lineCount, "WhoYouSayIAm", "F#")
+    #doc, lineCount = writeSong(doc, lineCount, "LetThereBeLight", "C")
+    #doc, lineCount = writeSong(doc, lineCount, "SpiritOfTheLivingGod", "B")
 
     doc.save('output.docx')
 
-def writeSong(doc, fileName, oldKey):
+def writeSong(doc, lineCount, fileName, oldKey):
     infile = open("songs/" + fileName + ".txt", "r")
     lines = infile.readlines()
     infile.close()
@@ -43,12 +52,12 @@ def writeSong(doc, fileName, oldKey):
     if len(oldKey) > 1:
         key += oldKey[1]
 
-    # Defines default style
-
-    style = doc.styles['Normal']
-    font = style.font
-    font.name = 'Calibri'
-    font.size = Pt(28)
+    if (lineCount + len(lines)) > 16:
+        p = doc.add_paragraph()
+        run = p.add_run()
+        run.add_break(WD_BREAK.PAGE)
+    
+    lineCount += len(lines)
 
     # Writes title
 
@@ -89,6 +98,7 @@ def writeSong(doc, fileName, oldKey):
                 p.add_run("|  ")
             elif chord == "new":
                 p.add_run("\n\t")
+                lineCount += 1
             elif chord == "double":
                 p.add_run("x 2  ")
             elif chord == "triple":
@@ -109,7 +119,7 @@ def writeSong(doc, fileName, oldKey):
         p.paragraph_format.space_after = Pt(0)
         p.paragraph_format.space_before = Pt(0)
 
-    return doc
+    return doc, lineCount
 
 def getNotes(key, notes):
     noteList = []
