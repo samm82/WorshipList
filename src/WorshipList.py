@@ -59,6 +59,8 @@ def writeSong(doc, lineCount, fileName, oldKey):
     if len(oldKey) > 1:
         key += oldKey[1]
 
+    noteList = getNotes(key)
+
     if (lineCount + len(lines)) > 16:
         p = doc.add_paragraph()
         run = p.add_run()
@@ -118,17 +120,17 @@ def writeSong(doc, lineCount, fileName, oldKey):
                 run = p.add_run("x 3  ")
             elif "/" in chord:
                 newChord = chord[:-1]
-                run = p.add_run(getChord(key, newChord, fileName) + "/")
+                run = p.add_run(getChord(noteList, newChord, fileName) + "/")
             elif "(" in chord:
                 newChord = chord[1:]
-                run = p.add_run("(" + getChord(key, newChord, fileName) + "  ")
+                run = p.add_run("(" + getChord(noteList, newChord, fileName) + "  ")
                 small = 1
             elif ")" in chord:
                 newChord = chord[:-1]
-                run = p.add_run(getChord(key, newChord, fileName) + ")  ")
+                run = p.add_run(getChord(noteList, newChord, fileName) + ")  ")
                 small = 2
             else:
-                run = p.add_run(getChord(key, chord, fileName) + "  ")
+                run = p.add_run(getChord(noteList, chord, fileName) + "  ")
 
             if small == 1:
                 run.font.size = Pt(22)
@@ -142,29 +144,11 @@ def writeSong(doc, lineCount, fileName, oldKey):
 
     return doc, lineCount
 
-## @brief           Gets a list of notes in the given key.
-#  @param[in] key   The key of the song.
-#  @param[in] notes The list of all possible notes (either notesSharp or notesFlat).
-#  @return          A list of notes in the given key.
-def getNotes(key, notes):
-    noteList = []
-    note = notes.index(key)
-    for i in list(range(7)):
-        noteList.append(notes[note])
-        if i == 2:
-            note += 1
-        else:
-            note += 2
-    return noteList
-
-## @brief              Gets chord from Roman numeral based on key.
-#  @param[in] key      The key of the song.
-#  @param[in] num      The Roman numeral from the song file.
-#  @param[in] fileName The name of file with student information.
-#  @return             The chord converted from the Roman numeral.
-#  @throw              ParamError if the key isn't valid.
-#  @throw              FileError  if the chord isn't valid.
-def getChord(key, num, fileName):
+## @brief         Gets a list of notes in the given key.
+#  @param[in] key The key of the song.
+#  @return        A list of notes in the given key.
+#  @throw         ParamError if the key isn't valid.
+def getNotes(key):
     # pull this step out to getNotes()
     validKeys  = ['F','F#','Gb','G','G#','Ab','A','A#','Bb','B','C','C#','Db','D','D#','Eb','E']
     notesSharp = ['F','F#','G','G#','A','A#','B','C','C#','D','D#','E','F','F#','G','G#','A','A#','B','C','C#','D','D#','E']
@@ -175,14 +159,31 @@ def getChord(key, num, fileName):
 
     if len(key) > 1:
         if key[1] == "#":
-            keyList = getNotes(key, notesSharp)
+            notes = notesSharp
         elif key[1] == "b":
-            keyList = getNotes(key, notesFlat)
+            notes = notesFlat
     elif key in ["C", "F"]:
-        keyList = getNotes(key, notesFlat)
+        notes = notesFlat
     else:
-        keyList = getNotes(key, notesSharp)        
+        notes = notesSharp
 
+    noteList = []
+    note = notes.index(key)
+    for i in list(range(7)):
+        noteList.append(notes[note])
+        if i == 2:
+            note += 1
+        else:
+            note += 2
+    return noteList
+
+## @brief              Gets chord from Roman numeral based on list of notes.
+#  @param[in] noteList A list of notes in the key of the song.
+#  @param[in] num      The Roman numeral from the song file.
+#  @param[in] fileName The name of file with student information.
+#  @return             The chord converted from the Roman numeral.
+#  @throw              FileError if the chord isn't valid.
+def getChord(noteList, num, fileName):
     minor = False
     if num.islower():
         minor = True
@@ -191,19 +192,19 @@ def getChord(key, num, fileName):
 
     # TODO: make more efficient
     if num == "i":
-        chord = keyList[0]
+        chord = noteList[0]
     elif num == "ii":
-        chord = keyList[1]
+        chord = noteList[1]
     elif num == "iii":
-        chord = keyList[2]
+        chord = noteList[2]
     elif num == "iv":
-        chord = keyList[3]
+        chord = noteList[3]
     elif num == "v":
-        chord = keyList[4]
+        chord = noteList[4]
     elif num == "vi":
-        chord = keyList[5]
+        chord = noteList[5]
     elif num == "vii":
-        chord = keyList[6]
+        chord = noteList[6]
     else:
         raise FileError("The chord \"" + num + "\" in the " + fileName + " file isn't recognized.")
     if minor:
