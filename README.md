@@ -5,6 +5,8 @@ Last Modified: 1/25/2019
 
 Every week for worship at LIFT Church, I have to manually create a chord chart for the four songs we're playing that week. This program automatically generates that chord chart. This is currently done semi-manually from the `main()` function (mainly for ease of testing), but will eventually be updated to ask for user input.
 
+To generate documentation, run `make doc` in the directory with the Makefile. This will create two folders; the important files are html/index and latex/refman.pdf for documentation.
+
 ## Song Files
 
 Each song is stored as a text file with chords represented as Roman numerals, where "I" corresponds to the first chord of the scale, "II" to the second, etc. Lower case numerals denote minor chords. The program than automatically translates these numerals to standard chords, depending on the key specified. 
@@ -33,12 +35,19 @@ Some assumptions for how the song files are formatted:
 5) Any chords wrapped in parentheses are meant to have a smaller text size.
 
 ## Contents
+.  
+├── src/  
+│   ├── songs/  
+│   └── WorshipList.py  
+├── .gitignore  
+├── Doxyfile  
+├── Makefile  
+└── README.md  
 
-**songs**
-: Directory of songs, with chords stored as Roman numerals.
-
-WorshipList.py
-: The actual program that outputs the chord chart as `output.docx`.
-
-README.md
-: This file.
+| Name | Description |
+|---|---|
+|src/|Source folder|
+|.gitignore|File for Git to ignore output files|
+|Doxyfile|Configuration file for Doxygen|
+|Makefile|Contains commands for building|
+|README.md|This file - Gives information about repo|
