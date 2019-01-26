@@ -190,23 +190,14 @@ def getChord(noteList, num, fileName):
 
     num = num.lower()
 
-    # TODO: make more efficient
-    if num == "i":
-        chord = noteList[0]
-    elif num == "ii":
-        chord = noteList[1]
-    elif num == "iii":
-        chord = noteList[2]
-    elif num == "iv":
-        chord = noteList[3]
-    elif num == "v":
-        chord = noteList[4]
-    elif num == "vi":
-        chord = noteList[5]
-    elif num == "vii":
-        chord = noteList[6]
-    else:
+    # Finds chord from list based on numeral
+    numList = ["i", "ii", "iii", "iv", "v", "vi", "vii"]
+    
+    if num not in numList:
         raise FileError("The chord \"" + num + "\" in the " + fileName + " file isn't recognized.")
+    else:
+        chord = noteList[numList.index(num)]
+        
     if minor:
         chord += "m"
 
