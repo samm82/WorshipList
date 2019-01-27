@@ -9,12 +9,6 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_BREAK, WD_LINE_SPACING, WD_TAB
 
 from MusicData import getChord, getNotes
 
-class FileError(Exception):
-    pass
-
-class ParamError(Exception):
-    pass
-
 ## @brief The main function of the program that calls other programs.
 def main():
     doc = Document()
