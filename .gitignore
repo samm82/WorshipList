@@ -1,6 +1,7 @@
 output.docx
 testOutput.docx
 ~$*
+*pycache*
 
 html/
 latex/
