@@ -206,27 +206,17 @@ def getNotes(key):
 #  @return             The chord converted from the Roman numeral.
 #  @throw              FileError if the chord isn't valid.
 def getChord(noteList, num, fileName):
-    # Handles if key is minor
-
-    minor = False
-    if num.islower():
-        minor = True
-
-    num = num.lower()
-
-    # Finds chord from list based on numeral
+    lowerNum = num.lower()
     numList = ["i", "ii", "iii", "iv", "v", "vi", "vii"]
 
     # Checks if chord is valid, and retrieves it from list if it is
-
-    if num not in numList:
+    if lowerNum not in numList:
         raise FileError("The chord \"" + num + "\" in the " + fileName + " file isn't recognized.")
     else:
-        chord = noteList[numList.index(num)]
+        chord = noteList[numList.index(lowerNum)]
 
-    # Finishes minor handling
-
-    if minor:
+    # Handles if chord is minor
+    if num.islower():
         chord += "m"
 
     return chord
