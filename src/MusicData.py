@@ -9,6 +9,11 @@ class FileError(Exception):
 class ParamError(Exception):
     pass
 
+## @brief  Gets a list of valid keys.
+#  @return A list of valid keys.
+def validKeys():
+    return ['F','F#','Gb','G','G#','Ab','A','A#','Bb','B','C','C#','Db','D','D#','Eb','E']
+
 ## @brief         Gets a list of notes in the given key.
 #  @param[in] key The key of the song.
 #  @return        A list of notes in the given key.
@@ -16,13 +21,12 @@ class ParamError(Exception):
 def getNotes(key):
     # Defines standard lists
 
-    validKeys  = ['F','F#','Gb','G','G#','Ab','A','A#','Bb','B','C','C#','Db','D','D#','Eb','E']
     notesSharp = ['F','F#','G','G#','A','A#','B','C','C#','D','D#','E','F','F#','G','G#','A','A#','B','C','C#','D','D#','E']
     notesFlat  = ['F','Gb','G','Ab','A','Bb','B','C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B','C','Db','D','Eb','E']
 
     # Checks if key is valid
 
-    if key not in validKeys:
+    if key not in validKeys():
         raise ParamError("The key \"" + key + "\" isn't recognized.")
 
     if len(key) > 1:

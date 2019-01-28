@@ -7,6 +7,7 @@ from docx import Document
 from docx.shared import Inches, Pt
 from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_BREAK, WD_LINE_SPACING, WD_TAB_ALIGNMENT
 
+from GUI import songGUI
 from MusicData import getChord, getNotes
 
 ## @brief The main function of the program that calls other programs.
@@ -30,10 +31,15 @@ def main():
 
     # Writes each song
 
-    doc, lineCount = writeSong(doc, lineCount, "ThePassion", "D")
-    doc, lineCount = writeSong(doc, lineCount, "Anointing", "B")
-    doc, lineCount = writeSong(doc, lineCount, "OPraiseTheName", "B")
-    doc, lineCount = writeSong(doc, lineCount, "DeathWasArrested", "B")
+    songs, keys = songGUI()
+
+    for i in range(4):
+        doc, lineCount = writeSong(doc, lineCount, songs[i].replace(" ", ""), keys[i])
+
+    #doc, lineCount = writeSong(doc, lineCount, "ThePassion", "D")
+    #doc, lineCount = writeSong(doc, lineCount, "Anointing", "B")
+    #doc, lineCount = writeSong(doc, lineCount, "OPraiseTheName", "B")
+    #doc, lineCount = writeSong(doc, lineCount, "DeathWasArrested", "B")
     
     #doc, lineCount = writeSong(doc, lineCount, "GloriousDay", "D")
     #doc, lineCount = writeSong(doc, lineCount, "WhoYouSayIAm", "F#")
@@ -49,7 +55,7 @@ def main():
 #  @param[in] oldKey    The original key of the song (manipulated in function).
 #  @return              The document (doc) and line counter (lineCount).
 def writeSong(doc, lineCount, fileName, oldKey):
-    infile = open("src/songs/" + fileName + ".txt", "r")
+    infile = open("songs/" + fileName + ".txt", "r")
     lines = infile.readlines()
     infile.close()
 
