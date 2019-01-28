@@ -9,26 +9,13 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_BREAK, WD_LINE_SPACING, WD_TAB
 
 from sys import argv
 
+from Document import docSetup
 from GUI import songGUI
 from MusicData import getChord, getNotes
 
 ## @brief The main function of the program that calls other programs.
 def main():
-    doc = Document()
-    
-    # Defines margins
-
-    section = doc.sections[0]
-    section.left_margin = Inches(1)
-    section.right_margin = Inches(1)
-
-    # Defines default style
-
-    style = doc.styles['Normal']
-    font = style.font
-    font.name = 'Calibri'
-    font.size = Pt(28)
-
+    doc = docSetup()
     lineCount = 0
 
     # Writes each song
@@ -38,21 +25,10 @@ def main():
         for i in range(4):
             doc, lineCount = writeSong(doc, lineCount, songs[i].replace(" ", ""), keys[i])
     else:
-        # Random inputs from GUI - fix
-        doc, lineCount = writeSong(doc, lineCount, "Anointing", "A")
-        doc, lineCount = writeSong(doc, lineCount, "GreatAreYouLord", "F#")
-        doc, lineCount = writeSong(doc, lineCount, "GloriousDay", "F#")
-        doc, lineCount = writeSong(doc, lineCount, "OPraiseTheName", "E")
-
-        # doc, lineCount = writeSong(doc, lineCount, "ThePassion", "D")
-        # doc, lineCount = writeSong(doc, lineCount, "Anointing", "B")
-        # doc, lineCount = writeSong(doc, lineCount, "OPraiseTheName", "B")
-        # doc, lineCount = writeSong(doc, lineCount, "DeathWasArrested", "B")
-    
-    #doc, lineCount = writeSong(doc, lineCount, "GloriousDay", "D")
-    #doc, lineCount = writeSong(doc, lineCount, "WhoYouSayIAm", "F#")
-    #doc, lineCount = writeSong(doc, lineCount, "LetThereBeLight", "C")
-    #doc, lineCount = writeSong(doc, lineCount, "SpiritOfTheLivingGod", "B")
+        doc, lineCount = writeSong(doc, lineCount, "ThePassion", "D")
+        doc, lineCount = writeSong(doc, lineCount, "Anointing", "B")
+        doc, lineCount = writeSong(doc, lineCount, "OPraiseTheName", "B")
+        doc, lineCount = writeSong(doc, lineCount, "DeathWasArrested", "B")
 
     doc.save('output.docx')
 
