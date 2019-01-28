@@ -9,9 +9,9 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_BREAK, WD_LINE_SPACING, WD_TAB
 
 from sys import argv
 
-from Document import docSetup
+from Document import docSetup, writeLine
 from GUI import songGUI
-from MusicData import getChord, getNotes
+from MusicData import getNotes
 
 ## @brief The main function of the program that calls other programs.
 def main():
@@ -49,10 +49,6 @@ def writeSong(doc, lineCount, fileName, oldKey):
     if len(oldKey) > 1:
         key += oldKey[1]
 
-    # Gets list of notes from getNotes(key)
-
-    noteList = getNotes(key)
-
     # Adds page break if song will get cut off
 
     newLineLength = len(lines)
@@ -82,76 +78,18 @@ def writeSong(doc, lineCount, fileName, oldKey):
     p.paragraph_format.space_after = Pt(0)
     p.paragraph_format.space_before = Pt(0)
 
-    # Writes chords
+    # Gets list of notes from getNotes(key)
+
+    noteList = getNotes(key)
+
+    # Writes the lines with chords
 
     for i in range(1, len(lines)):
         line = lines[i].split()
+        end = i == len(lines) - 1
 
-        p = doc.add_paragraph()
-
-        # Defines tab stops
-        
-        tab_stops = p.paragraph_format.tab_stops
-        tab_stop = tab_stops.add_tab_stop(Inches(1.58), WD_TAB_ALIGNMENT.LEFT)
-
-        # Adds section name
-
-        if line[0][-1] == ":":
-            p.add_run(line[0] + "\t")
-            chordStart = 1
-        else:
-            p.add_run(line[0] + " " + line[1] + "\t")
-            chordStart = 2
-
-        # small = 0 -> normal size
-        # small = 1 -> small size
-        # small = 2 -> last small size
-
-        small = 0
-
-        # Adds all chords
-
-        for chord in line[chordStart:]:
-            if chord == "|":
-                run = p.add_run("|  ")
-            elif chord == "new":
-                run = p.add_run("\n\t")
-                lineCount += 1
-            elif chord == "double":
-                run = p.add_run("x 2  ")
-            elif chord == "triple":
-                run = p.add_run("x 3  ")
-            elif "/" in chord:
-                newChord = chord[:-1]
-                run = p.add_run(getChord(noteList, newChord, fileName) + "/")
-            elif "(" in chord:
-                newChord = chord[1:]
-                run = p.add_run("(" + getChord(noteList, newChord, fileName) + "  ")
-                small = 1
-            elif ")" in chord:
-                newChord = chord[:-1]
-                run = p.add_run(getChord(noteList, newChord, fileName) + ")  ")
-                small = 2
-            else:
-                run = p.add_run(getChord(noteList, chord, fileName) + "  ")
-
-            # Set font size for small text
-
-            if small == 1:
-                run.font.size = Pt(22)
-            if small == 2:
-                run.font.size = Pt(22)
-                small = 0
-
-        # Sets paragraph spacing
-
-        if i != len(lines) - 1:
-            p.paragraph_format.space_after = Pt(0)
-        else:
-            p.paragraph_format.space_after = Pt(10)
-
-        p.paragraph_format.space_before = Pt(0)
-        p.paragraph_format.line_spacing = Pt(36)
+        doc, newLines = writeLine(doc, line, end, noteList, fileName)
+        lineCount += newLines
 
     return doc, lineCount
 
