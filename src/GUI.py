@@ -48,6 +48,7 @@ def songGUI():
                 songs.append(values[i])
             else:
                 key = values[i]
+                key = key.strip()
                 if len(key) == 1:
                     key = key.upper()
                 else:
