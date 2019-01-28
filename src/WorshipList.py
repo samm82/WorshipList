@@ -44,7 +44,6 @@ def main():
         doc, lineCount = writeSong(doc, lineCount, "GloriousDay", "F#")
         doc, lineCount = writeSong(doc, lineCount, "OPraiseTheName", "E")
 
-
         # doc, lineCount = writeSong(doc, lineCount, "ThePassion", "D")
         # doc, lineCount = writeSong(doc, lineCount, "Anointing", "B")
         # doc, lineCount = writeSong(doc, lineCount, "OPraiseTheName", "B")
@@ -80,13 +79,18 @@ def writeSong(doc, lineCount, fileName, oldKey):
 
     # Adds page break if song will get cut off
 
-    if (lineCount + len(lines)) > 16:
+    newLineLength = len(lines)
+    for line in lines:
+        if "new" in line.split():
+            newLineLength += 1
+
+    lineCount += newLineLength
+
+    if lineCount > 16:
         p = doc.add_paragraph()
         run = p.add_run()
         run.add_break(WD_BREAK.PAGE)
     
-    lineCount += len(lines)
-
     # Writes title
 
     p = doc.add_paragraph()
