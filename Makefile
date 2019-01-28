@@ -9,10 +9,10 @@ SRC = src/WorshipList.py
 .PHONY: all test gui doc clean
 
 test: 
-	$(PY) $(PYFLAGS) $(SRC) false
+	$(PY) $(PYFLAGS) $(SRC)
 
 gui: 
-	$(PY) $(PYFLAGS) $(SRC) true
+	$(PY) $(PYFLAGS) $(SRC) gui
 
 doc: 
 	$(DOC) $(DOCFLAGS) $(DOCCONFIG)
@@ -22,3 +22,5 @@ all: test doc
 
 clean:
 	rm output.docx
+	rm -rf html/*
+	rm -rf latex/*

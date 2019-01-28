@@ -1,7 +1,7 @@
 ## @file   WorshipList.py
 #  @brief  Generates a worship chart from specified songs and keys.
 #  @author Samuel Crawford
-#  @date   1/25/2019
+#  @date   1/28/2019
 
 from docx import Document
 from docx.shared import Inches, Pt
@@ -33,15 +33,22 @@ def main():
 
     # Writes each song
 
-    if argv[1] == "true":
+    if "gui" in argv:
         songs, keys = songGUI()
         for i in range(4):
             doc, lineCount = writeSong(doc, lineCount, songs[i].replace(" ", ""), keys[i])
     else:
-        doc, lineCount = writeSong(doc, lineCount, "ThePassion", "D")
-        doc, lineCount = writeSong(doc, lineCount, "Anointing", "B")
-        doc, lineCount = writeSong(doc, lineCount, "OPraiseTheName", "B")
-        doc, lineCount = writeSong(doc, lineCount, "DeathWasArrested", "B")
+        # Random inputs from GUI - fix
+        doc, lineCount = writeSong(doc, lineCount, "Anointing", "A")
+        doc, lineCount = writeSong(doc, lineCount, "GreatAreYouLord", "F#")
+        doc, lineCount = writeSong(doc, lineCount, "GloriousDay", "F#")
+        doc, lineCount = writeSong(doc, lineCount, "OPraiseTheName", "E")
+
+
+        # doc, lineCount = writeSong(doc, lineCount, "ThePassion", "D")
+        # doc, lineCount = writeSong(doc, lineCount, "Anointing", "B")
+        # doc, lineCount = writeSong(doc, lineCount, "OPraiseTheName", "B")
+        # doc, lineCount = writeSong(doc, lineCount, "DeathWasArrested", "B")
     
     #doc, lineCount = writeSong(doc, lineCount, "GloriousDay", "D")
     #doc, lineCount = writeSong(doc, lineCount, "WhoYouSayIAm", "F#")

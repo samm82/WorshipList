@@ -32,10 +32,10 @@ def songGUI():
         songDialogue = [
             # Maybe InputCombo isn't the best implementation
             [sg.Text("Song                                           Key")],
-            [sg.InputCombo(songList), sg.InputText("  ", size=(5, None))],
-            [sg.InputCombo(songList), sg.InputText("  ", size=(5, None))],
-            [sg.InputCombo(songList), sg.InputText("  ", size=(5, None))],
-            [sg.InputCombo(songList), sg.InputText("  ", size=(5, None))],
+            [sg.InputCombo(songList), sg.InputText(" ", size=(5, None))],
+            [sg.InputCombo(songList), sg.InputText(" ", size=(5, None))],
+            [sg.InputCombo(songList), sg.InputText(" ", size=(5, None))],
+            [sg.InputCombo(songList), sg.InputText(" ", size=(5, None))],
             [sg.CloseButton("OK"), sg.CloseButton("Cancel")]
         ]
 
