@@ -1,9 +1,9 @@
 # WorshipList
-Last Modified: 1/25/2019
+Last Modified: 1/28/2019
 
 ## Description
 
-Every week for worship at LIFT Church, I have to manually create a chord chart for the four songs we're playing that week. This program automatically generates that chord chart. This is currently done semi-manually from the `main()` function (mainly for ease of testing), but will eventually be updated to ask for user input.
+Every week for worship at LIFT Church, I have to manually create a chord chart for the four songs we're playing that week. This program automatically generates that chord chart. This can be done by the GIU (by running `make gui`) or semi-manually from the `main()` function (mainly for ease of testing without having to enter each song/key every time).
 
 To generate documentation, run `make doc` in the directory with the Makefile. This will create two folders; the important files are html/index and latex/refman.pdf for documentation.
 
@@ -35,18 +35,25 @@ Some assumptions for how the song files are formatted:
 5) Any chords wrapped in parentheses are meant to have a smaller text size.
 
 ## Contents
-.  
-├── src/  
-│   ├── songs/  
-│   └── WorshipList.py  
-├── .gitignore  
-├── Doxyfile  
-├── Makefile  
-└── README.md  
+
+```
+.
+└── src/
+│   │   GUI.py  
+│   │   MusicData.py
+│   │   WorshipList.py
+│   │
+│   └── songs/
+│   
+│   .gitignore
+│   Doxyfile
+│   Makefile
+│   README.md
+```
 
 | Name | Description |
 |---|---|
-|src/|Source folder|
+|src/|Source folder for code and inputs|
 |.gitignore|File for Git to ignore output files|
 |Doxyfile|Configuration file for Doxygen|
 |Makefile|Contains commands for building|
