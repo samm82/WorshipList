@@ -108,8 +108,8 @@ def writeSong(doc, lineCount, fileName, oldKey):
 
     # Writes chords
 
-    for i in lines[1:]:
-        line = i.split()
+    for i in range(1, len(lines)):
+        line = lines[i].split()
 
         p = doc.add_paragraph()
 
@@ -169,9 +169,13 @@ def writeSong(doc, lineCount, fileName, oldKey):
 
         # Sets paragraph spacing
 
-        p.paragraph_format.line_spacing = Pt(36)
-        p.paragraph_format.space_after = Pt(0)
+        if i != len(lines) - 1:
+            p.paragraph_format.space_after = Pt(0)
+        else:
+            p.paragraph_format.space_after = Pt(10)
+
         p.paragraph_format.space_before = Pt(0)
+        p.paragraph_format.line_spacing = Pt(36)
 
     return doc, lineCount
 
