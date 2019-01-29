@@ -17,8 +17,10 @@ def songGUI():
         "Glorious Day",
         "Great Are You Lord",
         "Heaven Come",
+        "King Of My Heart",
         "Let There Be Light",
         "Lion and the Lamb",
+        "Love So Great",
         "O Praise the Name",
         "Resurrecting",
         "Spirit of the Living God",
@@ -58,7 +60,7 @@ def songGUI():
                     key = key[0].upper() + key[1].lower()
                 keys.append(key)
 
-        invalid = checkSongGUI(button, songs, keys)
+        invalid = checkSongGUI(button, songs, keys, file)
 
     return songs, keys, file
 
@@ -67,7 +69,7 @@ def songGUI():
 #  @param[in] songs  The song inputs.
 #  @param[in] keys   The key inputs.
 #  @return           A (verified) list of songs and their keys.
-def checkSongGUI(button, songs, keys):
+def checkSongGUI(button, songs, keys, file):
     if button == "Cancel":
         exit()
 
@@ -84,6 +86,12 @@ def checkSongGUI(button, songs, keys):
     if len(songs) != len(set(songs)):
         popupError("Each song can only be selected once.")
         return True
+
+    for char in ['/', '\\', '?', '%', '*', ':', '|', '"', '<', '>']:
+        if char in file:
+            popupError("File cannot contain any of the following characters:\n" + 
+                '               / \ ? % * : | " < > ')
+            return True
 
     return False
 
