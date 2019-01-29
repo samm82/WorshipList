@@ -5,7 +5,7 @@
 
 from docx import Document
 from docx.shared import Inches, Pt
-from docx.enum.text import WD_TAB_ALIGNMENT
+from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_TAB_ALIGNMENT
 
 from MusicData import getChord
 
@@ -26,6 +26,27 @@ def docSetup():
     font = style.font
     font.name = 'Calibri'
     font.size = Pt(28)
+
+    return doc
+
+## @brief            Writes a song title to the document.
+#  @param[in] doc    The document to write to.
+#  @param[in] title  The title to write to the document.
+#  @param[in] key    The key of the song.
+#  @return          The document.
+def writeTitle(doc, title, key):
+    p = doc.add_paragraph()
+    title = p.add_run(title.strip() + " ")
+    title.font.size = Pt(36)
+    title.underline = True
+
+    titleKey = p.add_run("(" + key + ")")
+    titleKey.font.size = Pt(20)
+    titleKey.underline = True
+
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p.paragraph_format.space_after = Pt(0)
+    p.paragraph_format.space_before = Pt(0)
 
     return doc
 

@@ -9,7 +9,7 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_BREAK, WD_LINE_SPACING, WD_TAB
 
 from sys import argv
 
-from Document import docSetup, writeLine
+from Document import docSetup, writeLine, writeTitle
 from GUI import songGUI
 from MusicData import getNotes
 
@@ -65,18 +65,7 @@ def writeSong(doc, lineCount, fileName, oldKey):
     
     # Writes title
 
-    p = doc.add_paragraph()
-    title = p.add_run(lines[0].strip() + " ")
-    title.font.size = Pt(36)
-    title.underline = True
-
-    titleKey = p.add_run("(" + key + ")")
-    titleKey.font.size = Pt(20)
-    titleKey.underline = True
-
-    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p.paragraph_format.space_after = Pt(0)
-    p.paragraph_format.space_before = Pt(0)
+    doc = writeTitle(doc, lines[0], key)
 
     # Gets list of notes from getNotes(key)
 
