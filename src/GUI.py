@@ -1,14 +1,14 @@
 ## @file   GUI.py
 #  @brief  Implements GUI for selecting songs.
 #  @author Samuel Crawford
-#  @date   1/27/2019
+#  @date   1/28/2019
 
 import PySimpleGUI as sg
 
 from MusicData import validKeys
 
-## @brief  Implements GUI for retrieving songs and keys.
-#  @return A list of songs, and a list of their keys.
+## @brief  Implements GUI for retrieving songs and keys, as well as the file name.
+#  @return A list of songs, and a list of their keys, and the file name.
 def songGUI():
     songList = [
         "Select a song...", # Default entry
@@ -36,11 +36,14 @@ def songGUI():
             [sg.InputCombo(songList), sg.InputText(" ", size=(5, None))],
             [sg.InputCombo(songList), sg.InputText(" ", size=(5, None))],
             [sg.InputCombo(songList), sg.InputText(" ", size=(5, None))],
+            [sg.Text("Enter the target file name:")],
+            [sg.InputText(" ")],
             [sg.CloseButton("OK"), sg.CloseButton("Cancel")]
         ]
 
         songWindow = sg.Window("WorshipList").Layout(songDialogue)
         button, values = songWindow.Read()
+        file = values.pop()
 
         songs, keys = [], []
         for i in range(len(values)):
@@ -55,16 +58,16 @@ def songGUI():
                     key = key[0].upper() + key[1].lower()
                 keys.append(key)
 
-        invalid = checkGUI(button, songs, keys)
+        invalid = checkSongGUI(button, songs, keys)
 
-    return songs, keys
+    return songs, keys, file
 
 ## @brief            Checks output of GUI to ensure correct outputs.
 #  @param[in] button The button input.
 #  @param[in] songs  The song inputs.
 #  @param[in] keys   The key inputs.
 #  @return           A (verified) list of songs and their keys.
-def checkGUI(button, songs, keys):
+def checkSongGUI(button, songs, keys):
     if button == "Cancel":
         exit()
 

@@ -21,16 +21,16 @@ def main():
     # Writes each song
 
     if "gui" in argv:
-        songs, keys = songGUI()
+        songs, keys, file = songGUI()
         for i in range(4):
             doc, lineCount = writeSong(doc, lineCount, songs[i].replace(" ", ""), keys[i])
+        doc.save(file + ".docx")
     else:
         doc, lineCount = writeSong(doc, lineCount, "ThePassion", "D")
         doc, lineCount = writeSong(doc, lineCount, "Anointing", "B")
         doc, lineCount = writeSong(doc, lineCount, "OPraiseTheName", "B")
         doc, lineCount = writeSong(doc, lineCount, "DeathWasArrested", "B")
-
-    doc.save('output.docx')
+        doc.save('output.docx')
 
 ## @brief               Writes a song to doc.
 #  @param[in] doc       The document being generated.
