@@ -5,9 +5,9 @@
 
 from docx import Document
 from docx.shared import Inches, Pt
-from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_TAB_ALIGNMENT
+from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_BREAK, WD_TAB_ALIGNMENT
 
-from MusicData import getChord
+from MusicData import getChord, getNotes
 
 ## @brief  Sets up an empty document.
 #  @return The document.
@@ -28,6 +28,56 @@ def docSetup():
     font.size = Pt(28)
 
     return doc
+
+## @brief               Writes a song to doc.
+#  @param[in] doc       The document being generated.
+#  @param[in] lineCount A counter of how many lines have been printed.
+#  @param[in] fileName  The name of the song file.
+#  @param[in] oldKey    The original key of the song (manipulated in function).
+#  @return              The document (doc) and line counter (lineCount).
+def writeSong(doc, lineCount, fileName, oldKey):
+    infile = open("src/songs/" + fileName + ".txt", "r")
+    lines = infile.readlines()
+    infile.close()
+
+    # Converts key to uppercase
+
+    key = oldKey[0].upper()
+    if len(oldKey) > 1:
+        key += oldKey[1]
+
+    # Adds page break if song will get cut off
+
+    newLineLength = len(lines)
+    for line in lines:
+        if "new" in line.split():
+            newLineLength += 1
+
+    lineCount += newLineLength
+
+    if lineCount > 16:
+        p = doc.add_paragraph()
+        run = p.add_run()
+        run.add_break(WD_BREAK.PAGE)
+    
+    # Writes title
+
+    doc = writeTitle(doc, lines[0], key)
+
+    # Gets list of notes from getNotes(key)
+
+    noteList = getNotes(key)
+
+    # Writes the lines with chords
+
+    for i in range(1, len(lines)):
+        line = lines[i].split()
+        end = i == len(lines) - 1
+
+        doc, newLines = writeLine(doc, line, end, noteList, fileName)
+        lineCount += newLines
+
+    return doc, lineCount
 
 ## @brief            Writes a song title to the document.
 #  @param[in] doc    The document to write to.
