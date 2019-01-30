@@ -1,16 +1,16 @@
 ## @file   WorshipList.py
 #  @brief  Generates a worship chart from specified songs and keys.
 #  @author Samuel Crawford
-#  @date   1/28/2019
+#  @date   1/29/2019
 
-from docx import Document
-from docx.shared import Inches, Pt
+from docx           import Document
+from docx.shared    import Inches, Pt
 from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_BREAK, WD_LINE_SPACING, WD_TAB_ALIGNMENT
 
 from sys import argv
 
-from Document import docSetup, writeLine, writeTitle
-from GUI import songGUI
+from Document  import docSetup, writeLine, writeTitle
+from GUI       import fileNameGUI, songGUI
 from MusicData import getNotes
 
 ## @brief The main function of the program that calls other programs.
@@ -21,7 +21,8 @@ def main():
     # Writes each song
 
     if "gui" in argv:
-        songs, keys, file = songGUI()
+        songs, keys = songGUI()
+        file = fileNameGUI()
         for i in range(4):
             doc, lineCount = writeSong(doc, lineCount, songs[i].replace(" ", ""), keys[i])
         doc.save(file + ".docx")
