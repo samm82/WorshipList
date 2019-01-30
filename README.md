@@ -1,5 +1,5 @@
 # WorshipList
-Last Modified: 1/28/2019
+Last Modified: 1/29/2019
 
 ## Description
 
@@ -39,6 +39,7 @@ Some assumptions for how the song files are formatted:
 ```
 .
 └── src/
+│   │   Document.py
 │   │   GUI.py  
 │   │   MusicData.py
 │   │   WorshipList.py
