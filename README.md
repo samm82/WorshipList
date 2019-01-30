@@ -41,8 +41,8 @@ Some assumptions for how the song files are formatted:
 └── src/
 │   │   Document.py
 │   │   GUI.py  
+│   │   Main.py
 │   │   MusicData.py
-│   │   WorshipList.py
 │   │
 │   └── songs/
 │   

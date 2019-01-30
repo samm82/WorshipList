@@ -4,7 +4,7 @@ DOC = doxygen
 DOCFLAGS = 
 DOCCONFIG = 
 
-SRC = src/WorshipList.py
+SRC = src/Main.py
 
 .PHONY: all test gui doc clean
 
