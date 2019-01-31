@@ -97,8 +97,8 @@ def popupError(string):
     songWindow = sg.Window("Error").Layout(errorDialgue)
     button, values = songWindow.Read()
 
-## @brief  Implements GUI for retrieving the file name.
-#  @return The file name.
+## @brief  Implements GUI for retrieving the date.
+#  @return The date.
 def fileNameGUI():
     invalid = True
     while invalid:
@@ -111,23 +111,29 @@ def fileNameGUI():
 
         fileWindow = sg.Window("WorshipList").Layout(fileDialogue)
         button, values = fileWindow.Read()
-        file = values[0]
+        date = values[0]
 
         if button != "OK":
             exit()
         else:
-            invalid = checkFileNameGUI(file)
+            invalid = checkFileNameGUI(date)
 
-    return file
+    return date
 
 ## @brief           Checks output of GUI to ensure correct outputs.
-#  @param[in] file  The file name.
-#  @return          True if the file name is invalid, otherwise false.
-def checkFileNameGUI(file):
-    for char in ['/', '\\', '?', '%', '*', ':', '|', '"', '<', '>']:
-        if char in file:
-            popupError("File cannot contain any of the following characters:\n" + 
-                '               / \ ? % * : | " < > ')
+#  @param[in] date  The date.
+#  @return          True if the date is invalid, otherwise false.
+def checkFileNameGUI(date):
+    for char in date:
+        if char not in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-']:
+            popupError("Characters can only be numerals or hyphens (-).")
             return True
+
+    if len(date) < 6:
+        popupError("The date must be at least six characters long.")
+        return True   
+    elif len(date) > 8:
+        popupError("The date must be at most eight characters long.")
+        return True  
 
     return False
