@@ -1,7 +1,7 @@
 ## @file   GUI.py
 #  @brief  Implements GUI for selecting songs.
 #  @author Samuel Crawford
-#  @date   1/29/2019
+#  @date   1/31/2019
 
 import PySimpleGUI as sg
 
@@ -104,7 +104,7 @@ def fileNameGUI():
     while invalid:
 
         fileDialogue = [
-            [sg.Text("Enter the target file name:")],
+            [sg.Text("Enter the date in MM-DD-YY format (eg. 2-3-19):")],
             [sg.InputText("")],
             [sg.CloseButton("OK"), sg.CloseButton("Cancel")]
         ]
