@@ -43,6 +43,7 @@ Some assumptions for how the song files are formatted:
 │   │   GUI.py  
 │   │   Main.py
 │   │   MusicData.py
+│   │   README.md  
 │   │
 │   └── songs/
 │   

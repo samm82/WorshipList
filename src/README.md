@@ -8,13 +8,14 @@ This is the source folder for the code and song input files.
 ## Contents
 
 ```
-.
-│   Document.py
+.  
+└── songs/  
+│  
+│   Document.py  
 │   GUI.py  
-│   Main.py
-│   MusicData.py
-│
-└── songs/
+│   Main.py  
+│   MusicData.py  
+│   README.md  
 ```
 
 | Name | Description |
