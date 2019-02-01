@@ -1,5 +1,4 @@
 Glorious Day
 Verse: 	 I  vi  IV  I  |  IV  I
 Chorus:  I  IV  I  IV  |  vi  IV  I
-Bridge 1: I
-Bridge 2: vi  V  IV  I
+Bridge 1: I same Bridge 2: vi  V  IV  I

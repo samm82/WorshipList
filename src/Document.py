@@ -135,6 +135,10 @@ def writeLine(doc, line, end, notes, file):
         elif chord == "new":
             run = p.add_run("\n\t")
             extraLines += 1
+        elif chord == "same":
+            run = p.add_run("|  ")
+            run, i = writeSection(p, line, "  ", i + 1)
+            iNext = False
         elif chord == "double":
             run = p.add_run("x 2  ")
         elif chord == "triple":
@@ -185,9 +189,9 @@ def writeLine(doc, line, end, notes, file):
 #  @param[in] ind  The index to be read next.
 #  @return         The paragraph and the next index.
 def writeSection(p, line, sep, ind):
-    if line[0][-1] == ":":
-        p.add_run(line[0] + sep)
+    if line[ind][-1] == ":":
+        p.add_run(line[ind] + sep)
         return p, ind + 1
     else:
-        p.add_run(line[0] + " " + line[1] + sep)
+        p.add_run(line[ind] + " " + line[ind+1] + sep)
         return p, ind + 2
