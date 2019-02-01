@@ -115,14 +115,7 @@ def writeLine(doc, line, end, notes, file):
     tab_stops = p.paragraph_format.tab_stops
     tab_stop = tab_stops.add_tab_stop(Inches(1.58), WD_TAB_ALIGNMENT.LEFT)
 
-    # Adds section name
-
-    if line[0][-1] == ":":
-        p.add_run(line[0] + "\t")
-        chordStart = 1
-    else:
-        p.add_run(line[0] + " " + line[1] + "\t")
-        chordStart = 2
+    p, chordStart = writeSection(p, line, 0)
 
     # small = 0 -> normal size
     # small = 1 -> small size
@@ -176,3 +169,16 @@ def writeLine(doc, line, end, notes, file):
     p.paragraph_format.line_spacing = Pt(36)
 
     return doc, extraLines
+
+## @brief           Writes a section name to the document.
+#  @param[in] p     The paragraph to write to.
+#  @param[in] line  The line to get the section name from.
+#  @param[in] start The index the chords start at.
+#  @return          The paragraph and the index the chords start at.
+def writeSection(p, line, start):
+    if line[0][-1] == ":":
+        p.add_run(line[0] + "\t")
+        return p, start + 1
+    else:
+        p.add_run(line[0] + " " + line[1] + "\t")
+        return p, start + 2
