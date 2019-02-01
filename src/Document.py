@@ -1,7 +1,7 @@
 ## @file   Document.py
 #  @brief  Contains functions for adding text to document.
 #  @author Samuel Crawford
-#  @date   1/28/2019
+#  @date   2/1/2019
 
 from docx import Document
 from docx.shared import Inches, Pt
@@ -115,15 +115,6 @@ def writeLine(doc, line, end, notes, file):
     tab_stops = p.paragraph_format.tab_stops
     tab_stop = tab_stops.add_tab_stop(Inches(1.58), WD_TAB_ALIGNMENT.LEFT)
 
-    # Adds section name
-
-    if line[0][-1] == ":":
-        p.add_run(line[0] + "\t")
-        chordStart = 1
-    else:
-        p.add_run(line[0] + " " + line[1] + "\t")
-        chordStart = 2
-
     # small = 0 -> normal size
     # small = 1 -> small size
     # small = 2 -> last small size
@@ -131,14 +122,23 @@ def writeLine(doc, line, end, notes, file):
     small      = 0
     extraLines = 0
 
+    # Index variable for chord
+    p, i = writeSection(p, line, "\t", 0)
+
     # Adds all chords
 
-    for chord in line[chordStart:]:
+    while i != len(line):
+        chord = line[i]
+        iNext = True
         if chord == "|":
             run = p.add_run("|  ")
         elif chord == "new":
             run = p.add_run("\n\t")
             extraLines += 1
+        elif chord == "same":
+            run = p.add_run("|  ")
+            run, i = writeSection(p, line, "  ", i + 1)
+            iNext = False
         elif chord == "double":
             run = p.add_run("x 2  ")
         elif chord == "triple":
@@ -165,6 +165,11 @@ def writeLine(doc, line, end, notes, file):
             run.font.size = Pt(22)
             small = 0
 
+        # Increments i if specified to.
+
+        if iNext:
+            i += 1
+
     # Sets paragraph spacing
 
     if end:
@@ -176,3 +181,17 @@ def writeLine(doc, line, end, notes, file):
     p.paragraph_format.line_spacing = Pt(36)
 
     return doc, extraLines
+
+## @brief          Writes a section name to the document.
+#  @param[in] p    The paragraph to write to.
+#  @param[in] line The line to get the section name from.
+#  @param[in] sep  The separator to use after the section name.
+#  @param[in] ind  The index to be read next.
+#  @return         The paragraph and the next index.
+def writeSection(p, line, sep, ind):
+    if line[ind][-1] == ":":
+        p.add_run(line[ind] + sep)
+        return p, ind + 1
+    else:
+        p.add_run(line[ind] + " " + line[ind+1] + sep)
+        return p, ind + 2

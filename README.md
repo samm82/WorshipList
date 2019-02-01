@@ -1,5 +1,5 @@
 # WorshipList
-Last Modified: 1/31/2019
+Last Modified: 2/1/2019
 
 ## Description
 
@@ -23,6 +23,7 @@ The song files also contain some custom symbols that are shorthand for some key 
 |double|"x 2"|
 |triple|"x 3"|
 |new|Splits a line into two lines, preserving tab stops|
+|same|Denotes that two sections should appear on the same line|
 |/|Denotes a chord over a bass note (with proper spacing)|
 |(|"(" and denotes beginning of small text|
 |)|")" and denotes end of small text|
