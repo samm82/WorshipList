@@ -115,8 +115,6 @@ def writeLine(doc, line, end, notes, file):
     tab_stops = p.paragraph_format.tab_stops
     tab_stop = tab_stops.add_tab_stop(Inches(1.58), WD_TAB_ALIGNMENT.LEFT)
 
-    p, chordStart = writeSection(p, line, "\t", 0)
-
     # small = 0 -> normal size
     # small = 1 -> small size
     # small = 2 -> last small size
@@ -124,9 +122,14 @@ def writeLine(doc, line, end, notes, file):
     small      = 0
     extraLines = 0
 
+    # Index variable for chord
+    p, i = writeSection(p, line, "\t", 0)
+
     # Adds all chords
 
-    for chord in line[chordStart:]:
+    while i != len(line):
+        chord = line[i]
+        iNext = True
         if chord == "|":
             run = p.add_run("|  ")
         elif chord == "new":
@@ -158,6 +161,11 @@ def writeLine(doc, line, end, notes, file):
             run.font.size = Pt(22)
             small = 0
 
+        # Increments i if specified to.
+
+        if iNext:
+            i += 1
+
     # Sets paragraph spacing
 
     if end:
@@ -170,16 +178,16 @@ def writeLine(doc, line, end, notes, file):
 
     return doc, extraLines
 
-## @brief           Writes a section name to the document.
-#  @param[in] p     The paragraph to write to.
-#  @param[in] line  The line to get the section name from.
-#  @param[in] sep   The separator to use after the section name.
-#  @param[in] start The index the chords start at.
-#  @return          The paragraph and the index the chords start at.
-def writeSection(p, line, sep, start):
+## @brief          Writes a section name to the document.
+#  @param[in] p    The paragraph to write to.
+#  @param[in] line The line to get the section name from.
+#  @param[in] sep  The separator to use after the section name.
+#  @param[in] ind  The index to be read next.
+#  @return         The paragraph and the next index.
+def writeSection(p, line, sep, ind):
     if line[0][-1] == ":":
         p.add_run(line[0] + sep)
-        return p, start + 1
+        return p, ind + 1
     else:
         p.add_run(line[0] + " " + line[1] + sep)
-        return p, start + 2
+        return p, ind + 2
