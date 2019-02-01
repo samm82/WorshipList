@@ -3,9 +3,12 @@
 #  @author Samuel Crawford
 #  @date   1/26/2019
 
+## @brief   Exception for if a file is incorrectly formatted (invalid chord).
 class FileError(Exception):
     pass
 
+## @brief   Exception for an invalid parameter (key).
+#  @details GUI automatically checks this - only used when not using GUI.
 class ParamError(Exception):
     pass
 
