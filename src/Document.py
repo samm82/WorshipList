@@ -1,7 +1,7 @@
 ## @file   Document.py
 #  @brief  Contains functions for adding text to document.
 #  @author Samuel Crawford
-#  @date   1/28/2019
+#  @date   2/1/2019
 
 from docx import Document
 from docx.shared import Inches, Pt
@@ -115,7 +115,7 @@ def writeLine(doc, line, end, notes, file):
     tab_stops = p.paragraph_format.tab_stops
     tab_stop = tab_stops.add_tab_stop(Inches(1.58), WD_TAB_ALIGNMENT.LEFT)
 
-    p, chordStart = writeSection(p, line, 0)
+    p, chordStart = writeSection(p, line, "\t", 0)
 
     # small = 0 -> normal size
     # small = 1 -> small size
@@ -173,12 +173,13 @@ def writeLine(doc, line, end, notes, file):
 ## @brief           Writes a section name to the document.
 #  @param[in] p     The paragraph to write to.
 #  @param[in] line  The line to get the section name from.
+#  @param[in] sep   The separator to use after the section name.
 #  @param[in] start The index the chords start at.
 #  @return          The paragraph and the index the chords start at.
-def writeSection(p, line, start):
+def writeSection(p, line, sep, start):
     if line[0][-1] == ":":
-        p.add_run(line[0] + "\t")
+        p.add_run(line[0] + sep)
         return p, start + 1
     else:
-        p.add_run(line[0] + " " + line[1] + "\t")
+        p.add_run(line[0] + " " + line[1] + sep)
         return p, start + 2
