@@ -1,7 +1,7 @@
 ## @file   GUI.py
 #  @brief  Implements GUI for selecting songs.
 #  @author Samuel Crawford
-#  @date   1/31/2019
+#  @date   2/2/2019
 
 import PySimpleGUI as sg
 
@@ -16,7 +16,10 @@ def songGUI():
         "Death Was Arrested",
         "Glorious Day",
         "Great Are You Lord",
+        "Hallelujah Here Below",
         "Heaven Come",
+        "I Will Boast in Christ",
+        "Jesus We Love You",
         "King Of My Heart",
         "Let There Be Light",
         "Lion and the Lamb",
@@ -25,6 +28,7 @@ def songGUI():
         "Resurrecting",
         "Spirit of the Living God",
         "The Passion",
+        "What A Beautiful Name",
         "Who You Say I Am"
     ]
 

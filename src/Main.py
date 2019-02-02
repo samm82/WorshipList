@@ -22,10 +22,15 @@ def main():
             doc, lineCount = writeSong(doc, lineCount, songs[i].replace(" ", ""), keys[i])
         doc.save("C:\\Users\\samcr\\OneDrive\\Documents\\LIFT\\LIFT Worship " + date + ".docx")
     else:
-        doc, lineCount = writeSong(doc, lineCount, "GloriousDay", "D")
-        doc, lineCount = writeSong(doc, lineCount, "Anointing", "B")
-        doc, lineCount = writeSong(doc, lineCount, "LetThereBeLight", "B")
-        doc, lineCount = writeSong(doc, lineCount, "ThePassion", "B")
+        doc, lineCount = writeSong(doc, lineCount, "JesusWeLoveYou", "B")
+        doc, lineCount = writeSong(doc, lineCount, "HallelujahHereBelow", "C")
+        doc, lineCount = writeSong(doc, lineCount, "WhatABeautifulName", "D")
+        doc, lineCount = writeSong(doc, lineCount, "IWillBoastInChrist", "A")
+
+        # doc, lineCount = writeSong(doc, lineCount, "GloriousDay", "D")
+        # doc, lineCount = writeSong(doc, lineCount, "Anointing", "B")
+        # doc, lineCount = writeSong(doc, lineCount, "LetThereBeLight", "B")
+        # doc, lineCount = writeSong(doc, lineCount, "ThePassion", "B")
         doc.save('output.docx')
 
 main()

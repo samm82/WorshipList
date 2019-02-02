@@ -1,7 +1,7 @@
 ## @file   Document.py
 #  @brief  Contains functions for adding text to document.
 #  @author Samuel Crawford
-#  @date   2/1/2019
+#  @date   2/2/2019
 
 from docx import Document
 from docx.shared import Inches, Pt
@@ -53,12 +53,13 @@ def writeSong(doc, lineCount, fileName, oldKey):
         if "new" in line.split():
             newLineLength += 1
 
-    lineCount += newLineLength
-
-    if lineCount > 16:
+    if lineCount + newLineLength > 16:
         p = doc.add_paragraph()
         run = p.add_run()
         run.add_break(WD_BREAK.PAGE)
+        lineCount = newLineLength
+    else:
+        lineCount += newLineLength
     
     # Writes title
 
@@ -146,6 +147,10 @@ def writeLine(doc, line, end, notes, file):
         elif "/" in chord:
             newChord = chord[:-1]
             run = p.add_run(getChord(notes, newChord, file) + "/")
+        elif "(" in chord and ")" in chord:
+            newChord = chord[1:-1]
+            run = p.add_run("(" + getChord(notes, newChord, file) + ")  ")
+            small = 2
         elif "(" in chord:
             newChord = chord[1:]
             run = p.add_run("(" + getChord(notes, newChord, file) + "  ")
@@ -191,7 +196,10 @@ def writeLine(doc, line, end, notes, file):
 def writeSection(p, line, sep, ind):
     if line[ind][-1] == ":":
         p.add_run(line[ind] + sep)
-        return p, ind + 1
-    else:
+        return p, ind + 1 
+    elif line[ind+1][-1] == ":":
         p.add_run(line[ind] + " " + line[ind+1] + sep)
         return p, ind + 2
+    else:
+        p.add_run(line[ind] + " " + line[ind+1] + " " + line[ind+2] + sep)
+        return p, ind + 3
