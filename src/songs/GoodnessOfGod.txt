@@ -1,4 +1,4 @@
 Goodness of God
-Verse:  I IV I V/ VII | vi IV V new vi IV I V/ VII | vi IV V I
-Chorus: IV I | IV I V new IV I V/ VII | vi IV V I
-Bridge: I/ III IV V (vi) I
+Verse:  I IV I V/ VII | vi IV V new vi IV I V/ VII vi | IV V I
+Chorus: IV I | IV I V new IV I V/ VII vi | IV V I
+Bridge: I/ III IV V I (vi)
