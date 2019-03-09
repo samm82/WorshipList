@@ -1,7 +1,7 @@
 ## @file   GUI.py
 #  @brief  Implements GUI for selecting songs.
 #  @author Samuel Crawford
-#  @date   3/2/2019
+#  @date   3/9/2019
 
 import PySimpleGUI as sg
 
@@ -13,9 +13,11 @@ def songGUI():
     songList = [
         "Select a song...", # Default entry
         "Anointing",
+        "Build My Life",
         "Death Was Arrested",
         "Glorious Day",
         "God, You're So Good",
+        "Goodness of God",
         "Great Are You Lord",
         "Hallelujah Here Below",
         "Heaven Come",
