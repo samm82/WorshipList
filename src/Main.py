@@ -1,7 +1,7 @@
 ## @file   WorshipList.py
 #  @brief  Generates a worship chart from specified songs and keys.
 #  @author Samuel Crawford
-#  @date   3/2/2019
+#  @date   5/10/2019
 
 from sys import argv
 
@@ -19,16 +19,16 @@ def main():
         songs, keys = songGUI()
         date = fileNameGUI()
         for i in range(4):
-            songFile = songs[i].replace(" ", "")
-            songFile = songFile.replace(",", "")
-            songFile = songFile.replace("'", "")
+            songFile = songs[i]
+            for char in [' ', ',', "'", "(", ")"]:
+                songFile = songFile.replace(char, "")
             doc, lineCount = writeSong(doc, lineCount, songFile, keys[i])
         doc.save("C:\\Users\\samcr\\OneDrive\\Documents\\LIFT\\LIFT Worship " + date + ".docx")
     else:
         doc, lineCount = writeSong(doc, lineCount, "JesusWeLoveYou", "B")
         doc, lineCount = writeSong(doc, lineCount, "HallelujahHereBelow", "C")
         doc, lineCount = writeSong(doc, lineCount, "WhatABeautifulName", "D")
-        doc, lineCount = writeSong(doc, lineCount, "IWillBoastInChrist", "A")
+        doc, lineCount = writeSong(doc, lineCount, "WholeHeartHoldMeNow", "E")
 
         # doc, lineCount = writeSong(doc, lineCount, "GloriousDay", "D")
         # doc, lineCount = writeSong(doc, lineCount, "Anointing", "B")
