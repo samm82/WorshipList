@@ -112,7 +112,7 @@ def fileNameGUI():
     while invalid:
 
         fileDialogue = [
-            [sg.Text("Enter the date in MM-DD-YY format (eg. 2-3-19):")],
+            [sg.Text("Enter the date in MM-DD-YY format (eg. 2-13-19):")],
             [sg.InputText("")],
             [sg.CloseButton("OK"), sg.CloseButton("Cancel")]
         ]
