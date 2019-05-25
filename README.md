@@ -11,8 +11,7 @@ would like.
 To generate documentation, run `make doc` in the directory with the Makefile. This will create two folders; the important files are html/index 
 and latex/refman.pdf for documentation.
 
-NOTE: Making with the GUI currently uses an absolute file path in `Main.py` on my system - if you are using this program, you will have to modify 
-it.
+NOTE: Making the documents currently uses an absolute file path in `Main.py` on my system - if you are using this program, you will have to modify the path(s).
 
 ## Song Files
 
