@@ -1,7 +1,7 @@
 ## @file   GUI.py
 #  @brief  Implements GUI for selecting songs.
 #  @author Samuel Crawford
-#  @date   5/10/2019
+#  @date   6/1/2019
 
 import PySimpleGUI as sg
 
@@ -21,6 +21,7 @@ def songGUI():
         "Great Are You Lord",
         "Hallelujah Here Below",
         "Heaven Come",
+        "Holy Spirit",
         "I Will Boast in Christ",
         "Jesus We Love You",
         "King Of My Heart",
