@@ -1,17 +1,15 @@
 # WorshipList
-Last Modified: 3/17/2019
+Last Modified: 6/1/2019
 
 ## Description
 
 Every week for worship at LIFT Church, I have to create a chord chart for the four songs we're playing that week. This program automatically 
-generates that chord chart. This can be done by the GUI (by running `make gui`) or semi-manually from the `main()` function (by running `make`). 
-Semi-manually generating the document is mainly for ease of testing without having to enter each song/key every time, but can be used if you 
-would like.
+generates that chord chart. This is done by a GUI, by running `make`.
 
 To generate documentation, run `make doc` in the directory with the Makefile. This will create two folders; the important files are html/index 
 and latex/refman.pdf for documentation.
 
-NOTE: Making the documents currently uses an absolute file path in `Main.py` on my system - if you are using this program, you will have to modify the path(s).
+NOTE: Making the documents currently uses an absolute file path in `Main.py` on my system - if you are using this program, you will have to modify the path.
 
 ## Song Files
 

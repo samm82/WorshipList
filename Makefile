@@ -6,13 +6,10 @@ DOCCONFIG =
 
 SRC = src/Main.py
 
-.PHONY: all test gui doc clean
+.PHONY: all test doc clean
 
 test: 
 	$(PY) $(PYFLAGS) $(SRC)
-
-gui: 
-	$(PY) $(PYFLAGS) $(SRC) gui
 
 doc: 
 	$(DOC) $(DOCFLAGS) $(DOCCONFIG)
@@ -22,5 +19,6 @@ all: test doc
 
 clean:
 	rm output.docx
+	rm output.pdf
 	rm -rf html/*
 	rm -rf latex/*
