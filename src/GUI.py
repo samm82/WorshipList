@@ -28,6 +28,7 @@ def songGUI():
         "Let There Be Light",
         "Lion and the Lamb",
         "Love So Great",
+        "O Come to the Altar",
         "O Praise the Name",
         "Resurrecting",
         "Spirit of the Living God",
