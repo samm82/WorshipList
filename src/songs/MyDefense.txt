@@ -1,0 +1,4 @@
+My Defense
+Verse:  I vi IV V
+Chorus: I vi IV I
+Bridge: IV | vi V triple IV vi | V

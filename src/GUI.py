@@ -28,6 +28,7 @@ def songGUI():
         "Let There Be Light",
         "Lion and the Lamb",
         "Love So Great",
+        "My Defense",
         "O Come to the Altar",
         "O Praise the Name",
         "Resurrecting",
@@ -35,7 +36,8 @@ def songGUI():
         "The Passion",
         "What A Beautiful Name",
         "Who You Say I Am",
-        "Whole Heart (Hold Me Now)"
+        "Whole Heart (Hold Me Now)",
+        "Your Promises"
     ]
 
     invalid = True
