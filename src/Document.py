@@ -1,7 +1,7 @@
 ## @file   Document.py
 #  @brief  Contains functions for adding text to document.
 #  @author Samuel Crawford
-#  @date   5/25/2019
+#  @date   9/7/2019
 
 import comtypes.client
 
@@ -66,7 +66,7 @@ def writeSong(doc, lineCount, fileName, oldKey):
         if "new" in line.split():
             newLineLength += 1
 
-    if lineCount + newLineLength > 16:
+    if lineCount + newLineLength > 15:
         p = doc.add_paragraph()
         run = p.add_run()
         run.add_break(WD_BREAK.PAGE)

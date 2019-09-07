@@ -1,7 +1,7 @@
 ## @file   GUI.py
 #  @brief  Implements GUI for selecting songs.
 #  @author Samuel Crawford
-#  @date   8/15/2019
+#  @date   9/7/2019
 
 import PySimpleGUI as sg
 
@@ -22,6 +22,7 @@ def songGUI():
         "Hallelujah Here Below",
         "Heaven Come",
         "Here As In Heaven",
+        "Holy Ground",
         "Holy Spirit",
         "I Will Boast in Christ",
         "Jesus We Love You",
@@ -32,6 +33,7 @@ def songGUI():
         "My Defense",
         "O Come to the Altar",
         "O Praise the Name",
+        "On Earth as in Heaven",
         "Resurrecting",
         "Spirit of the Living God",
         "The Passion",
