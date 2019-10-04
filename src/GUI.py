@@ -1,7 +1,7 @@
 ## @file   GUI.py
 #  @brief  Implements GUI for selecting songs.
 #  @author Samuel Crawford
-#  @date   9/7/2019
+#  @date   10/4/2019
 
 import PySimpleGUI as sg
 
@@ -12,6 +12,7 @@ from MusicData import validKeys
 def songGUI():
     songList = [
         "Select a song...", # Default entry
+        "Alleluia",
         "Anointing",
         "Build My Life",
         "Death Was Arrested",
@@ -31,6 +32,7 @@ def songGUI():
         "Lion and the Lamb",
         "Love So Great",
         "My Defense",
+        "Not Afraid",
         "O Come to the Altar",
         "O Praise the Name",
         "On Earth as in Heaven",
