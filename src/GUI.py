@@ -1,7 +1,7 @@
 ## @file   GUI.py
 #  @brief  Implements GUI for selecting songs.
 #  @author Samuel Crawford
-#  @date   10/4/2019
+#  @date   11/9/2019
 
 import PySimpleGUI as sg
 
@@ -30,6 +30,7 @@ def songGUI():
         "King Of My Heart",
         "Let There Be Light",
         "Lion and the Lamb",
+        "Living Hope",
         "Love So Great",
         "My Defense",
         "Not Afraid",
