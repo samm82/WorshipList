@@ -40,8 +40,8 @@ def validKeys():
 def getNotes(key):
     # Defines standard lists
 
-    notesSharp = ['F','F#','G','G#','A','A#','B','C','C#','D','D#','E','F','F#','G','G#','A','A#','B','C','C#','D','D#','E']
-    notesFlat  = ['F','Gb','G','Ab','A','Bb','B','C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B','C','Db','D','Eb','E']
+    notesSharp = ['F','F#','G','G#','A','A#','B','C','C#','D','D#','E'] * 2
+    notesFlat  = ['F','Gb','G','Ab','A','Bb','B','C','Db','D','Eb','E'] * 2
 
     # Checks if key is valid
 
