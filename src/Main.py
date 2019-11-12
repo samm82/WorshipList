@@ -5,6 +5,7 @@
 
 from Document  import docSetup, pdfWrite, writeSong
 from GUI       import fileNameGUI, songGUI
+from Helpers   import fileNameProcess
 
 ## @brief The main function of the program that calls other programs.
 def main():
@@ -18,9 +19,7 @@ def main():
     songs, keys = songGUI()
     date = fileNameGUI()
     for i in range(4):
-        songName, songFile = songs[i], songs[i]
-        for char in [' ', ',', "'", "(", ")"]:
-            songFile = songFile.replace(char, "")
+        songName, songFile = songs[i], fileNameProcess(songs[i])
         doc, lineCount = writeSong(doc, lineCount, songFile, keys[i])
         print("Wrote", songName + ".")
     file = "C:\\Users\\samcr\\OneDrive\\Documents\\LIFT\\LIFT Worship " + date

@@ -1,7 +1,7 @@
-## @file   MusicData.py
-#  @brief  Contains helper functions for getting list of notes in key and chords.
+## @file   Helpers.py
+#  @brief  Contains helper functions for the modules.
 #  @author Samuel Crawford
-#  @date   1/26/2019
+#  @date   11/11/2019
 
 ## @brief   Exception for if a file is incorrectly formatted (invalid chord).
 class FileError(Exception):
@@ -11,6 +11,22 @@ class FileError(Exception):
 #  @details GUI automatically checks this - only used when not using GUI.
 class ParamError(Exception):
     pass
+
+## @brief  Processes a file name string.
+#  @return The processed file name.
+def fileNameProcess(string):
+    words = string.split()
+
+    for i in range(len(words)):
+        if words[i][0] == "(":
+            words[i] = "(" + words[i][1].upper() + words[i][2:].lower()
+        else:
+            words[i] = words[i][0].upper() + words[i][1:].lower()
+
+    fileName = "".join(words)
+    for char in [' ', ',', "'", "\\", "/", ":", "*", "?", "\"", "<", ">", "|"]:
+        fileName = fileName.replace(char, "")
+    return fileName
 
 ## @brief  Gets a list of valid keys.
 #  @return A list of valid keys.

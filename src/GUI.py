@@ -1,11 +1,11 @@
 ## @file   GUI.py
 #  @brief  Implements GUI for selecting songs.
 #  @author Samuel Crawford
-#  @date   11/9/2019
+#  @date   11/11/2019
 
 import PySimpleGUI as sg
 
-from MusicData import validKeys
+from Helpers import fileNameProcess, validKeys
 
 ## @brief  Implements GUI for retrieving songs and keys.
 #  @return A list of songs, and a list of their keys.
@@ -56,14 +56,16 @@ def songGUI():
             [sg.InputCombo(songList), sg.InputText("", size=(5, None))],
             [sg.InputCombo(songList), sg.InputText("", size=(5, None))],
             [sg.InputCombo(songList), sg.InputText("", size=(5, None))],
-            [sg.CloseButton("OK"), sg.CloseButton("Cancel")]
+            [sg.CloseButton("OK"), sg.CloseButton("Add a Song"), sg.CloseButton("Cancel")]
         ]
 
         songWindow = sg.Window("WorshipList").Layout(songDialogue)
         button, values = songWindow.Read()
 
-        if button != "OK":
+        if button == "Cancel":
             exit()
+        elif button == "Add a Song":
+            addSongGUI()
         else:
             songs, keys = [], []
             for i in range(len(values)):
@@ -81,6 +83,34 @@ def songGUI():
             invalid = checkSongGUI(songs, keys)
 
     return songs, keys
+
+## @brief   Adds a blank song file.
+def addSongGUI():
+    while True:
+
+        songDialogue = [
+            [sg.Text("Enter the name of the new song:")],
+            [sg.InputText("")],
+            [sg.CloseButton("OK"), sg.CloseButton("Cancel")]
+        ]
+
+        songWindow = sg.Window("WorshipList").Layout(songDialogue)
+        button, values = songWindow.Read()
+        songName = values[0]
+
+        if button == "Cancel":
+            songGUI()
+        else:
+            # Try to write blank song file
+            filePath = "src\\songs\\" + fileNameProcess(songName) + ".txt"
+            try:
+                file = open(filePath, "r")
+                file.close()
+                popupError("Song file already exists.")
+            except:
+                file = open(filePath, "w")
+                file.close()
+                break
 
 ## @brief            Checks output of GUI to ensure correct outputs.
 #  @param[in] songs  The song inputs.
@@ -103,7 +133,7 @@ def checkSongGUI(songs, keys):
 
     return False
 
-## @brief            Defines an error popup that signifies incorrec input.
+## @brief            Defines an error popup that signifies incorrect input.
 #  @param[in] string The error string to be printed in dialogue box.
 #  @return           A (verified) list of songs and their keys.
 def popupError(string):

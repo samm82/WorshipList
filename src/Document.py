@@ -9,7 +9,7 @@ from docx import Document
 from docx.shared import Inches, Pt
 from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_BREAK, WD_TAB_ALIGNMENT
 
-from MusicData import getChord, getNotes
+from Helpers import getChord, getNotes
 
 ## @brief              Outputs a .pdf from a .docx file.
 #  @param[in] fileName The file of the .pdf and the .docx file.
