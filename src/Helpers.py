@@ -28,6 +28,19 @@ def fileNameProcess(string):
         fileName = fileName.replace(char, "")
     return fileName
 
+## @brief  Processes a song name string.
+#  @return The processed song name.
+def songNameProcess(string):
+    words = string.split()
+
+    for i in range(len(words)):
+        if words[i][0] == "(":
+            words[i] = "(" + words[i][1].upper() + words[i][2:].lower()
+        else:
+            words[i] = words[i][0].upper() + words[i][1:].lower()
+
+    return " ".join(words)
+
 ## @brief  Gets a list of valid keys.
 #  @return A list of valid keys.
 def validKeys():

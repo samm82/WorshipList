@@ -5,49 +5,18 @@
 
 import PySimpleGUI as sg
 
-from Helpers import fileNameProcess, validKeys
+from Helpers import fileNameProcess, songNameProcess, validKeys
 
 ## @brief  Implements GUI for retrieving songs and keys.
 #  @return A list of songs, and a list of their keys.
 def songGUI():
-    songList = [
-        "Select a song...", # Default entry
-        "Alleluia",
-        "Anointing",
-        "Build My Life",
-        "Death Was Arrested",
-        "Glorious Day",
-        "God, You're So Good",
-        "Goodness of God",
-        "Great Are You Lord",
-        "Hallelujah Here Below",
-        "Heaven Come",
-        "Here As In Heaven",
-        "Holy Ground",
-        "Holy Spirit",
-        "I Will Boast in Christ",
-        "Jesus We Love You",
-        "King Of My Heart",
-        "Let There Be Light",
-        "Lion and the Lamb",
-        "Living Hope",
-        "Love So Great",
-        "My Defense",
-        "Not Afraid",
-        "O Come to the Altar",
-        "O Praise the Name",
-        "On Earth as in Heaven",
-        "Resurrecting",
-        "Spirit of the Living God",
-        "The Passion",
-        "What A Beautiful Name",
-        "Who You Say I Am",
-        "Whole Heart (Hold Me Now)",
-        "Your Promises"
-    ]
-
     invalid = True
     while invalid:
+        # Read list of songs from file
+        file = open("src\\SongList.txt", "r")
+        songsFromFile = file.readlines()
+        file.close()
+        songList = ["Select a song..."] + songsFromFile
 
         songDialogue = [
             # Maybe InputCombo isn't the best implementation
@@ -109,6 +78,15 @@ def addSongGUI():
                 popupError("Song file already exists.")
             except:
                 file = open(filePath, "w")
+                file.close()
+
+                # Add to song list
+                file = open("src\\SongList.txt", "r+")
+                songs = file.readlines()
+                songs.append(songNameProcess(songName) + "\n")
+                songs.sort()
+                file.seek(0)
+                file.writelines(songs)
                 file.close()
                 break
 
