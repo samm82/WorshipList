@@ -77,13 +77,15 @@ def addSongGUI():
                 file.close()
                 popupError("Song file already exists.")
             except:
+                songName = songNameProcess(songName)
                 file = open(filePath, "w")
+                file.write(songName)
                 file.close()
 
                 # Add to song list
                 file = open("src\\SongList.txt", "r+")
                 songs = file.readlines()
-                songs.append(songNameProcess(songName) + "\n")
+                songs.append(songName + "\n")
                 songs.sort()
                 file.seek(0)
                 file.writelines(songs)
