@@ -1,7 +1,7 @@
 ## @file   WorshipList.py
 #  @brief  Generates a worship chart from specified songs and keys.
 #  @author Samuel Crawford
-#  @date   11/11/2019
+#  @date   11/14/2019
 
 from Document  import docSetup, pdfWrite, writeSong
 from GUI       import fileNameGUI, songGUI
@@ -22,13 +22,23 @@ def main():
         songName, songFile = songNameProcess(songs[i]), fileNameProcess(songs[i])
         doc, lineCount = writeSong(doc, lineCount, songFile, keys[i])
         print("Wrote", songName + ".")
-    file = "C:\\Users\\samcr\\OneDrive\\Documents\\LIFT\\LIFT Worship " + date
+
+    # Get output file directory from file
+    f = open("src\\Settings.txt", "r")
+    path = f.read().strip()
+    f.close()
+
+    file = path + "LIFT Worship " + date
 
     print()
 
     # Saves document as .docx
-    doc.save(file + ".docx")
-    print("Chord sheet saved as docx.")
+    try:
+        doc.save(file + ".docx")
+        print("Chord sheet saved as docx.")
+    except:
+        print("Can't find file path " + file)
+        print("Make sure your file path is correct in Settings.txt")
     
     # Saves document as .pdf
     pdfWrite(file)
