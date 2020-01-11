@@ -1,9 +1,9 @@
 ## @file   Document.py
 #  @brief  Contains functions for adding text to document.
 #  @author Samuel Crawford
-#  @date   9/7/2019
+#  @date   1/11/2020
 
-import comtypes.client
+import win32com.client
 
 from docx import Document
 from docx.shared import Inches, Pt
@@ -14,7 +14,7 @@ from Helpers import getChord, getNotes
 ## @brief              Outputs a .pdf from a .docx file.
 #  @param[in] fileName The file of the .pdf and the .docx file.
 def pdfWrite(fileName):
-    word = comtypes.client.CreateObject('Word.Application')
+    word = win32com.client.DispatchEx('Word.Application')
     doc  = word.Documents.Open(fileName + ".docx")
 
     doc.SaveAs(fileName + ".pdf", FileFormat=17)
