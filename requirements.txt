@@ -1,4 +1,4 @@
+pywin32==227
 python_docx==0.8.10
-comtypes==1.1.7
-PySimpleGUI==3.33.0
+PySimpleGUI==4.15.1
 docx==0.2.4
