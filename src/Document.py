@@ -1,7 +1,7 @@
 ## @file   Document.py
 #  @brief  Contains functions for adding text to document.
 #  @author Samuel Crawford
-#  @date   1/11/2020
+#  @date   1/14/2020
 
 import win32com.client
 
@@ -88,16 +88,15 @@ def writeSong(doc, lineCount, fileName, oldKey):
         line = lines[i].split()
         end = i == len(lines) - 1
 
-        doc, newLines = writeLine(doc, line, end, noteList, fileName)
-        lineCount += newLines
+        doc = writeLine(doc, line, end, noteList, fileName)
 
-    return doc, lineCount
+    return doc
 
 ## @brief            Writes a song title to the document.
 #  @param[in] doc    The document to write to.
 #  @param[in] title  The title to write to the document.
 #  @param[in] key    The key of the song.
-#  @return          The document.
+#  @return           The document.
 def writeTitle(doc, title, key):
     p = doc.add_paragraph()
     title = p.add_run(title.strip() + " ")
@@ -133,8 +132,7 @@ def writeLine(doc, line, end, notes, file):
     # small = 1 -> small size
     # small = 2 -> last small size
 
-    small      = 0
-    extraLines = 0
+    small = 0
 
     # Index variable for chord
     p, i = writeSection(p, line, "\t", 0)
@@ -148,7 +146,6 @@ def writeLine(doc, line, end, notes, file):
             run = p.add_run("|  ")
         elif chord == "new":
             run = p.add_run("\n\t")
-            extraLines += 1
         elif chord == "same":
             run = p.add_run("|  ")
             run, i = writeSection(p, line, "  ", i + 1)
@@ -198,7 +195,7 @@ def writeLine(doc, line, end, notes, file):
     p.paragraph_format.space_before = Pt(0)
     p.paragraph_format.line_spacing = Pt(36)
 
-    return doc, extraLines
+    return doc
 
 ## @brief          Writes a section name to the document.
 #  @param[in] p    The paragraph to write to.
