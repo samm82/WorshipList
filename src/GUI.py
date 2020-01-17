@@ -6,6 +6,7 @@
 import PySimpleGUI as sg
 
 from pathvalidate import is_valid_filename
+from datetime import date, timedelta
 
 from Helpers import fileNameProcess, songNameProcess, validKeys
 
@@ -145,7 +146,9 @@ def fileNameGUI():
         if button == "Cancel":
             exit()
         elif button == "Use Next Sunday":
-            return "LIFT Worship " + nextSunday()
+            # Gets the next Sunday and formats it appropriately
+            nextSunday = (date.today() + timedelta(days=(6-date.today().weekday())%7))
+            return "LIFT Worship " + nextSunday.strftime("%F")
         elif checkFileName(fileName):
             return fileName
         else:
