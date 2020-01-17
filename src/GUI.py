@@ -1,9 +1,11 @@
 ## @file   GUI.py
 #  @brief  Implements GUI for selecting songs.
 #  @author Samuel Crawford
-#  @date   11/11/2019
+#  @date   1/17/2020
 
 import PySimpleGUI as sg
+
+from pathvalidate import is_valid_filename
 
 from Helpers import fileNameProcess, songNameProcess, validKeys
 
@@ -125,43 +127,36 @@ def popupError(string):
     songWindow = sg.Window("Error").Layout(errorDialgue)
     button, values = songWindow.Read()
 
-## @brief  Implements GUI for retrieving the date.
-#  @return The date.
+## @brief  Implements GUI for retrieving the file name.
+#  @return The file name.
 def fileNameGUI():
-    invalid = True
-    while invalid:
+    while True:
 
         fileDialogue = [
-            [sg.Text("Enter the date in MM-DD-YY format (eg. 2-13-19):")],
+            [sg.Text("Enter a filename:")],
             [sg.InputText("")],
-            [sg.CloseButton("OK"), sg.CloseButton("Cancel")]
+            [sg.CloseButton("OK"), sg.CloseButton("Use Next Sunday"), sg.CloseButton("Cancel")]
         ]
 
         fileWindow = sg.Window("WorshipList").Layout(fileDialogue)
         button, values = fileWindow.Read()
-        date = values[0]
+        fileName = values[0]
 
-        if button != "OK":
+        if button == "Cancel":
             exit()
+        elif button == "Use Next Sunday":
+            return "LIFT Worship " + nextSunday()
+        elif checkFileName(fileName):
+            return fileName
         else:
-            invalid = checkFileNameGUI(date)
+            popupError("Invalid file name. Try again.")
 
-    return date
+## @brief           Checks a file name to ensure it is valid.
+#  @param[in] name  The file name.
+#  @return          True if the name is valid, otherwise False.
+def checkFileName(name):
+    if name in ['CON', 'PRN', 'AUX', 'NUL', 'COM1', 'COM2', 'COM3', 'COM4', 'COM5', 'COM6',
+        'COM7', 'COM8', 'COM9', 'LPT1', 'LPT2', 'LPT3', 'LPT4', 'LPT5', 'LPT6', 'LPT7', 'LPT8', 'LPT9']:
+        return False
 
-## @brief           Checks output of GUI to ensure correct outputs.
-#  @param[in] date  The date.
-#  @return          True if the date is invalid, otherwise false.
-def checkFileNameGUI(date):
-    for char in date:
-        if char not in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-']:
-            popupError("Characters can only be numerals or hyphens (-).")
-            return True
-
-    if len(date) < 6:
-        popupError("The date must be at least six characters long.")
-        return True   
-    elif len(date) > 8:
-        popupError("The date must be at most eight characters long.")
-        return True  
-
-    return False
+    return is_valid_filename(name)

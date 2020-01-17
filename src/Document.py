@@ -90,7 +90,7 @@ def writeSong(doc, lineCount, fileName, oldKey):
 
         doc = writeLine(doc, line, end, noteList, fileName)
 
-    return doc
+    return doc, lineCount
 
 ## @brief            Writes a song title to the document.
 #  @param[in] doc    The document to write to.
