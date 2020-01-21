@@ -1,5 +1,5 @@
 # WorshipList
-Last Modified: 6/1/2019
+Last Modified: 1/21/2020
 
 ## Description
 
@@ -59,6 +59,7 @@ Some assumptions for how the song files are formatted:
 │   Doxyfile
 │   Makefile
 │   README.md
+|   requirements.txt
 ```
 
 | Name | Description |
@@ -68,3 +69,4 @@ Some assumptions for how the song files are formatted:
 |Doxyfile|Configuration file for Doxygen|
 |Makefile|Contains commands for building|
 |README.md|This file - Gives information about repo|
+|requirements.txt|The required packages for using WorshipList|
