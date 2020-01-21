@@ -1,7 +1,7 @@
-## @file   WorshipList.py
+## @file   Main.py
 #  @brief  Generates a worship chart from specified songs and keys.
 #  @author Samuel Crawford
-#  @date   1/17/2020
+#  @date   1/21/2020
 
 from Document  import docSetup, pdfWrite, writeSong
 from GUI       import fileNameGUI, songGUI
@@ -24,9 +24,8 @@ def main():
         print("Wrote", songName + ".")
 
     # Get output file directory from file
-    f = open("src\\Settings.txt", "r")
-    file = f.read().strip() + fileName
-    f.close()
+    with open("src\\Settings.txt", "r") as fp:
+        file = fp.read().strip() + fileName
 
     print()
 
