@@ -5,8 +5,9 @@
 
 import PySimpleGUI as sg
 
-from pathvalidate import is_valid_filename
 from datetime import date, timedelta
+from os.path import isfile
+from pathvalidate import is_valid_filename
 
 from Helpers import fileNameProcess, songNameProcess, validKeys
 
@@ -56,7 +57,7 @@ def songGUI():
 
     return songs, keys
 
-## @brief   Adds a blank song file.
+## @brief   Adds a blank song file with the specified name.
 def addSongGUI():
     while True:
 
@@ -71,28 +72,26 @@ def addSongGUI():
         songName = values[0]
 
         if button == "Cancel":
-            songGUI()
+            return
         else:
-            # Try to write blank song file
             filePath = "src\\songs\\" + fileNameProcess(songName) + ".txt"
-            try:
-                file = open(filePath, "r")
-                file.close()
-                popupError("Song file already exists.")
-            except:
-                songName = songNameProcess(songName)
-                file = open(filePath, "w")
-                file.write(songName)
-                file.close()
 
-                # Add to song list
-                file = open("src\\SongList.txt", "r+")
-                songs = file.readlines()
-                songs.append(songName + "\n")
-                songs.sort()
-                file.seek(0)
-                file.writelines(songs)
-                file.close()
+            if isfile(filePath):
+                popupError("Song file already exists.")
+            else:
+                songName = songNameProcess(songName)
+
+                # Create new file with title
+                with open(filePath, "w") as fp:
+                    fp.write(songName)
+
+                # Add new songs to song list
+                with open("src\\SongList.txt", "r+") as fp:
+                    songs = fp.readlines()
+                    songs.append(songName + "\n")
+                    songs.sort()
+                    fp.seek(0)
+                    fp.writelines(songs)
                 break
 
 ## @brief            Checks output of GUI to ensure correct outputs.
