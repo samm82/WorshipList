@@ -7,9 +7,8 @@ import PySimpleGUI as sg
 
 from datetime import date, timedelta
 from os.path import isfile
-from pathvalidate import is_valid_filename
 
-from Helpers import fileNameProcess, songNameProcess, validKeys
+from Helpers import checkFileName, fileNameProcess, songNameProcess, validKeys
 
 ## @brief  Implements GUI for retrieving songs and keys.
 #  @return A list of songs, and a list of their keys.
@@ -74,7 +73,12 @@ def addSongGUI():
         if button == "Cancel":
             return
         else:
-            filePath = "src\\songs\\" + fileNameProcess(songName) + ".txt"
+            fileName = fileNameProcess(songName)
+            if not checkFileName(fileName):
+                popupError("Invalid file name for a song.")
+                continue
+            else:
+                filePath = "src\\songs\\" + fileNameProcess(songName) + ".txt"
 
             if isfile(filePath):
                 popupError("Song file already exists.")
@@ -151,13 +155,3 @@ def fileNameGUI():
             return fileName
         else:
             popupError("Invalid file name. Try again.")
-
-## @brief           Checks a file name to ensure it is valid.
-#  @param[in] name  The file name.
-#  @return          True if the name is valid, otherwise False.
-def checkFileName(name):
-    if name in ['CON', 'PRN', 'AUX', 'NUL', 'COM1', 'COM2', 'COM3', 'COM4', 'COM5', 'COM6',
-        'COM7', 'COM8', 'COM9', 'LPT1', 'LPT2', 'LPT3', 'LPT4', 'LPT5', 'LPT6', 'LPT7', 'LPT8', 'LPT9']:
-        return False
-
-    return is_valid_filename(name)

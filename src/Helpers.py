@@ -1,7 +1,9 @@
 ## @file   Helpers.py
 #  @brief  Contains helper functions for the modules.
 #  @author Samuel Crawford
-#  @date   11/11/2019
+#  @date   1/21/2020
+
+from pathvalidate import is_valid_filename
 
 ## @brief   Exception for if a file is incorrectly formatted (invalid chord).
 class FileError(Exception):
@@ -23,10 +25,17 @@ def fileNameProcess(string):
         else:
             words[i] = words[i][0].upper() + words[i][1:].lower()
 
-    fileName = "".join(words)
-    for char in [' ', ',', "'", "\\", "/", ":", "*", "?", "\"", "<", ">", "|"]:
-        fileName = fileName.replace(char, "")
-    return fileName
+    return "".join(words)
+
+## @brief           Checks a file name to ensure it is valid.
+#  @param[in] name  The file name.
+#  @return          True if the name is valid, otherwise False.
+def checkFileName(name):
+    if name in ['CON', 'PRN', 'AUX', 'NUL', 'COM1', 'COM2', 'COM3', 'COM4', 'COM5', 'COM6',
+        'COM7', 'COM8', 'COM9', 'LPT1', 'LPT2', 'LPT3', 'LPT4', 'LPT5', 'LPT6', 'LPT7', 'LPT8', 'LPT9']:
+        return False
+
+    return is_valid_filename(name)
 
 ## @brief  Processes a song name string.
 #  @return The processed song name.
