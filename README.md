@@ -47,11 +47,13 @@ Some assumptions for how the song files are formatted:
 ```
 .
 └── src/
-│   │   Document.py
-│   │   GUI.py  
-│   │   Main.py
-│   │   MusicData.py
+│   │   Document.py 
+│   │   GUI.py 
+│   │   Helpers.py   
+│   │   Main.py  
 │   │   README.md  
+│   │   Settings.txt  
+│   │   SongList.txt  
 │   │
 │   └── songs/
 │   
