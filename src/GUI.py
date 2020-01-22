@@ -13,8 +13,7 @@ from Helpers import checkFileName, fileNameProcess, songNameProcess, validKeys
 ## @brief  Implements GUI for retrieving songs and keys.
 #  @return A list of songs, and a list of their keys.
 def songGUI():
-    invalid = True
-    while invalid:
+    while True:
         # Read list of songs from file
         file = open("src\\SongList.txt", "r")
         songsFromFile = file.readlines()
@@ -44,15 +43,13 @@ def songGUI():
                 if i % 2 == 0:
                     songs.append(values[i])
                 else:
-                    key = values[i]
-                    key = key.strip()
-                    if len(key) == 1:
-                        key = key.upper()
-                    elif len(key) == 2:
-                        key = key[0].upper() + key[1].lower()
+                    key = values[i].strip()
+                    key = key[0].upper() + key[1:].lower()
                     keys.append(key)
+                    print(key)
 
-            invalid = checkSongGUI(songs, keys)
+            if checkSongGUI(songs, keys):
+                break
 
     return songs, keys
 
@@ -101,23 +98,23 @@ def addSongGUI():
 ## @brief            Checks output of GUI to ensure correct outputs.
 #  @param[in] songs  The song inputs.
 #  @param[in] keys   The key inputs.
-#  @return           True if the outputs are invalid, otherwise false.
+#  @return           True if the outputs are valid, otherwise False.
 def checkSongGUI(songs, keys):
     for song in songs:
         if song == "Select a song...":
             popupError("You must select a song for all four options.")
-            return True
+            return False
 
     for key in keys:
         if key not in validKeys():
             popupError("You must select a valid key for all four options.")
-            return True
+            return False
 
     if len(songs) != len(set(songs)):
         popupError("Each song can only be selected once.")
-        return True
+        return False
 
-    return False
+    return True
 
 ## @brief  Implements GUI for retrieving the file name.
 #  @return The file name.
