@@ -1,7 +1,7 @@
 ## @file   GUI.py
 #  @brief  Implements GUI for selecting songs.
 #  @author Samuel Crawford
-#  @date   1/21/2020
+#  @date   1/22/2020
 
 import PySimpleGUI as sg
 
@@ -119,17 +119,6 @@ def checkSongGUI(songs, keys):
 
     return False
 
-## @brief            Defines an error popup that signifies incorrect input.
-#  @param[in] string The error string to be printed in dialogue box.
-def popupError(string):
-    errorDialgue = [
-        [sg.Text(string)], 
-        [sg.CloseButton("OK")]
-    ]
-
-    errorWindow = sg.Window("Error").Layout(errorDialgue)
-    errorWindow.Read()
-
 ## @brief  Implements GUI for retrieving the file name.
 #  @return The file name.
 def fileNameGUI():
@@ -155,3 +144,8 @@ def fileNameGUI():
             return fileName
         else:
             popupError("Invalid file name. Try again.")
+
+## @brief            Defines an error popup that signifies incorrect input.
+#  @param[in] string The error string to be printed in dialogue box.
+def popupError(string):
+    sg.Popup(string, title="Error")
