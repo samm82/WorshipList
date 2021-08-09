@@ -1,5 +1,5 @@
 python_docx==0.8.10
-pywin32==227
+pywin32==301
 pathvalidate==2.0.1
 PySimpleGUI==4.15.2
 docx==0.2.4
