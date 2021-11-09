@@ -15,6 +15,7 @@ from Helpers import checkFileName, fileNameProcess, songNameProcess, validKeys
 def songGUI():
     numSongs = 4
     while True:
+        
         # Read list of songs from file
         file = open("src\\SongList.txt", "r")
         songsFromFile = file.readlines()
@@ -56,22 +57,14 @@ def songGUI():
 def numSongsGUI():
     while True:
 
-        numDialogue = [
-            [sg.Text("Enter the number of songs:")],
-            [sg.InputText("")],
-            [sg.CloseButton("OK"), sg.CloseButton("Cancel")]
-        ]
-
-        songWindow = sg.Window("WorshipList").Layout(numDialogue)
-        button, values = songWindow.Read()
-        numSong = values[0]
+        button, numSongs = popupText("Enter the number of songs:")
 
         if button == "Cancel":
             return
         else:
             try:
-                if int(numSong) > 0:
-                    return int(numSong)
+                if int(numSongs) > 0:
+                    return int(numSongs)
                 else:
                     popupError("You must error a number greater than zero.")
             except ValueError:
@@ -82,15 +75,7 @@ def numSongsGUI():
 def addSongGUI():
     while True:
 
-        songDialogue = [
-            [sg.Text("Enter the name of the new song:")],
-            [sg.InputText("")],
-            [sg.CloseButton("OK"), sg.CloseButton("Cancel")]
-        ]
-
-        songWindow = sg.Window("WorshipList").Layout(songDialogue)
-        button, values = songWindow.Read()
-        songName = values[0]
+        button, songName = popupText("Enter the name of the new song:")
 
         if button == "Cancel":
             return
@@ -171,6 +156,20 @@ def fileNameGUI():
             return fileName
         else:
             popupError("Invalid file name. Try again.")
+
+## @brief            Defines a text input popup.
+#  @param[in] string The prompt string to be printed in dialogue box.
+#  @return           The name of the button pressed and the text entered.
+def popupText(string):
+    dialogue = [
+        [sg.Text(string)],
+        [sg.InputText("")],
+        [sg.CloseButton("OK"), sg.CloseButton("Cancel")]
+    ]
+
+    window = sg.Window("WorshipList").Layout(dialogue)
+    button, values = window.Read()
+    return button, values[0]
 
 ## @brief            Defines an error popup that signifies incorrect input.
 #  @param[in] string The error string to be printed in dialogue box.
