@@ -13,6 +13,7 @@ from Helpers import checkFileName, fileNameProcess, songNameProcess, validKeys
 ## @brief  Implements GUI for retrieving songs and keys.
 #  @return A list of songs, and a list of their keys.
 def songGUI():
+    numSongs = 4
     while True:
         # Read list of songs from file
         file = open("src\\SongList.txt", "r")
@@ -20,21 +21,18 @@ def songGUI():
         file.close()
         songList = ["Select a song..."] + songsFromFile
 
-        songDialogue = [
-            # Maybe InputCombo isn't the best implementation
-            [sg.Text("Song                                           Key")],
-            [sg.InputCombo(songList), sg.InputText("", size=(5, None))],
-            [sg.InputCombo(songList), sg.InputText("", size=(5, None))],
-            [sg.InputCombo(songList), sg.InputText("", size=(5, None))],
-            [sg.InputCombo(songList), sg.InputText("", size=(5, None))],
-            [sg.CloseButton("OK"), sg.CloseButton("Add a Song"), sg.CloseButton("Cancel")]
-        ]
+        # TODO? Maybe InputCombo isn't the best implementation
+        songDialogue = [[sg.Text("Song                                           Key")]] + \
+            [[sg.InputCombo(songList), sg.InputText("", size=(5, None))] for _ in range(numSongs)] + \
+            [[sg.CloseButton("OK"), sg.CloseButton("Number of Songs"), sg.CloseButton("Add a Song"), sg.CloseButton("Cancel")]]
 
         songWindow = sg.Window("WorshipList").Layout(songDialogue)
         button, values = songWindow.Read()
 
         if button == "Cancel":
             exit()
+        elif button == "Number of Songs":
+            numSongs = numSongsGUI()
         elif button == "Add a Song":
             addSongGUI()
         else:
@@ -48,11 +46,37 @@ def songGUI():
                         key = key[0].upper() + key[1:].lower()
                     keys.append(key)
 
+            # TODO: Better way to implement this?
             verifiedOutput = checkSongGUI(songs, keys)
             if verifiedOutput:
                 break
 
     return verifiedOutput[0], verifiedOutput[1]
+
+def numSongsGUI():
+    while True:
+
+        numDialogue = [
+            [sg.Text("Enter the number of songs:")],
+            [sg.InputText("")],
+            [sg.CloseButton("OK"), sg.CloseButton("Cancel")]
+        ]
+
+        songWindow = sg.Window("WorshipList").Layout(numDialogue)
+        button, values = songWindow.Read()
+        numSong = values[0]
+
+        if button == "Cancel":
+            return
+        else:
+            try:
+                if int(numSong) > 0:
+                    return int(numSong)
+                else:
+                    popupError("You must error a number greater than zero.")
+            except ValueError:
+                popupError("You must error a number greater than zero.")
+
 
 ## @brief   Adds a blank song file with the specified name.
 def addSongGUI():
