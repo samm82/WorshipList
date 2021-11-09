@@ -1,7 +1,7 @@
 ## @file   GUI.py
 #  @brief  Implements GUI for selecting songs.
 #  @author Samuel Crawford
-#  @date   1/22/2020
+#  @date   11/9/2021
 
 import PySimpleGUI as sg
 
@@ -44,14 +44,15 @@ def songGUI():
                     songs.append(values[i])
                 else:
                     key = values[i].strip()
-                    key = key[0].upper() + key[1:].lower()
+                    if len(key):
+                        key = key[0].upper() + key[1:].lower()
                     keys.append(key)
-                    print(key)
 
-            if checkSongGUI(songs, keys):
+            verifiedOutput = checkSongGUI(songs, keys)
+            if verifiedOutput:
                 break
 
-    return songs, keys
+    return verifiedOutput[0], verifiedOutput[1]
 
 ## @brief   Adds a blank song file with the specified name.
 def addSongGUI():
@@ -95,26 +96,31 @@ def addSongGUI():
                     fp.writelines(songs)
                 break
 
-## @brief            Checks output of GUI to ensure correct outputs.
+## @brief            Checks output of GUI to ensure correct outputs and removes empty song fields.
 #  @param[in] songs  The song inputs.
 #  @param[in] keys   The key inputs.
-#  @return           True if the outputs are valid, otherwise False.
+#  @return           The updated output if valid, otherwise False.
 def checkSongGUI(songs, keys):
-    for song in songs:
-        if song == "Select a song...":
-            popupError("You must select a song for all four options.")
-            return False
+
+    def rmEmptySongsKeys(xs):
+        return [xs[i] for i in range(len(xs)) if songs[i] and keys[i]]
+
+    songs, keys = rmEmptySongsKeys(songs), rmEmptySongsKeys(keys)
+
+    if not len(songs):
+        popupError("You must select at least one song.")
+        return False
 
     for key in keys:
         if key not in validKeys():
-            popupError("You must select a valid key for all four options.")
+            popupError("You must select a valid key for each song.")
             return False
 
     if len(songs) != len(set(songs)):
         popupError("Each song can only be selected once.")
         return False
 
-    return True
+    return songs, keys
 
 ## @brief  Implements GUI for retrieving the file name.
 #  @return The file name.

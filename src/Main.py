@@ -1,7 +1,7 @@
 ## @file   Main.py
 #  @brief  Generates a worship chart from specified songs and keys.
 #  @author Samuel Crawford
-#  @date   1/21/2020
+#  @date   11/9/2021
 
 from Document  import docSetup, pdfWrite, writeSong
 from GUI       import fileNameGUI, songGUI
@@ -18,7 +18,7 @@ def main():
 
     songs, keys = songGUI()
     fileName = fileNameGUI()
-    for i in range(4):
+    for i in range(len(songs)):
         songName, songFile = songNameProcess(songs[i]), fileNameProcess(songs[i])
         doc, lineCount = writeSong(doc, lineCount, songFile, keys[i])
         print("Wrote", songName + ".")
