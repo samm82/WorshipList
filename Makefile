@@ -1,5 +1,5 @@
 PY = python
-PYFLAGS = 
+PYFLAGS = -u
 DOC = doxygen
 DOCFLAGS = 
 DOCCONFIG = 
