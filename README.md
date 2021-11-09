@@ -1,9 +1,9 @@
 # WorshipList
-Last Modified: 1/21/2020
+Last Modified: 11/9/2021
 
 ## Description
 
-Every week for worship at LIFT Church, I have to create a chord chart for the four songs we're playing that week. This program automatically 
+Every week for worship at LIFT Church, I have to create a chord chart for the songs we're playing that week. This program automatically 
 generates that chord chart. This is done by a GUI, by running `make`.
 
 To generate documentation, run `make doc` in the directory with the Makefile. This will create two folders; the important files are html/index 
