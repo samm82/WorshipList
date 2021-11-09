@@ -7,8 +7,9 @@ import PySimpleGUI as sg
 
 from datetime import date, timedelta
 from os.path import isfile
+from titlecase import titlecase
 
-from Helpers import checkFileName, fileNameProcess, songNameProcess, validKeys
+from Helpers import checkFileName, validKeys
 
 ## @brief  Implements GUI for retrieving songs and keys.
 #  @return A list of songs, and a list of their keys.
@@ -40,7 +41,7 @@ def songGUI():
             songs, keys = [], []
             for i in range(len(values)):
                 if i % 2 == 0:
-                    songs.append(values[i])
+                    songs.append(values[i].strip())
                 else:
                     key = values[i].strip()
                     if len(key):
@@ -80,18 +81,16 @@ def addSongGUI():
         if button == "Cancel":
             return
         else:
-            fileName = fileNameProcess(songName)
-            if not checkFileName(fileName):
+            songName = titlecase(songName)
+            if not checkFileName(songName):
                 popupError("Invalid file name for a song.")
                 continue
             else:
-                filePath = "src\\songs\\" + fileNameProcess(songName) + ".txt"
+                filePath = "src\\songs\\" + songName + ".txt"
 
             if isfile(filePath):
                 popupError("Song file already exists.")
             else:
-                songName = songNameProcess(songName)
-
                 # Create new file with title
                 with open(filePath, "w") as fp:
                     fp.write(songName)

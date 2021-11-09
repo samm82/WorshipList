@@ -3,9 +3,10 @@
 #  @author Samuel Crawford
 #  @date   11/9/2021
 
+from titlecase import titlecase
+
 from Document  import docSetup, pdfWrite, writeSong
 from GUI       import fileNameGUI, songGUI
-from Helpers   import fileNameProcess, songNameProcess
 
 ## @brief The main function of the program that calls other programs.
 def main():
@@ -19,7 +20,7 @@ def main():
     songs, keys = songGUI()
     fileName = fileNameGUI()
     for i in range(len(songs)):
-        songName, songFile = songNameProcess(songs[i]), fileNameProcess(songs[i])
+        songName, songFile = titlecase(songs[i]), titlecase(songs[i])
         doc, lineCount = writeSong(doc, lineCount, songFile, keys[i])
         print("Wrote", songName + ".")
 

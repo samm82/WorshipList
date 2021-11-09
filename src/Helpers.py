@@ -1,7 +1,7 @@
 ## @file   Helpers.py
 #  @brief  Contains helper functions for the modules.
 #  @author Samuel Crawford
-#  @date   1/21/2020
+#  @date   11/9/2021
 
 from pathvalidate import is_valid_filename
 
@@ -14,19 +14,6 @@ class FileError(Exception):
 class ParamError(Exception):
     pass
 
-## @brief  Processes a file name string.
-#  @return The processed file name.
-def fileNameProcess(string):
-    words = string.split()
-
-    for i in range(len(words)):
-        if words[i][0] == "(":
-            words[i] = "(" + words[i][1].upper() + words[i][2:].lower()
-        else:
-            words[i] = words[i][0].upper() + words[i][1:].lower()
-
-    return "".join(words)
-
 ## @brief           Checks a file name to ensure it is valid.
 #  @param[in] name  The file name.
 #  @return          True if the name is valid, otherwise False.
@@ -36,19 +23,6 @@ def checkFileName(name):
         return False
 
     return is_valid_filename(name)
-
-## @brief  Processes a song name string.
-#  @return The processed song name.
-def songNameProcess(string):
-    words = string.split()
-
-    for i in range(len(words)):
-        if words[i][0] == "(":
-            words[i] = "(" + words[i][1].upper() + words[i][2:].lower()
-        else:
-            words[i] = words[i][0].upper() + words[i][1:].lower()
-
-    return " ".join(words)
 
 ## @brief  Gets a list of valid keys.
 #  @return A list of valid keys.
