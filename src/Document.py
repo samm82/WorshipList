@@ -14,7 +14,7 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_BREAK, WD_TAB_ALIGNMENT
 from Helpers import getChord, getNotes
 
 ## @brief              Outputs a .pdf from a .docx file.
-#  @param[in] fileName The file of the .pdf and the .docx file.
+#  @param[in] fileName The filename of the .pdf and .docx file.
 def pdfWrite(fileName):
     word = win32com.client.DispatchEx('Word.Application')
     doc  = word.Documents.Open(fileName + ".docx")
