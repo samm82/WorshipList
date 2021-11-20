@@ -1,9 +1,11 @@
 ## @file   Document.py
 #  @brief  Contains functions for adding text to document.
 #  @author Samuel Crawford
-#  @date   1/14/2020
+#  @date   11/20/2021
 
 import win32com.client
+
+from enum import Enum, auto
 
 from docx import Document
 from docx.shared import Inches, Pt
@@ -113,6 +115,23 @@ def writeTitle(doc, title, key):
 
     return doc
 
+## @brief          Writes a section name to the document.
+#  @param[in] p    The paragraph to write to.
+#  @param[in] line The line to get the section name from.
+#  @param[in] sep  The separator to use after the section name.
+#  @param[in] ind  The index to be read next.
+#  @return         The paragraph and the next index.
+def writeSection(p, line, sep, ind):
+    if line[ind][-1] == ":":
+        p.add_run(line[ind] + sep)
+        return p, ind + 1 
+    elif line[ind+1][-1] == ":":
+        p.add_run(line[ind] + " " + line[ind+1] + sep)
+        return p, ind + 2
+    else:
+        p.add_run(line[ind] + " " + line[ind+1] + " " + line[ind+2] + sep)
+        return p, ind + 3
+
 ## @brief           Writes a line to the document.
 #  @param[in] doc   The document to write to.
 #  @param[in] line  The line to write to the document.
@@ -124,21 +143,21 @@ def writeLine(doc, line, end, notes, file):
     p = doc.add_paragraph()
 
     # Defines tab stops
-    
     tab_stops = p.paragraph_format.tab_stops
     tab_stop = tab_stops.add_tab_stop(Inches(1.58), WD_TAB_ALIGNMENT.LEFT)
 
-    # small = 0 -> normal size
-    # small = 1 -> small size
-    # small = 2 -> last small size
+    # Defines relative font size based on song file
+    class Size(Enum):
+        NORMAL = auto()
+        SMALL = auto()
+        SMALL_LAST = auto()
 
-    small = 0
+    size = Size.NORMAL
 
     # Index variable for chord
     p, i = writeSection(p, line, "\t", 0)
 
     # Adds all chords
-
     while i != len(line):
         chord = line[i]
         iNext = True
@@ -160,25 +179,25 @@ def writeLine(doc, line, end, notes, file):
         elif "(" in chord and ")" in chord:
             newChord = chord[1:-1]
             run = p.add_run("(" + getChord(notes, newChord, file) + ")  ")
-            small = 2
+            size = Size.SMALL_LAST
         elif "(" in chord:
             newChord = chord[1:]
             run = p.add_run("(" + getChord(notes, newChord, file) + "  ")
-            small = 1
+            size = Size.SMALL
         elif ")" in chord:
             newChord = chord[:-1]
             run = p.add_run(getChord(notes, newChord, file) + ")  ")
-            small = 2
+            size = Size.SMALL_LAST
         else:
             run = p.add_run(getChord(notes, chord, file) + "  ")
 
         # Set font size for small text
 
-        if small == 1:
+        if size == Size.SMALL:
             run.font.size = Pt(22)
-        if small == 2:
+        if size == Size.SMALL_LAST:
             run.font.size = Pt(22)
-            small = 0
+            size = Size.NORMAL
 
         # Increments i if specified to.
 
@@ -196,20 +215,3 @@ def writeLine(doc, line, end, notes, file):
     p.paragraph_format.line_spacing = Pt(36)
 
     return doc
-
-## @brief          Writes a section name to the document.
-#  @param[in] p    The paragraph to write to.
-#  @param[in] line The line to get the section name from.
-#  @param[in] sep  The separator to use after the section name.
-#  @param[in] ind  The index to be read next.
-#  @return         The paragraph and the next index.
-def writeSection(p, line, sep, ind):
-    if line[ind][-1] == ":":
-        p.add_run(line[ind] + sep)
-        return p, ind + 1 
-    elif line[ind+1][-1] == ":":
-        p.add_run(line[ind] + " " + line[ind+1] + sep)
-        return p, ind + 2
-    else:
-        p.add_run(line[ind] + " " + line[ind+1] + " " + line[ind+2] + sep)
-        return p, ind + 3
