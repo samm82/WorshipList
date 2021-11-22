@@ -1,11 +1,12 @@
 ## @file   GUI.py
 #  @brief  Implements GUI for selecting songs.
 #  @author Samuel Crawford
-#  @date   11/9/2021
+#  @date   11/21/2021
 
 import PySimpleGUI as sg
 
 from datetime import date, timedelta
+from os import listdir
 from os.path import isfile
 from titlecase import titlecase
 
@@ -17,10 +18,10 @@ def songGUI():
     numSongs = 4
     while True:
         
-        # Read list of songs from file
-        file = open("src\\SongList.txt", "r")
-        songsFromFile = file.readlines()
-        file.close()
+        # Get list of songs from songs directory
+        # [:-4] removes ".txt" from filenames
+        songsFromFile = [song[:-4] for song in listdir("src\\songs")]
+        songsFromFile.sort()
         songList = ["Select a song..."] + songsFromFile
 
         # TODO? Maybe InputCombo isn't the best implementation
@@ -71,7 +72,6 @@ def numSongsGUI():
             except ValueError:
                 popupError("You must error a number greater than zero.")
 
-
 ## @brief   Adds a blank song file with the specified name.
 def addSongGUI():
     while True:
@@ -94,15 +94,6 @@ def addSongGUI():
                 # Create new file with title
                 with open(filePath, "w") as fp:
                     fp.write(songName)
-
-                # Add new songs to song list
-                with open("src\\SongList.txt", "r+") as fp:
-                    songs = fp.readlines()
-                    songs.append(songName + "\n")
-                    songs.sort()
-                    fp.seek(0)
-                    fp.writelines(songs)
-                break
 
 ## @brief            Checks output of GUI to ensure correct outputs and removes empty song fields.
 #  @param[in] songs  The song inputs.

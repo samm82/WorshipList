@@ -1,5 +1,5 @@
 # src/
-Last Modified: 1/21/2020
+Last Modified: 11/21/2021
 
 ## Description
 
@@ -17,7 +17,6 @@ This is the source folder for the code and song input files.
 │   Main.py  
 │   README.md  
 │   Settings.txt  
-│   SongList.txt  
 ```
 
 | Name | Description |
@@ -29,4 +28,3 @@ This is the source folder for the code and song input files.
 |Main.py|The main module that contains the `main()` function|
 |README.md|This file - Gives information about `src/` folder|
 |Settings.txt|Contains the settings for the program (only output file path right now)|
-|SongList.txt|Contains the list of all songs in the program|
