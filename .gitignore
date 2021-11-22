@@ -1,7 +1,8 @@
-output.docx
-output.pdf
 ~$*
 *pycache*
 
+Main.spec
+
+build/
 html/
 latex/
