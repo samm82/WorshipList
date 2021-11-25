@@ -27,12 +27,12 @@ def songGUI():
         # TODO? Maybe InputCombo isn't the best implementation
         songDialogue = [[sg.Text("Song                                           Key")]] + \
             [[sg.InputCombo(songList), sg.InputText("", size=(5, None))] for _ in range(numSongs)] + \
-            [[sg.CloseButton("OK"), sg.CloseButton("Number of Songs"), sg.CloseButton("Add a Song"), sg.CloseButton("Cancel")]]
+            [[sg.CloseButton("OK"), sg.CloseButton("Number of Songs"), sg.CloseButton("Add a Song"), sg.CloseButton("Quit")]]
 
         songWindow = sg.Window("WorshipList").Layout(songDialogue)
         button, values = songWindow.Read()
 
-        if button == "Cancel":
+        if button == "Quit":
             exit()
         elif button == "Number of Songs":
             numSongs = numSongsGUI()
