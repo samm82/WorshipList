@@ -32,7 +32,7 @@ def songGUI():
         songWindow = sg.Window("WorshipList").Layout(songDialogue)
         button, values = songWindow.Read()
 
-        if button == "Cancel":
+        if button == "Quit":
             exit()
         elif button == "Number of Songs":
             numSongs = numSongsGUI()
