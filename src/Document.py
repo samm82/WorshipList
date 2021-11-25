@@ -1,7 +1,7 @@
 ## @file   Document.py
 #  @brief  Contains functions for adding text to document.
 #  @author Samuel Crawford
-#  @date   11/20/2021
+#  @date   11/24/2021
 
 import win32com.client
 
@@ -15,11 +15,11 @@ from Helpers import getChord, getNotes
 
 ## @brief              Outputs a .pdf from a .docx file.
 #  @param[in] fileName The filename of the .pdf and .docx file.
-def pdfWrite(fileName):
+def pdfWrite(docx, pdf):
     word = win32com.client.DispatchEx('Word.Application')
-    doc  = word.Documents.Open(fileName + ".docx")
+    doc  = word.Documents.Open(str(docx))
 
-    doc.SaveAs(fileName + ".pdf", FileFormat=17)
+    doc.SaveAs(str(pdf), FileFormat=17)
     doc.Close()
 
     word.Quit()
