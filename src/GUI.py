@@ -1,13 +1,13 @@
 ## @file   GUI.py
 #  @brief  Implements GUI for selecting songs.
 #  @author Samuel Crawford
-#  @date   11/21/2021
+#  @date   11/24/2021
 
 import PySimpleGUI as sg
 
 from datetime import date, timedelta
 from os import listdir
-from os.path import isfile
+from pathlib import Path
 from titlecase import titlecase
 
 from Helpers import checkFileName, validKeys
@@ -20,7 +20,7 @@ def songGUI():
         
         # Get list of songs from songs directory
         # [:-4] removes ".txt" from filenames
-        songsFromFile = [song[:-4] for song in listdir("src\\songs")]
+        songsFromFile = [song[:-4] for song in listdir(Path("src/songs"))]
         songsFromFile.sort()
         songList = ["Select a song..."] + songsFromFile
 
@@ -86,9 +86,9 @@ def addSongGUI():
                 popupError("Invalid file name for a song.")
                 continue
             else:
-                filePath = "src\\songs\\" + songName + ".txt"
+                filePath = Path("src/songs/" + songName + ".txt")
 
-            if isfile(filePath):
+            if filePath.is_file():
                 popupError("Song file already exists.")
             else:
                 # Create new file with title
@@ -134,18 +134,19 @@ def fileNameGUI():
 
         fileWindow = sg.Window("WorshipList").Layout(fileDialogue)
         button, values = fileWindow.Read()
-        fileName = values[0]
 
         if button == "Cancel":
             exit()
         elif button == "Use Next Sunday":
             # Gets the next Sunday and formats it appropriately
             nextSunday = (date.today() + timedelta(days=(6-date.today().weekday())%7))
-            return "LIFT Worship " + nextSunday.strftime("%F")
-        elif checkFileName(fileName):
-            return fileName
+            filename =  "LIFT Worship " + nextSunday.strftime("%F")
+        elif checkFileName(values[0]):
+            filename = values[0]
         else:
             popupError("Invalid file name. Try again.")
+
+        return filename + ".docx", filename + ".pdf"
 
 ## @brief            Defines a text input popup.
 #  @param[in] string The prompt string to be printed in dialogue box.

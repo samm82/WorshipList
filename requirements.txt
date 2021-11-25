@@ -3,3 +3,5 @@ pywin32==301
 pathvalidate==2.0.1
 PySimpleGUI==4.15.2
 docx==0.2.4
+titlecase==2.3
+pathlib==1.0.1
