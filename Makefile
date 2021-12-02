@@ -13,7 +13,7 @@ run:
 	$(PY) $(PYFLAGS) $(MAIN)
 
 compile: $(MAIN)
-	pyinstaller --onefile $^ #-w
+	pyinstaller --onefile $^ -n WorshipList #-w
 # Continues execution if dist/ exists
 	mkdir $(DIST_SRC) || true
 	cp -R src/songs $(DIST_SRC)
