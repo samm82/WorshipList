@@ -14,9 +14,12 @@ run:
 
 compile: $(MAIN)
 	pyinstaller --onefile $^ #-w
-	mkdir $(DIST_SRC)
+# Continues execution if dist/ exists
+	mkdir $(DIST_SRC) || true
 	cp -R src/songs $(DIST_SRC)
 	cp src/Settings.txt $(DIST_SRC)
+	cp src/COMPILED_README.md dist
+	mv dist/COMPILED_README.md dist/README.md
 
 doc: 
 	$(DOC) $(DOCFLAGS) $(DOCCONFIG)
