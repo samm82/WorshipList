@@ -1,7 +1,8 @@
-output.docx
-output.pdf
 ~$*
 *pycache*
 
+WorshipList.spec
+
+build/
 html/
 latex/
