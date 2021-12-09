@@ -10,7 +10,18 @@
     build:
       runs-on: 	ubuntu-latest
       steps:
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: get pyinstaller
+        run: sudo pip install pyinstaller
       - name: checkout repo
         uses: actions/checkout@v2
       - name: build application
         run: make build
+      - name: upload build
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-dir
+          path: dist
