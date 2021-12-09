@@ -128,14 +128,11 @@ def writeTitle(doc, title, key):
 #  @return         The paragraph and the next index.
 def writeSection(p, line, sep, ind):
     items = [line[ind]]
+    i = 0
 
-    if line[ind][-1] == ":":
-        pass
-    elif line[ind + 1][-1] == ":":
-        items.append(line[ind + 1])
-    else:
-        items.append(line[ind + 1])
-        items.append(line[ind + 2])
+    while line[ind + i][-1] != ":":
+        i += 1
+        items.append(line[ind + i])
 
     p.add_run(" ".join(items) + sep)
     return p, ind + len(items)

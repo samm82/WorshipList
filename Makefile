@@ -14,12 +14,15 @@ run:
 
 compile: $(MAIN)
 	pyinstaller --onefile $^ -n WorshipList #-w
+	rm WorshipList.spec || true
 # Continues execution if dist/ exists
 	mkdir $(DIST_SRC) || true
 	cp -R src/songs $(DIST_SRC)
 	cp src/Settings.txt $(DIST_SRC)
 	cp src/COMPILED_README.md dist
 	mv dist/COMPILED_README.md dist/README.md
+
+build: compile
 
 doc: 
 	$(DOC) $(DOCFLAGS) $(DOCCONFIG)
@@ -34,8 +37,6 @@ clean:
 # Compilation files
 	rm -rf build/*
 	rm -rf dist/*
-# Continues execution if Main.spec not found
-	rm Main.spec || true
 
 # Documentation files
 	rm -rf html/*

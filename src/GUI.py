@@ -115,7 +115,7 @@ def checkSongGUI(songs, keys):
         return False
 
     for key in keys:
-        if key not in validKeys():
+        if key not in validKeys:
             popupError("You must select a valid key for each song.")
             return False
 
