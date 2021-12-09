@@ -13,22 +13,24 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_BREAK, WD_TAB_ALIGNMENT
 
 from Helpers import getChord, getNotes
 
+
 ## @brief              Outputs a .pdf from a .docx file.
 #  @param[in] fileName The filename of the .pdf and .docx file.
 def pdfWrite(docx, pdf):
     word = win32com.client.DispatchEx('Word.Application')
-    doc  = word.Documents.Open(str(docx))
+    doc = word.Documents.Open(str(docx))
 
     doc.SaveAs(str(pdf), FileFormat=17)
     doc.Close()
 
     word.Quit()
 
+
 ## @brief  Sets up an empty document.
 #  @return The document.
 def docSetup():
     doc = Document()
-    
+
     # Defines margins
 
     section = doc.sections[0]
@@ -43,6 +45,7 @@ def docSetup():
     font.size = Pt(28)
 
     return doc
+
 
 ## @brief               Writes a song to doc.
 #  @param[in] doc       The document being generated.
@@ -75,7 +78,7 @@ def writeSong(doc, lineCount, fileName, oldKey):
         lineCount = newLineLength
     else:
         lineCount += newLineLength
-    
+
     # Writes title
 
     doc = writeTitle(doc, lines[0], key)
@@ -93,6 +96,7 @@ def writeSong(doc, lineCount, fileName, oldKey):
         doc = writeLine(doc, line, end, noteList, fileName)
 
     return doc, lineCount
+
 
 ## @brief            Writes a song title to the document.
 #  @param[in] doc    The document to write to.
@@ -115,6 +119,7 @@ def writeTitle(doc, title, key):
 
     return doc
 
+
 ## @brief          Writes a section name to the document.
 #  @param[in] p    The paragraph to write to.
 #  @param[in] line The line to get the section name from.
@@ -122,15 +127,19 @@ def writeTitle(doc, title, key):
 #  @param[in] ind  The index to be read next.
 #  @return         The paragraph and the next index.
 def writeSection(p, line, sep, ind):
+    items = [line[ind]]
+
     if line[ind][-1] == ":":
-        p.add_run(line[ind] + sep)
-        return p, ind + 1 
-    elif line[ind+1][-1] == ":":
-        p.add_run(line[ind] + " " + line[ind+1] + sep)
-        return p, ind + 2
+        pass
+    elif line[ind + 1][-1] == ":":
+        items.append(line[ind + 1])
     else:
-        p.add_run(line[ind] + " " + line[ind+1] + " " + line[ind+2] + sep)
-        return p, ind + 3
+        items.append(line[ind + 1])
+        items.append(line[ind + 2])
+
+    p.add_run(" ".join(items) + sep)
+    return p, ind + len(items)
+
 
 ## @brief           Writes a line to the document.
 #  @param[in] doc   The document to write to.

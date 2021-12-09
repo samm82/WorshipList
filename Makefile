@@ -26,7 +26,7 @@ doc:
 	cd latex && $(MAKE)
 
 lint:
-	flake8 --ignore=E402,F403,F405,N802,N806,N813,N815,W504 .
+	flake8 --ignore=E266,E402,E722,F403,F405,N802,N806,N813,N815,W504 .
 
 all: compile lint doc
 
