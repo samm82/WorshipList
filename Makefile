@@ -21,6 +21,7 @@ compile: $(MAIN)
 	cp src/Settings.txt $(DIST_SRC)
 	cp src/COMPILED_README.md dist
 	mv dist/COMPILED_README.md dist/README.md
+	sed -i -- "s@COMPILE_DATE@$$(date "+%-m/%-d/%Y")@g" dist/README.md
 
 build: compile
 

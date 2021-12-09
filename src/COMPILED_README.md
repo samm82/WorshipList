@@ -1,5 +1,6 @@
 # WorshipList
 Last Modified: 12/8/2021
+Last Compiled: COMPILE_DATE
 
 ## Description
 
