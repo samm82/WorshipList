@@ -10,7 +10,7 @@
     build:
       runs-on: 	ubuntu-latest
       steps:
-      - name: Set up Python 3.9
+      - name: set up python 3.9
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
@@ -23,5 +23,5 @@
       - name: upload build
         uses: actions/upload-artifact@v2
         with:
-          name: build-dir
+          name: compiled-program
           path: dist
