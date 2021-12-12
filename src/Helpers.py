@@ -6,8 +6,8 @@
 from pathvalidate import is_valid_filename
 
 notesSharp = ['F','F#','G','G#','A','A#','B','C','C#','D','D#','E'] * 2  # noqa: E231,E501
-notesFlat  = ['F','Gb','G','Ab','A','Bb','B','C','Db','D','Eb','E'] * 2  # noqa: E221,E231,E501
-validKeys  = set(notesSharp + notesFlat)  # noqa: E221
+notesFlat = ['F','Gb','G','Ab','A','Bb','B','C','Db','D','Eb','E'] * 2  # noqa: E231,E501
+validKeys = set(notesSharp + notesFlat)
 
 
 ## @brief   Exception for if a file is incorrectly formatted (invalid chord).

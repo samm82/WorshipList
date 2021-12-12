@@ -17,27 +17,38 @@ from Helpers import checkFileName, rmEmptySongsKeys, validKeys
 #  @return A list of songs, and a list of their keys.
 def songGUI():
     numSongs = 4
+    songs, keys = ["", "", "", ""], ["", "", "", ""]
+
     while True:
 
         # Get list of songs from songs directory
         # [:-4] removes ".txt" from filenames
         songsFromFile = sorted([s[:-4] for s in listdir(Path("src/songs"))])
-        songList = ["Select a song..."] + songsFromFile
+        songList = [""] + songsFromFile
+        combo = []
 
-        # TODO? Maybe InputCombo isn't the best implementation
-        songDialogue = [[sg.Text("Song                                           Key")]] + \
-            [[sg.InputCombo(songList), sg.InputText("", size=(5, None))] for _ in range(numSongs)] + \
-            [[sg.CloseButton("OK"), sg.CloseButton("Number of Songs"), sg.CloseButton("Add a Song"), sg.CloseButton("Quit")]]  # noqa: E501
+        # TODO? Maybe Combo isn't the best implementation
+        for i in range(numSongs):
+            row = [sg.Combo(songList, ""), sg.InputText(size=(5, None))]
+
+            if i < len(songs):
+                if songs[i] in songsFromFile:
+                    row[0] = sg.Combo(songList, songs[i])
+
+                if keys[i] in validKeys:
+                    row[1] = sg.InputText(keys[i], (5, None))
+
+            combo.append(row)
+
+        songDialogue = [[sg.Text("Song" + " " * 43 + "Key")]] + combo + \
+            [[sg.CloseButton("OK"), sg.CloseButton("Number of Songs"),
+              sg.CloseButton("Add a Song"), sg.CloseButton("Quit")]]
 
         songWindow = sg.Window("WorshipList").Layout(songDialogue)
         button, values = songWindow.Read()
 
         if button == "Quit":
             exit()
-        elif button == "Number of Songs":
-            numSongs = numSongsGUI()
-        elif button == "Add a Song":
-            addSongGUI()
         else:
             songs, keys = [], []
             for i in range(len(values)):
@@ -50,12 +61,16 @@ def songGUI():
                     keys.append(key)
 
             if checkSongGUI(songs, keys):
-                return rmEmptySongsKeys(songs, keys)
+                if button == "Number of Songs":
+                    numSongs = numSongsGUI()
+                elif button == "Add a Song":
+                    addSongGUI()
+                else:
+                    return rmEmptySongsKeys(songs, keys)
 
 
 def numSongsGUI():
     while True:
-
         button, numSongs = popupText("Enter the number of songs:")
 
         if button == "Cancel":
@@ -99,6 +114,7 @@ def addSongGUI():
 #  @param[in] keys   The key inputs.
 #  @return           A Boolean representing if the output is valid.
 def checkSongGUI(songs, keys):
+    songs, keys = rmEmptySongsKeys(songs.copy(), keys.copy())
 
     if not len(songs):
         popupError("You must select at least one song.")
