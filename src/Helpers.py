@@ -1,7 +1,7 @@
 ## @file   Helpers.py
 #  @brief  Contains helper functions for the modules.
 #  @author Samuel Crawford
-#  @date   12/8/2021
+#  @date   12/11/2021
 
 from pathvalidate import is_valid_filename
 
@@ -29,6 +29,15 @@ def checkFileName(name):
                 'COM5', 'COM6', 'COM7', 'COM8', 'COM9', 'LPT1', 'LPT2',
                 'LPT3', 'LPT4', 'LPT5', 'LPT6', 'LPT7', 'LPT8', 'LPT9'}
     return is_valid_filename(name) and name not in reserved
+
+
+## @brief            Removes empty pairs of entries from song and key inputs.
+#  @param[in] songs  The song inputs.
+#  @param[in] keys   The key inputs.
+#  @return           The song and key inputs with empty pairs removed.
+def rmEmptySongsKeys(songs, keys):
+    rm = lambda xs: [xs[i] for i in range(len(xs)) if songs[i] and keys[i]]  # noqa: E501, E731
+    return rm(songs), rm(keys)
 
 
 ## @brief         Gets a list of notes in the given key.

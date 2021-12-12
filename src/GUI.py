@@ -1,7 +1,7 @@
 ## @file   GUI.py
 #  @brief  Implements GUI for selecting songs.
 #  @author Samuel Crawford
-#  @date   12/8/2021
+#  @date   12/11/2021
 
 import PySimpleGUI as sg
 
@@ -10,7 +10,7 @@ from os import listdir
 from pathlib import Path
 from titlecase import titlecase
 
-from Helpers import checkFileName, validKeys
+from Helpers import checkFileName, rmEmptySongsKeys, validKeys
 
 
 ## @brief  Implements GUI for retrieving songs and keys.
@@ -21,8 +21,7 @@ def songGUI():
 
         # Get list of songs from songs directory
         # [:-4] removes ".txt" from filenames
-        songsFromFile = [song[:-4] for song in listdir(Path("src/songs"))]
-        songsFromFile.sort()
+        songsFromFile = sorted([s[:-4] for s in listdir(Path("src/songs"))])
         songList = ["Select a song..."] + songsFromFile
 
         # TODO? Maybe InputCombo isn't the best implementation
@@ -50,12 +49,8 @@ def songGUI():
                         key = key[0].upper() + key[1:].lower()
                     keys.append(key)
 
-            # TODO: Better way to implement this?
-            verifiedOutput = checkSongGUI(songs, keys)
-            if verifiedOutput:
-                break
-
-    return verifiedOutput[0], verifiedOutput[1]
+            if checkSongGUI(songs, keys):
+                return rmEmptySongsKeys(songs, keys)
 
 
 def numSongsGUI():
@@ -99,16 +94,11 @@ def addSongGUI():
                     fp.write(songName)
 
 
-## @brief            Ensures output is valid and removes empty song fields.
+## @brief            Ensures output is valid.
 #  @param[in] songs  The song inputs.
 #  @param[in] keys   The key inputs.
-#  @return           The updated output if valid, otherwise False.
+#  @return           A Boolean representing if the output is valid.
 def checkSongGUI(songs, keys):
-
-    def rmEmptySongsKeys(xs):
-        return [xs[i] for i in range(len(xs)) if songs[i] and keys[i]]
-
-    songs, keys = rmEmptySongsKeys(songs), rmEmptySongsKeys(keys)
 
     if not len(songs):
         popupError("You must select at least one song.")
@@ -123,7 +113,7 @@ def checkSongGUI(songs, keys):
         popupError("Each song can only be selected once.")
         return False
 
-    return songs, keys
+    return True
 
 
 ## @brief  Implements GUI for retrieving the file name.
