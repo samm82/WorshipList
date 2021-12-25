@@ -60,17 +60,23 @@ def songGUI():
                     keys.append(key)
 
             if button == "Number of Songs":
-                numSongs = numSongsGUI()
+                def lastEntry(x):
+                    return next((i for i, j in enumerate(x) if j), 0)
+
+                newNS = numSongsGUI(max(lastEntry(songs), lastEntry(keys)))
+                if newNS:
+                    numSongs = newNS
+
             elif button == "Add a Song":
                 addSongGUI()
-                # Only return once user has a chance to use new song file
-                continue
-
-            if checkSongGUI(songs, keys):
-                return songs, keys
+            elif button == "OK":
+                if checkSongGUI(songs, keys):
+                    return songs, keys
 
 
-def numSongsGUI():
+## @brief  Implements a GUI for entering the number of songs to generate.
+#  @return Returns the entered number of songs.
+def numSongsGUI(lastEntry):
     while True:
         button, numSongs = popupText("Enter the number of songs:")
 
@@ -78,11 +84,26 @@ def numSongsGUI():
             return
         else:
             try:
-                if int(numSongs) > 0:
-                    return int(numSongs)
-                else:
-                    popupError("You must error a number greater than zero.")
+                numSongs = int(numSongs)
             except ValueError:
+                popupError("You must error a number greater than zero.")
+
+            if int(numSongs) > 0:
+                if numSongs <= lastEntry:
+                    delDialogue = [
+                        [sg.Text("The number of songs entered will delete at "
+                                 "least one entry. Proceed anyways?")],
+                        [sg.CloseButton("OK"), sg.CloseButton("Cancel")]
+                    ]
+
+                    delWindow = sg.Window("WorshipList").Layout(delDialogue)
+                    button, values = delWindow.Read()
+
+                    if button == "Cancel":
+                        return
+                return numSongs
+
+            else:
                 popupError("You must error a number greater than zero.")
 
 
@@ -143,15 +164,15 @@ def checkSongGUI(songs, keys):
 def fileNameGUI():
     while True:
 
-        fileDialogue = [
+        deleteDialogue = [
             [sg.Text("Enter a filename:")],
             [sg.InputText("")],
             [sg.CloseButton("OK"), sg.CloseButton("Use Next Sunday"),
              sg.CloseButton("Cancel")]
         ]
 
-        fileWindow = sg.Window("WorshipList").Layout(fileDialogue)
-        button, values = fileWindow.Read()
+        deleteWindow = sg.Window("WorshipList").Layout(deleteDialogue)
+        button, values = deleteWindow.Read()
 
         if button == "Cancel":
             exit()
