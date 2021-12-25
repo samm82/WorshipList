@@ -1,5 +1,5 @@
 # src/
-Last Modified: 11/21/2021
+Last Modified: 12/24/2021
 
 ## Description
 
@@ -11,6 +11,7 @@ This is the source folder for the code and song input files.
 .  
 └── songs/  
 │  
+│   COMPILED_README.md
 │   Document.py  
 │   GUI.py  
 │   Helpers.py  
@@ -22,6 +23,7 @@ This is the source folder for the code and song input files.
 | Name | Description |
 |---|---|
 |songs/|Contains song input files, with chords stored as Roman numerals|
+|COMPILED_README.md|The template README.md to be populated and included with the built version of the program|
 |Document.py|Contains functions for writing to the output document|
 |GUI.py|Contains functions for implementing the GUIs|
 |Helpers.py|Contains helper functions for processing and retrieving information|

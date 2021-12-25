@@ -1,6 +1,6 @@
 # WorshipList
-Last Modified: 12/8/2021
-Last Compiled: 12/9/2021
+Last Modified: 12/24/2021
+Last Compiled: 12/24/2021
 
 ## Description
 
@@ -19,8 +19,7 @@ The song files also contain some custom symbols that are shorthand for some impo
 | Keyword | Output |
 |---|---|
 |\||"\|"|
-|double|"x 2"|
-|triple|"x 3"|
+|x#|"x#" eg. "x2"|
 |new|Splits a line into two lines, preserving tab stops|
 |same|Denotes that two sections should appear on the same line|
 |/|Denotes a chord over a bass note|
