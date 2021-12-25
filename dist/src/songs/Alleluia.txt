@@ -1,5 +1,5 @@
 Alleluia
-Verse: 	I IV | vi V IV double
-Chorus: IV I V triple ii I/ III V
-Bridge 1: IV I V vi double
+Verse: 	I IV | vi V IV x2
+Chorus: IV I V x3 ii I/ III V
+Bridge 1: IV I V vi x2
 Bridge 2: IV V | IV/ VI V I/ III

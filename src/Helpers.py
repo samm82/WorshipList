@@ -7,9 +7,9 @@ from os import listdir
 from pathlib import Path
 from pathvalidate import is_valid_filename
 
-notesSharp = ['F','F#','G','G#','A','A#','B','C','C#','D','D#','E'] * 2  # noqa: E231,E501
-notesFlat = ['F','Gb','G','Ab','A','Bb','B','C','Db','D','Eb','E'] * 2  # noqa: E231,E501
-validKeys = set(notesSharp + notesFlat)
+sharpNotes = ['F','F#','G','G#','A','A#','B','C','C#','D','D#','E'] * 2  # noqa: E231,E501
+flatNotes = ['F','Gb','G','Ab','A','Bb','B','C','Db','D','Eb','E'] * 2  # noqa: E231,E501
+validKeys = set(sharpNotes + flatNotes)
 
 
 ## @brief   Exception for if a file is incorrectly formatted (invalid chord).
@@ -52,13 +52,13 @@ def getNotes(key):
 
     if len(key) > 1:
         if key[1] == "#":
-            notes = notesSharp
+            notes = sharpNotes
         elif key[1] == "b":
-            notes = notesFlat
+            notes = flatNotes
     elif key in ["C", "F"]:
-        notes = notesFlat
+        notes = flatNotes
     else:
-        notes = notesSharp
+        notes = sharpNotes
 
     # Gets notes of the major scale started at the given key
 

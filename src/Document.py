@@ -1,7 +1,7 @@
 ## @file   Document.py
 #  @brief  Contains functions for adding text to document.
 #  @author Samuel Crawford
-#  @date   11/24/2021
+#  @date   12/24/2021
 
 import win32com.client
 
@@ -175,10 +175,8 @@ def writeLine(doc, line, end, notes, file):
             run = p.add_run("|  ")
             run, i = writeSection(p, line, "  ", i + 1)
             iNext = False
-        elif chord == "double":
-            run = p.add_run("x 2  ")
-        elif chord == "triple":
-            run = p.add_run("x 3  ")
+        elif chord[0] == "x" and len(chord) > 1 and chord[1:].isdecimal():
+            run = p.add_run(f"x{chord[1:].lstrip('0')}  ")
         elif "/" in chord:
             newChord = chord[:-1]
             run = p.add_run(getChord(notes, newChord, file) + "/")
