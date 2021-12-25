@@ -1,42 +1,41 @@
 ## @file   GUI.py
 #  @brief  Implements GUI for selecting songs.
 #  @author Samuel Crawford
-#  @date   12/11/2021
+#  @date   12/24/2021
 
 import PySimpleGUI as sg
 
 from datetime import date, timedelta
-from os import listdir
 from pathlib import Path
 from titlecase import titlecase
 
-from Helpers import checkFileName, rmEmptySongsKeys, validKeys
+from Helpers import checkFileName, getValidSongs, validKeys
 
 
 ## @brief  Implements GUI for retrieving songs and keys.
 #  @return A list of songs, and a list of their keys.
 def songGUI():
     numSongs = 4
-    songs, keys = ["", "", "", ""], ["", "", "", ""]
+    songs, keys = ["" for _ in range(numSongs)], ["" for _ in range(numSongs)]
 
     while True:
-
-        # Get list of songs from songs directory
-        # [:-4] removes ".txt" from filenames
-        songsFromFile = sorted([s[:-4] for s in listdir(Path("src/songs"))])
-        songList = [""] + songsFromFile
+        songsFromFile = getValidSongs()
         combo = []
+
+        def songCombo(input=""):
+            if input and input not in songsFromFile:
+                return sg.Combo([input, ""] + songsFromFile, input)
+            return sg.Combo([""] + songsFromFile, input)
+
+        def keyInput(input=""):
+            return sg.InputText(input, (5, None))
 
         # TODO? Maybe Combo isn't the best implementation
         for i in range(numSongs):
-            row = [sg.Combo(songList, ""), sg.InputText(size=(5, None))]
-
             if i < len(songs):
-                if songs[i] in songsFromFile:
-                    row[0] = sg.Combo(songList, songs[i])
-
-                if keys[i] in validKeys:
-                    row[1] = sg.InputText(keys[i], (5, None))
+                row = [songCombo(songs[i]), keyInput(keys[i])]
+            else:
+                row = [songCombo(), keyInput()]
 
             combo.append(row)
 
@@ -56,17 +55,19 @@ def songGUI():
                     songs.append(values[i].strip())
                 else:
                     key = values[i].strip()
-                    if len(key):
+                    if key:
                         key = key[0].upper() + key[1:].lower()
                     keys.append(key)
 
+            if button == "Number of Songs":
+                numSongs = numSongsGUI()
+            elif button == "Add a Song":
+                addSongGUI()
+                # Only return once user has a chance to use new song file
+                continue
+
             if checkSongGUI(songs, keys):
-                if button == "Number of Songs":
-                    numSongs = numSongsGUI()
-                elif button == "Add a Song":
-                    addSongGUI()
-                else:
-                    return rmEmptySongsKeys(songs, keys)
+                return songs, keys
 
 
 def numSongsGUI():
@@ -88,7 +89,6 @@ def numSongsGUI():
 ## @brief   Adds a blank song file with the specified name.
 def addSongGUI():
     while True:
-
         button, songName = popupText("Enter the name of the new song:")
 
         if button == "Cancel":
@@ -114,11 +114,12 @@ def addSongGUI():
 #  @param[in] keys   The key inputs.
 #  @return           A Boolean representing if the output is valid.
 def checkSongGUI(songs, keys):
-    songs, keys = rmEmptySongsKeys(songs.copy(), keys.copy())
+    rm = lambda xs: [xs[i] for i in range(len(xs)) if songs[i] and keys[i]]  # noqa: E501, E731
+    songs, keys = rm(songs), rm(keys)
 
     if not len(songs):
-        popupError("You must select at least one song.")
-        return False
+        return popupError("You must select at least one song.")
+        # return False
 
     for key in keys:
         if key not in validKeys:
@@ -128,6 +129,11 @@ def checkSongGUI(songs, keys):
     if len(songs) != len(set(songs)):
         popupError("Each song can only be selected once.")
         return False
+
+    validSongs = getValidSongs()
+    for song in songs:
+        if song not in validSongs:
+            popupError("All songs must be present in the song directory.")
 
     return True
 

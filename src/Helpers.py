@@ -1,8 +1,10 @@
 ## @file   Helpers.py
 #  @brief  Contains helper functions for the modules.
 #  @author Samuel Crawford
-#  @date   12/11/2021
+#  @date   12/24/2021
 
+from os import listdir
+from pathlib import Path
 from pathvalidate import is_valid_filename
 
 notesSharp = ['F','F#','G','G#','A','A#','B','C','C#','D','D#','E'] * 2  # noqa: E231,E501
@@ -31,13 +33,11 @@ def checkFileName(name):
     return is_valid_filename(name) and name not in reserved
 
 
-## @brief            Removes empty pairs of entries from song and key inputs.
-#  @param[in] songs  The song inputs.
-#  @param[in] keys   The key inputs.
-#  @return           The song and key inputs with empty pairs removed.
-def rmEmptySongsKeys(songs, keys):
-    rm = lambda xs: [xs[i] for i in range(len(xs)) if songs[i] and keys[i]]  # noqa: E501, E731
-    return rm(songs), rm(keys)
+## @brief   Gets a list of valid songs from the song directory.
+#  @return  A list of all valid songs.
+def getValidSongs():
+    # [:-4] removes ".txt" from filenames
+    return sorted([s[:-4] for s in listdir(Path("src/songs"))])
 
 
 ## @brief         Gets a list of notes in the given key.
