@@ -68,10 +68,8 @@ def songGUI():
                 songWindow[f"-KEY{i}-"].update(key)
 
             if button == "Number of Songs":
-                def lastEntry(x):
-                    return next((i for i, j in enumerate(x) if j), 0)
-
-                newNS = numSongsGUI(max(lastEntry(songs), lastEntry(keys)))
+                nonEmptyRows = [i for i in range(len(songs)) if songs[i] or keys[i]]
+                newNS = numSongsGUI(nonEmptyRows)
                 if newNS:
                     numSongs = newNS
                 else:
@@ -98,36 +96,46 @@ def songGUI():
                 songWindow.close()
 
 
-## @brief  Implements a GUI for entering the number of songs to generate.
-#  @return Returns the entered number of songs.
-def numSongsGUI(lastEntry):
+## @brief       Implements a GUI for entering the number of songs to generate.
+#  @param[in] n The number of GUI rows with a song and/or a key entered.
+#  @return      Returns the user-entered number of songs.
+def numSongsGUI(n):
     while True:
         button, numSongs = popupText("Enter the number of songs:")
 
         if button == "Cancel":
             return
-        else:
+        elif button == "OK":
             try:
                 numSongs = int(numSongs)
-            except ValueError:
-                popupError("You must error a number greater than zero.")
-                continue
 
-            if int(numSongs) > 0:
-                if numSongs <= lastEntry:
+                if numSongs > 0:
+                    overwritten = sum(i >= numSongs for i in n)
+
+                    if not overwritten:
+                        return numSongs
+                    elif overwritten == 1:
+                        overwritten = "one entry"
+                    else:
+                        overwritten = f"{overwritten} entries"
+
                     delDialogue = [
-                        [sg.Text("The number of songs entered will delete at least one entry. Proceed anyways?")],
+                        [sg.Text(f"The number of songs entered will delete {overwritten}. Proceed anyways?")],
                         [sg.CloseButton("OK"), sg.CloseButton("Cancel")]
                     ]
 
                     delWindow = sg.Window("WorshipList").Layout(delDialogue)
-                    button, values = delWindow.Read()
+                    button, _ = delWindow.Read()
 
                     if button == "Cancel":
                         return
-                return numSongs
+                    elif button == "OK":
+                        return numSongs
 
-            else:
+                else:
+                    popupError("You must error a number greater than zero.")
+
+            except ValueError:
                 popupError("You must error a number greater than zero.")
 
 

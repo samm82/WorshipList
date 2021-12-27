@@ -42,4 +42,5 @@ clean:
 # Documentation files
 	rm -rf html/*
 	rm -rf latex/*
-	
+
+rebuild: clean compile
