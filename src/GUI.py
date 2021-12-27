@@ -1,88 +1,152 @@
 ## @file   GUI.py
 #  @brief  Implements GUI for selecting songs.
 #  @author Samuel Crawford
-#  @date   12/8/2021
+#  @date   12/27/2021
 
 import PySimpleGUI as sg
 
 from datetime import date, timedelta
-from os import listdir
 from pathlib import Path
 from titlecase import titlecase
 
-from Helpers import checkFileName, validKeys
+from Helpers import checkFileName, getValidSongs, validKeys
 
 
 ## @brief  Implements GUI for retrieving songs and keys.
 #  @return A list of songs, and a list of their keys.
 def songGUI():
     numSongs = 4
+    songs, keys = [""] * numSongs, [""] * numSongs
+    makeNewWindow = True
+
     while True:
+        if makeNewWindow:
+            songsFromFile = getValidSongs()
+            combo = []
 
-        # Get list of songs from songs directory
-        # [:-4] removes ".txt" from filenames
-        songsFromFile = [song[:-4] for song in listdir(Path("src/songs"))]
-        songsFromFile.sort()
-        songList = ["Select a song..."] + songsFromFile
+            def songCombo(i, input=""):
+                if input and input not in songsFromFile:
+                    prepend = [input, ""]
+                else:
+                    prepend = [""]
+                return sg.Combo(prepend + songsFromFile, input, key=f"-SONG{i}-")
 
-        # TODO? Maybe InputCombo isn't the best implementation
-        songDialogue = [[sg.Text("Song                                           Key")]] + \
-            [[sg.InputCombo(songList), sg.InputText("", size=(5, None))] for _ in range(numSongs)] + \
-            [[sg.CloseButton("OK"), sg.CloseButton("Number of Songs"), sg.CloseButton("Add a Song"), sg.CloseButton("Quit")]]  # noqa: E501
+            def keyInput(i, input=""):
+                return sg.InputText(input, (5, None), key=f"-KEY{i}-")
 
-        songWindow = sg.Window("WorshipList").Layout(songDialogue)
+            # TODO? Maybe Combo isn't the best implementation
+            for i in range(numSongs):
+                if i < len(songs):
+                    row = [songCombo(i, songs[i]), keyInput(i, keys[i])]
+                else:
+                    row = [songCombo(i), keyInput(i)]
+
+                combo.append(row)
+
+            songDialogue = [[sg.Text("Song" + " " * 43 + "Key")]] + combo + \
+                [[sg.Button("OK"), sg.Button("Number of Songs"),
+                  sg.Button("Add a Song"), sg.Button("Quit")]]
+
+            songWindow = sg.Window("WorshipList").Layout(songDialogue)
+
         button, values = songWindow.Read()
+        makeNewWindow = None
 
         if button == "Quit":
             exit()
-        elif button == "Number of Songs":
-            numSongs = numSongsGUI()
-        elif button == "Add a Song":
-            addSongGUI()
         else:
             songs, keys = [], []
-            for i in range(len(values)):
-                if i % 2 == 0:
-                    songs.append(values[i].strip())
+
+            for i in range(numSongs):
+                songs.append(values[f"-SONG{i}-"].strip())
+                songWindow[f"-SONG{i}-"].update(songs[i])
+
+                key = values[f"-KEY{i}-"].strip()
+                if key:
+                    key = key[0].upper() + key[1:].lower()
+                keys.append(key)
+                songWindow[f"-KEY{i}-"].update(key)
+
+            if button == "Number of Songs":
+                nonEmptyRows = [i for i in range(len(songs)) if songs[i] or keys[i]]
+                newNS = numSongsGUI(nonEmptyRows)
+                if newNS:
+                    numSongs = newNS
                 else:
-                    key = values[i].strip()
-                    if len(key):
-                        key = key[0].upper() + key[1:].lower()
-                    keys.append(key)
+                    makeNewWindow = False
 
-            # TODO: Better way to implement this?
-            verifiedOutput = checkSongGUI(songs, keys)
-            if verifiedOutput:
-                break
+            elif button == "Add a Song":
+                makeNewWindow = addSongGUI()
+            elif button == "OK":
+                if checkSongGUI(songs, keys):
+                    toDelete = [i for i, s in enumerate(songs) if not s]
+                    songWindow.close()
 
-    return verifiedOutput[0], verifiedOutput[1]
+                    def prune(xs):
+                        return [x for i, x in enumerate(xs) if i not in toDelete]
+
+                    return prune(songs), prune(keys)
+                else:
+                    makeNewWindow = False
+
+            if makeNewWindow is None:
+                makeNewWindow = True
+
+            if makeNewWindow:
+                songWindow.close()
 
 
-def numSongsGUI():
+## @brief       Implements a GUI for entering the number of songs to generate.
+#  @param[in] n The number of GUI rows with a song and/or a key entered.
+#  @return      Returns the user-entered number of songs.
+def numSongsGUI(n):
     while True:
-
         button, numSongs = popupText("Enter the number of songs:")
 
         if button == "Cancel":
             return
-        else:
+        elif button == "OK":
             try:
-                if int(numSongs) > 0:
-                    return int(numSongs)
+                numSongs = int(numSongs)
+
+                if numSongs > 0:
+                    overwritten = sum(i >= numSongs for i in n)
+
+                    if not overwritten:
+                        return numSongs
+                    elif overwritten == 1:
+                        overwritten = "one entry"
+                    else:
+                        overwritten = f"{overwritten} entries"
+
+                    delDialogue = [
+                        [sg.Text(f"The number of songs entered will delete {overwritten}. Proceed anyways?")],
+                        [sg.CloseButton("OK"), sg.CloseButton("Cancel")]
+                    ]
+
+                    delWindow = sg.Window("WorshipList").Layout(delDialogue)
+                    button, _ = delWindow.Read()
+
+                    if button == "Cancel":
+                        return
+                    elif button == "OK":
+                        return numSongs
+
                 else:
                     popupError("You must error a number greater than zero.")
+
             except ValueError:
                 popupError("You must error a number greater than zero.")
 
 
 ## @brief   Adds a blank song file with the specified name.
 def addSongGUI():
+    songCreated = False
     while True:
-
         button, songName = popupText("Enter the name of the new song:")
 
         if button == "Cancel":
-            return
+            return songCreated
         else:
             songName = titlecase(songName)
             if not checkFileName(songName):
@@ -97,49 +161,63 @@ def addSongGUI():
                 # Create new file with title
                 with open(filePath, "w") as fp:
                     fp.write(songName)
+                songCreated = True
 
 
-## @brief            Ensures output is valid and removes empty song fields.
+## @brief            Ensures output of song GUI is valid.
 #  @param[in] songs  The song inputs.
 #  @param[in] keys   The key inputs.
-#  @return           The updated output if valid, otherwise False.
+#  @return           True if the output is valid and None otherwise.
 def checkSongGUI(songs, keys):
+    ignoreAll = False
 
-    def rmEmptySongsKeys(xs):
-        return [xs[i] for i in range(len(xs)) if songs[i] and keys[i]]
+    if not any(songs):
+        return popupError("You must select at least one song.")
 
-    songs, keys = rmEmptySongsKeys(songs), rmEmptySongsKeys(keys)
+    validSongs = getValidSongs()
+    for song, key in zip(songs, keys):
+        if song:
+            if song not in validSongs:
+                return popupError(f"\"{song}\" not found in the songs directory.")
+            elif not key:
+                return popupError(f"No key specified for \"{song}\".")
+            elif key not in validKeys:
+                return popupError(f"\"{key}\" is not a valid key.")
+        else:
+            if key and not ignoreAll:
+                noSongName = [
+                    [sg.Text(f"No song name entered for key \"{key}\".")],
+                    [sg.CloseButton("Go Back"), sg.CloseButton("Ignore"),
+                     sg.CloseButton("Ignore All")]
+                ]
 
-    if not len(songs):
-        popupError("You must select at least one song.")
-        return False
+                window = sg.Window("WorshipList").Layout(noSongName)
+                button, _ = window.Read()
+                if button == "Go Back":
+                    return
+                elif button == "Ignore All":
+                    ignoreAll = True
 
-    for key in keys:
-        if key not in validKeys:
-            popupError("You must select a valid key for each song.")
-            return False
+    nonEmptySongs = [song for song in songs if song]
+    if len(nonEmptySongs) != len(set(nonEmptySongs)):
+        return popupError("Each song can only be selected once.")
 
-    if len(songs) != len(set(songs)):
-        popupError("Each song can only be selected once.")
-        return False
-
-    return songs, keys
+    return True
 
 
 ## @brief  Implements GUI for retrieving the file name.
 #  @return The file name.
 def fileNameGUI():
     while True:
-
-        fileDialogue = [
+        deleteDialogue = [
             [sg.Text("Enter a filename:")],
             [sg.InputText("")],
             [sg.CloseButton("OK"), sg.CloseButton("Use Next Sunday"),
              sg.CloseButton("Cancel")]
         ]
 
-        fileWindow = sg.Window("WorshipList").Layout(fileDialogue)
-        button, values = fileWindow.Read()
+        deleteWindow = sg.Window("WorshipList").Layout(deleteDialogue)
+        button, values = deleteWindow.Read()
 
         if button == "Cancel":
             exit()

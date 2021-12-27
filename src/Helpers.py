@@ -1,13 +1,15 @@
 ## @file   Helpers.py
 #  @brief  Contains helper functions for the modules.
 #  @author Samuel Crawford
-#  @date   12/24/2021
+#  @date   12/27/2021
 
+from os import listdir
+from pathlib import Path
 from pathvalidate import is_valid_filename
 
-sharpNotes = ['F','F#','G','G#','A','A#','B','C','C#','D','D#','E'] * 2  # noqa: E231,E501
-flatNotes  = ['F','Gb','G','Ab','A','Bb','B','C','Db','D','Eb','E'] * 2  # noqa: E221,E231,E501
-validKeys  = set(sharpNotes + flatNotes)  # noqa: E221
+sharpNotes = ['F','F#','G','G#','A','A#','B','C','C#','D','D#','E'] * 2  # noqa: E231
+flatNotes = ['F','Gb','G','Ab','A','Bb','B','C','Db','D','Eb','E'] * 2  # noqa: E231
+validKeys = set(sharpNotes + flatNotes)
 
 
 ## @brief   Exception for if a file is incorrectly formatted (invalid chord).
@@ -29,6 +31,13 @@ def checkFileName(name):
                 'COM5', 'COM6', 'COM7', 'COM8', 'COM9', 'LPT1', 'LPT2',
                 'LPT3', 'LPT4', 'LPT5', 'LPT6', 'LPT7', 'LPT8', 'LPT9'}
     return is_valid_filename(name) and name not in reserved
+
+
+## @brief   Gets a list of valid songs from the song directory.
+#  @return  A list of all valid songs.
+def getValidSongs():
+    # [:-4] removes ".txt" from filenames
+    return sorted([s[:-4] for s in listdir(Path("src/songs"))])
 
 
 ## @brief         Gets a list of notes in the given key.
