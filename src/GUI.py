@@ -1,7 +1,7 @@
 ## @file   GUI.py
 #  @brief  Implements GUI for selecting songs.
 #  @author Samuel Crawford
-#  @date   12/24/2021
+#  @date   12/27/2021
 
 import PySimpleGUI as sg
 
@@ -71,7 +71,9 @@ def songGUI():
                 addSongGUI()
             elif button == "OK":
                 if checkSongGUI(songs, keys):
-                    return songs, keys
+                    toDelete = [i for i, s in enumerate(songs) if not s]
+                    prune = lambda xs: [x for i, x in enumerate(xs) if i not in toDelete]  # noqa: E731
+                    return prune(songs), prune(keys)
 
 
 ## @brief  Implements a GUI for entering the number of songs to generate.
@@ -91,8 +93,7 @@ def numSongsGUI(lastEntry):
             if int(numSongs) > 0:
                 if numSongs <= lastEntry:
                     delDialogue = [
-                        [sg.Text("The number of songs entered will delete at "
-                                 "least one entry. Proceed anyways?")],
+                        [sg.Text("The number of songs entered will delete at least one entry. Proceed anyways?")],
                         [sg.CloseButton("OK"), sg.CloseButton("Cancel")]
                     ]
 
@@ -130,31 +131,43 @@ def addSongGUI():
                     fp.write(songName)
 
 
-## @brief            Ensures output is valid.
+## @brief            Ensures output of song GUI is valid.
 #  @param[in] songs  The song inputs.
 #  @param[in] keys   The key inputs.
-#  @return           A Boolean representing if the output is valid.
+#  @return           True if the output is valid and None otherwise.
 def checkSongGUI(songs, keys):
-    rm = lambda xs: [xs[i] for i in range(len(xs)) if songs[i] and keys[i]]  # noqa: E501, E731
-    songs, keys = rm(songs), rm(keys)
+    ignoreAll = False
 
-    if not len(songs):
+    if not any(songs):
         return popupError("You must select at least one song.")
-        # return False
-
-    for key in keys:
-        if key not in validKeys:
-            popupError("You must select a valid key for each song.")
-            return False
-
-    if len(songs) != len(set(songs)):
-        popupError("Each song can only be selected once.")
-        return False
 
     validSongs = getValidSongs()
-    for song in songs:
-        if song not in validSongs:
-            popupError("All songs must be present in the song directory.")
+    for song, key in zip(songs, keys):
+        if song:
+            if song not in validSongs:
+                return popupError(f"\"{song}\" not found in the songs directory.")
+            elif not key:
+                return popupError(f"No key specified for \"{song}\".")
+            elif key not in validKeys:
+                return popupError(f"\"{key}\" is not a valid key.")
+        else:
+            if key and not ignoreAll:
+                noSongName = [
+                    [sg.Text(f"No song name entered for key \"{key}\".")],
+                    [sg.CloseButton("Go Back"), sg.CloseButton("Ignore"),
+                     sg.CloseButton("Ignore All")]
+                ]
+
+                window = sg.Window("WorshipList").Layout(noSongName)
+                button, _ = window.Read()
+                if button == "Go Back":
+                    return
+                elif button == "Ignore All":
+                    ignoreAll = True
+
+    nonEmptySongs = [song for song in songs if song]
+    if len(nonEmptySongs) != len(set(nonEmptySongs)):
+        return popupError("Each song can only be selected once.")
 
     return True
 

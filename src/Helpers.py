@@ -1,14 +1,14 @@
 ## @file   Helpers.py
 #  @brief  Contains helper functions for the modules.
 #  @author Samuel Crawford
-#  @date   12/24/2021
+#  @date   12/27/2021
 
 from os import listdir
 from pathlib import Path
 from pathvalidate import is_valid_filename
 
-sharpNotes = ['F','F#','G','G#','A','A#','B','C','C#','D','D#','E'] * 2  # noqa: E231,E501
-flatNotes = ['F','Gb','G','Ab','A','Bb','B','C','Db','D','Eb','E'] * 2  # noqa: E231,E501
+sharpNotes = ['F','F#','G','G#','A','A#','B','C','C#','D','D#','E'] * 2  # noqa: E231
+flatNotes = ['F','Gb','G','Ab','A','Bb','B','C','Db','D','Eb','E'] * 2  # noqa: E231
 validKeys = set(sharpNotes + flatNotes)
 
 
