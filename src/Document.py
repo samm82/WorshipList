@@ -1,7 +1,7 @@
 ## @file   Document.py
 #  @brief  Contains functions for adding text to document.
 #  @author Samuel Crawford
-#  @date   12/24/2021
+#  @date   12/27/2021
 
 import win32com.client
 
@@ -51,21 +51,14 @@ def docSetup():
 #  @param[in] doc       The document being generated.
 #  @param[in] lineCount A counter of how many lines have been printed.
 #  @param[in] fileName  The name of the song file.
-#  @param[in] oldKey    The original key of the song (manipulated in function).
+#  @param[in] key       The key of the song.
 #  @return              The document (doc) and line counter (lineCount).
-def writeSong(doc, lineCount, fileName, oldKey):
+def writeSong(doc, lineCount, fileName, key):
     infile = open("src/songs/" + fileName + ".txt", "r")
     lines = infile.readlines()
     infile.close()
 
-    # Converts key to uppercase
-
-    key = oldKey[0].upper()
-    if len(oldKey) > 1:
-        key += oldKey[1]
-
     # Adds page break if song will get cut off
-
     newLineLength = len(lines)
     for line in lines:
         if "new" in line.split():
@@ -80,15 +73,12 @@ def writeSong(doc, lineCount, fileName, oldKey):
         lineCount += newLineLength
 
     # Writes title
-
     doc = writeTitle(doc, lines[0], key)
 
     # Gets list of notes from getNotes(key)
-
     noteList = getNotes(key)
 
     # Writes the lines with chords
-
     for i in range(1, len(lines)):
         line = lines[i].split()
         end = i == len(lines) - 1
@@ -109,7 +99,7 @@ def writeTitle(doc, title, key):
     title.font.size = Pt(36)
     title.underline = True
 
-    titleKey = p.add_run("(" + key + ")")
+    titleKey = p.add_run(f"({key})")
     titleKey.font.size = Pt(20)
     titleKey.underline = True
 
@@ -150,7 +140,7 @@ def writeLine(doc, line, end, notes, file):
 
     # Defines tab stops
     tab_stops = p.paragraph_format.tab_stops
-    tab_stop = tab_stops.add_tab_stop(Inches(1.58), WD_TAB_ALIGNMENT.LEFT)
+    tab_stops.add_tab_stop(Inches(1.58), WD_TAB_ALIGNMENT.LEFT)
 
     # Defines relative font size based on song file
     class Size(Enum):
@@ -196,7 +186,6 @@ def writeLine(doc, line, end, notes, file):
             run = p.add_run(getChord(notes, chord, file) + "  ")
 
         # Set font size for small text
-
         if size == Size.SMALL:
             run.font.size = Pt(22)
         if size == Size.SMALL_LAST:
@@ -204,12 +193,10 @@ def writeLine(doc, line, end, notes, file):
             size = Size.NORMAL
 
         # Increments i if specified to.
-
         if iNext:
             i += 1
 
     # Sets paragraph spacing
-
     if end:
         p.paragraph_format.space_after = Pt(10)
     else:

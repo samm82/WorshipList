@@ -1,10 +1,9 @@
 ## @file   Main.py
 #  @brief  Generates a worship chart from specified songs and keys.
 #  @author Samuel Crawford
-#  @date   12/8/2021
+#  @date   12/27/2021
 
 from pathlib import Path
-from titlecase import titlecase
 
 from Document import docSetup, pdfWrite, writeSong
 from GUI import fileNameGUI, songGUI
@@ -14,19 +13,16 @@ from GUI import fileNameGUI, songGUI
 def main():
     doc = docSetup()
     lineCount = 0
-
     print()
 
     # Writes each song
-
     songs, keys = songGUI()
     fileNameDOCX, fileNamePDF = fileNameGUI()
-    for i in range(len(songs)):
-        songName, songFile = titlecase(songs[i]), titlecase(songs[i])
-        doc, lineCount = writeSong(doc, lineCount, songFile, keys[i])
-        print("Wrote", songName + ".")
+    for song, key in zip(songs, keys):
+        doc, lineCount = writeSong(doc, lineCount, song, key)
+        print(f"Wrote {song}.")
 
-    # Get output file directory from file
+    # Gets output file directory from file
     with Path("src/Settings.txt").open() as fp:
         filepath = Path(fp.readline().strip())
 
