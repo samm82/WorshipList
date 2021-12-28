@@ -13,7 +13,7 @@ run:
 	$(PY) $(PYFLAGS) $(MAIN)
 
 compile: $(MAIN)
-	pyinstaller --onefile $^ -n WorshipList #-w
+	pyinstaller --onefile $^ -n WorshipList -i src/icon.ico #-w
 	rm WorshipList.spec || true
 # Continues execution if dist/ exists
 	mkdir $(DIST_SRC) || true
