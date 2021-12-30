@@ -1,11 +1,12 @@
 ## @file   Document.py
 #  @brief  Contains functions for adding text to document.
 #  @author Samuel Crawford
-#  @date   12/27/2021
+#  @date   12/29/2021
 
 import win32com.client
 
 from enum import Enum, auto
+from pathlib import Path
 
 from docx import Document
 from docx.shared import Inches, Pt
@@ -54,7 +55,7 @@ def docSetup():
 #  @param[in] key       The key of the song.
 #  @return              The document (doc) and line counter (lineCount).
 def writeSong(doc, lineCount, fileName, key):
-    infile = open("src/songs/" + fileName + ".txt", "r")
+    infile = open(Path(f"src/songs/{fileName}.txt"), "r")
     lines = infile.readlines()
     infile.close()
 
