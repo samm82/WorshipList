@@ -9,8 +9,6 @@ automatically generates that chord chart. This is done through a GUI, by running
 To generate documentation, run `make doc` in the directory with the Makefile. This will create two folders; the important files are html/index 
 and latex/refman.pdf for documentation.
 
-NOTE: Making the documents currently uses an absolute file path in `Main.py` on my system - if you are using this program, you will have to modify the path.
-
 ## Song Files
 
 Each song is stored as a text file with chords represented as Roman numerals, where "I" corresponds to the first chord of the scale, "II" to the 
