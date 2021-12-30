@@ -1,5 +1,5 @@
 # WorshipList
-Last Modified: 12/27/2021
+Last Modified: 12/30/2021
 Last Compiled: COMPILE_DATE
 
 ## Description
@@ -32,5 +32,4 @@ Some assumptions for how the song files are formatted:
 1) The first line in the file is the title of the song, properly formatted. (eg. "Lion and the Lamb")
 2) Each section (chorus, verse, bridge, etc.) is on a new line, with the first entry being the entry name and a colon. (eg. "V/Ch:")
 3) The longest section name (currently) is the length of "Bridge 2:" when implemented in Word.
-4) Any chord with a bass note has a space after the slash. (eg. "I/ III")
-5) Any chords wrapped in parentheses are meant to have a smaller text size.
+4) Any chords wrapped in parentheses are meant to have a smaller text size.

@@ -2,4 +2,4 @@ Heaven Come
 Verse: 	I  vi  IV  I  x2
 Pre-Ch:	IV  |  vi  I  |  IV  |  I  V
 Chorus:	I  IV  ii  x2
-Bridge:	I  V  IV  ii  |  I/ III  V  IV  ii
+Bridge:	I  V  IV  ii  |  I/III  V  IV  ii
