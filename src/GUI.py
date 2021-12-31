@@ -22,7 +22,8 @@ def songGUI():
     while True:
         if makeNewWindow:
             songsFromFile = getValidSongs()
-            combo = []
+            songColumnList = [sg.Text("Song")]
+            keyColumnList = [sg.Text("Key")]
 
             def songCombo(i, input=""):
                 if input and input not in songsFromFile:
@@ -37,20 +38,22 @@ def songGUI():
             # TODO? Maybe Combo isn't the best implementation
             for i in range(numSongs):
                 if i < len(songs):
-                    row = [songCombo(i, songs[i]), keyInput(i, keys[i])]
+                    songColumnList.append(songCombo(i, songs[i]))
+                    keyColumnList.append(keyInput(i, keys[i]))
                 else:
-                    row = [songCombo(i), keyInput(i)]
+                    songColumnList.append(songCombo(i))
+                    keyColumnList.append(keyInput(i))
 
-                combo.append(row)
-
-            # TODO: Implement using columns
-            songDialogue = [[sg.Text("Song" + " " * 64 + "Key")]] + combo + \
+            songDialogue = [
+                [sg.Column([[s] for s in songColumnList]),
+                 sg.Column([[k] for k in keyColumnList])],
                 [buttonRow(["Change Number of Songs", "Add a New Song"], False),
                  [sg.HorizontalSeparator()],
                  [sg.Text("Enter a filename:")],
                  [sg.InputText("", key="-FILENAME-")],
                  buttonRow(["OK", "Use Next Sunday", "Quit"], False)
                  ]
+            ]
 
             songWindow = sg.Window("WorshipList").Layout(songDialogue)
 
@@ -99,8 +102,8 @@ def songGUI():
                     nextSunday = today + timedelta(days=(6 - today.weekday()) % 7)
                     filename = f"LIFT Worship {nextSunday.strftime('%F')}"
 
-                toDelete = [i for i, s in enumerate(songs) if not s]
                 songWindow.close()
+                toDelete = [i for i, s in enumerate(songs) if not s]
 
                 def prune(xs):
                     return [x for i, x in enumerate(xs) if i not in toDelete]
