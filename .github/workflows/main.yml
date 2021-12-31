@@ -21,7 +21,7 @@
       - name: build application
         run: make build
       - name: remove extra file
-        run: rm WorshipList
+        run: ls
       - name: upload build
         uses: actions/upload-artifact@v2
         with:
@@ -31,12 +31,12 @@
     lint:
       runs-on: 	ubuntu-latest
       steps:
-      # - name: set up python 3.9
-      #   uses: actions/setup-python@v2
-      #   with:
-      #     python-version: 3.9
-      # - name: get pyinstaller
-      #   run: sudo pip install pyinstaller
+      - name: set up python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: get flake8
+        run: sudo pip install flake8
       - name: checkout repo
         uses: actions/checkout@v2
       - name: lint application
