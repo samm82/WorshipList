@@ -20,8 +20,6 @@
         uses: actions/checkout@v2
       - name: build application
         run: make build
-      - name: get file type of extra file
-        run: file dist/WorshipList
       - name: remove extra WorshipList file
         run: rm dist/WorshipList
       - name: upload build
@@ -43,10 +41,3 @@
         uses: actions/checkout@v2
       - name: lint application
         run: make lint
-      # - name: remove extra file
-      #   run: rm WorshipList
-      # - name: upload build
-      #   uses: actions/upload-artifact@v2
-      #   with:
-      #     name: WorshipList
-      #     path: dist
