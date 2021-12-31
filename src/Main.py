@@ -1,12 +1,12 @@
 ## @file   Main.py
 #  @brief  Generates a worship chart from specified songs and keys.
 #  @author Samuel Crawford
-#  @date   12/27/2021
+#  @date   12/30/2021
 
 from pathlib import Path
 
 from Document import docSetup, pdfWrite, writeSong
-from GUI import fileNameGUI, songGUI
+from GUI import songGUI
 
 
 ## @brief The main function of the program that calls other programs.
@@ -15,9 +15,11 @@ def main():
     lineCount = 0
     print()
 
+    # Gets list of songs, keys, and output filename from user
+    songs, keys, filename = songGUI()
+    fileNameDOCX, fileNamePDF = f"{filename}.docx", f"{filename}.pdf"
+
     # Writes each song
-    songs, keys = songGUI()
-    fileNameDOCX, fileNamePDF = fileNameGUI()
     for song, key in zip(songs, keys):
         doc, lineCount = writeSong(doc, lineCount, song, key)
         print(f"Wrote {song}.")
@@ -44,9 +46,13 @@ def main():
         print("Unknown exception with saving .docx file.")
 
     # Saves document as .pdf
-    pdfWrite(filepathDOCX, filepathPDF)
-    print("Chord sheet converted to PDF.")
+    if pdfWrite(filepathDOCX, filepathPDF):
+        print("Chord sheet converted to PDF.")
+    else:
+        print("Error saving chord sheet as PDF.")
+
     print("Done.")
 
 
-main()
+if __name__ == "__main__":
+    main()

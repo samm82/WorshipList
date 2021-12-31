@@ -44,3 +44,5 @@ clean:
 	rm -rf latex/*
 
 rebuild: clean compile
+
+recompile: rebuild

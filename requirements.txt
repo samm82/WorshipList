@@ -1,7 +1,9 @@
-python_docx==0.8.10
-pywin32==301
-pathvalidate==2.0.1
-PySimpleGUI==4.15.2
-docx==0.2.4
-titlecase==2.3
-pathlib==1.0.1
+pywin32>=301
+setuptools>=58.1.0
+pathvalidate>=2.0.1
+PySimpleGUI>=4.15.2
+lxml>=4.6.4
+Pillow>=8.4.0
+docx>=0.2.4
+titlecase>=2.3
+pathlib>=1.0.1

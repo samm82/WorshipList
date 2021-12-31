@@ -1,7 +1,7 @@
 ## @file   GUI.py
 #  @brief  Implements GUI for selecting songs.
 #  @author Samuel Crawford
-#  @date   12/27/2021
+#  @date   12/30/2021
 
 import PySimpleGUI as sg
 
@@ -13,7 +13,7 @@ from Helpers import checkFileName, getValidSongs, validKeys
 
 
 ## @brief  Implements GUI for retrieving songs and keys.
-#  @return A list of songs, and a list of their keys.
+#  @return A list of songs, a list of their keys, and the chord sheet file name.
 def songGUI():
     numSongs = 4
     songs, keys = [""] * numSongs, [""] * numSongs
@@ -29,7 +29,7 @@ def songGUI():
                     prepend = [input, ""]
                 else:
                     prepend = [""]
-                return sg.Combo(prepend + songsFromFile, input, key=f"-SONG{i}-")
+                return sg.Combo(prepend + songsFromFile, input, 37, key=f"-SONG{i}-")
 
             def keyInput(i, input=""):
                 return sg.InputText(input, (5, None), key=f"-KEY{i}-")
@@ -43,16 +43,22 @@ def songGUI():
 
                 combo.append(row)
 
-            songDialogue = [[sg.Text("Song" + " " * 43 + "Key")]] + combo + \
-                [[sg.Button("OK"), sg.Button("Number of Songs"),
-                  sg.Button("Add a Song"), sg.Button("Quit")]]
+            # TODO: Implement using columns
+            songDialogue = [[sg.Text("Song" + " " * 64 + "Key")]] + combo + \
+                [[sg.Button("Change Number of Songs"), sg.Button("Add a New Song")],
+                 [sg.HorizontalSeparator()],
+                 [sg.Text("Enter a filename:")],
+                 [sg.InputText("", key="-FILENAME-")],
+                 [sg.Button("OK"), sg.Button("Use Next Sunday"),
+                  sg.Button("Quit")]
+                 ]
 
             songWindow = sg.Window("WorshipList").Layout(songDialogue)
 
         button, values = songWindow.Read()
-        makeNewWindow = None
+        makeNewWindow = True
 
-        if button == "Quit":
+        if button in {"Quit", None}:
             exit()
         else:
             songs, keys = [], []
@@ -67,7 +73,7 @@ def songGUI():
                 keys.append(key)
                 songWindow[f"-KEY{i}-"].update(key)
 
-            if button == "Number of Songs":
+            if button == "Change Number of Songs":
                 nonEmptyRows = [i for i in range(len(songs)) if songs[i] or keys[i]]
                 newNS = numSongsGUI(nonEmptyRows)
                 if newNS:
@@ -75,29 +81,39 @@ def songGUI():
                 else:
                     makeNewWindow = False
 
-            elif button == "Add a Song":
+            elif button == "Add a New Song":
                 makeNewWindow = addSongGUI()
-            elif button == "OK":
-                if checkSongGUI(songs, keys):
-                    toDelete = [i for i, s in enumerate(songs) if not s]
-                    songWindow.close()
 
-                    def prune(xs):
-                        return [x for i, x in enumerate(xs) if i not in toDelete]
-
-                    return prune(songs), prune(keys)
-                else:
+            else:
+                if not checkSongGUI(songs, keys):
                     makeNewWindow = False
+                    continue
 
-            if makeNewWindow is None:
-                makeNewWindow = True
+                if button == "OK":
+                    if checkFileName(values["-FILENAME-"]):
+                        filename = values["-FILENAME-"]
+                    else:
+                        popupError("Invalid file name. Try again.")
+                        continue
+                elif button == "Use Next Sunday":
+                    today = date.today()
+                    nextSunday = today + timedelta(days=(6 - today.weekday()) % 7)
+                    filename = f"LIFT Worship {nextSunday.strftime('%F')}"
+
+                toDelete = [i for i, s in enumerate(songs) if not s]
+                songWindow.close()
+
+                def prune(xs):
+                    return [x for i, x in enumerate(xs) if i not in toDelete]
+
+                return prune(songs), prune(keys), filename
 
             if makeNewWindow:
                 songWindow.close()
 
 
 ## @brief       Implements a GUI for entering the number of songs to generate.
-#  @param[in] n The number of GUI rows with a song and/or a key entered.
+#  @param[in] n The indices of GUI rows with a song and/or a key entered.
 #  @return      Returns the user-entered number of songs.
 def numSongsGUI(n):
     while True:
@@ -203,35 +219,6 @@ def checkSongGUI(songs, keys):
         return popupError("Each song can only be selected once.")
 
     return True
-
-
-## @brief  Implements GUI for retrieving the file name.
-#  @return The file name.
-def fileNameGUI():
-    while True:
-        deleteDialogue = [
-            [sg.Text("Enter a filename:")],
-            [sg.InputText("")],
-            [sg.CloseButton("OK"), sg.CloseButton("Use Next Sunday"),
-             sg.CloseButton("Cancel")]
-        ]
-
-        deleteWindow = sg.Window("WorshipList").Layout(deleteDialogue)
-        button, values = deleteWindow.Read()
-
-        if button == "Cancel":
-            exit()
-        elif button == "Use Next Sunday":
-            # Gets the next Sunday and formats it appropriately
-            today = date.today()
-            nextSunday = today + timedelta(days=(6 - today.weekday()) % 7)
-            filename = f"LIFT Worship {nextSunday.strftime('%F')}"
-        elif checkFileName(values[0]):
-            filename = values[0]
-        else:
-            popupError("Invalid file name. Try again.")
-
-        return f"{filename}.docx", f"{filename}.pdf"
 
 
 ## @brief            Defines a text input popup.

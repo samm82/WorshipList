@@ -15,16 +15,23 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_BREAK, WD_TAB_ALIGNMENT
 from Helpers import getChord, getNotes
 
 
-## @brief              Outputs a .pdf from a .docx file.
-#  @param[in] fileName The filename of the .pdf and .docx file.
+## @brief          Outputs a .pdf from a .docx file.
+#  @param[in] docx The filename of the .docx file.
+#  @param[in] pdf  The filename of the .pdf file.
+#  @return         True if the conversion was successful and False otherwise.
 def pdfWrite(docx, pdf):
     word = win32com.client.DispatchEx('Word.Application')
-    doc = word.Documents.Open(str(docx))
-
-    doc.SaveAs(str(pdf), FileFormat=17)
-    doc.Close()
-
-    word.Quit()
+    success = False
+    try:
+        doc = word.Documents.Open(str(docx))
+        doc.SaveAs(str(pdf), FileFormat=17)
+        doc.Close()
+        success = True
+    except AttributeError:
+        pass
+    finally:
+        word.Quit()
+        return success
 
 
 ## @brief  Sets up an empty document.
