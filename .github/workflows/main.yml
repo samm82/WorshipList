@@ -20,8 +20,31 @@
         uses: actions/checkout@v2
       - name: build application
         run: make build
+      - name: remove extra file
+        run: rm WorshipList
       - name: upload build
         uses: actions/upload-artifact@v2
         with:
-          name: compiled-program
+          name: WorshipList
           path: dist
+
+    lint:
+      runs-on: 	ubuntu-latest
+      steps:
+      # - name: set up python 3.9
+      #   uses: actions/setup-python@v2
+      #   with:
+      #     python-version: 3.9
+      # - name: get pyinstaller
+      #   run: sudo pip install pyinstaller
+      - name: checkout repo
+        uses: actions/checkout@v2
+      - name: lint application
+        run: make lint
+      # - name: remove extra file
+      #   run: rm WorshipList
+      # - name: upload build
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: WorshipList
+      #     path: dist
