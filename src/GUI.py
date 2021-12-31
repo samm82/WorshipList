@@ -1,7 +1,7 @@
 ## @file   GUI.py
 #  @brief  Implements GUI for selecting songs.
 #  @author Samuel Crawford
-#  @date   12/30/2021
+#  @date   12/31/2021
 
 import PySimpleGUI as sg
 
@@ -45,12 +45,11 @@ def songGUI():
 
             # TODO: Implement using columns
             songDialogue = [[sg.Text("Song" + " " * 64 + "Key")]] + combo + \
-                [[sg.Button("Change Number of Songs"), sg.Button("Add a New Song")],
+                [buttonRow(["Change Number of Songs", "Add a New Song"], False),
                  [sg.HorizontalSeparator()],
                  [sg.Text("Enter a filename:")],
                  [sg.InputText("", key="-FILENAME-")],
-                 [sg.Button("OK"), sg.Button("Use Next Sunday"),
-                  sg.Button("Quit")]
+                 buttonRow(["OK", "Use Next Sunday", "Quit"], False)
                  ]
 
             songWindow = sg.Window("WorshipList").Layout(songDialogue)
@@ -137,7 +136,7 @@ def numSongsGUI(n):
 
                     delDialogue = [
                         [sg.Text(f"The number of songs entered will delete {overwritten}. Proceed anyways?")],
-                        [sg.CloseButton("OK"), sg.CloseButton("Cancel")]
+                        buttonRow(["OK", "Cancel"], True)
                     ]
 
                     delWindow = sg.Window("WorshipList").Layout(delDialogue)
@@ -203,8 +202,7 @@ def checkSongGUI(songs, keys):
             if key and not ignoreAll:
                 noSongName = [
                     [sg.Text(f"No song name entered for key \"{key}\".")],
-                    [sg.CloseButton("Go Back"), sg.CloseButton("Ignore"),
-                     sg.CloseButton("Ignore All")]
+                    buttonRow(["Go Back", "Ignore", "Ignore All"], True)
                 ]
 
                 window = sg.Window("WorshipList").Layout(noSongName)
@@ -228,7 +226,7 @@ def popupText(string):
     dialogue = [
         [sg.Text(string)],
         [sg.InputText("")],
-        [sg.CloseButton("OK"), sg.CloseButton("Cancel")]
+        buttonRow(["OK", "Cancel"], True)
     ]
 
     window = sg.Window("WorshipList").Layout(dialogue)
@@ -240,3 +238,12 @@ def popupText(string):
 #  @param[in] string The error string to be printed in dialogue box.
 def popupError(string):
     sg.Popup(string, title="Error")
+
+
+## @brief     Creates a row of buttons.
+#  @param[in] A list of names for buttons and a Boolean for if they should close on press.
+#  @return    A list of buttons.
+def buttonRow(names, close):
+    if close:
+        return list(map(lambda n: sg.CloseButton(n), names))
+    return list(map(lambda n: sg.Button(n), names))
