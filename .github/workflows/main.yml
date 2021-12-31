@@ -20,8 +20,10 @@
         uses: actions/checkout@v2
       - name: build application
         run: make build
-      - name: remove extra file
-        run: ls dist
+      - name: get file type of extra file
+        run: file dist/WorshipList
+      - name: remove extra WorshipList file
+        run: rm dist/WorshipList
       - name: upload build
         uses: actions/upload-artifact@v2
         with:
