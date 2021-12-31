@@ -21,7 +21,7 @@
       - name: build application
         run: make build
       - name: remove extra file
-        run: ls
+        run: ls dist
       - name: upload build
         uses: actions/upload-artifact@v2
         with:
