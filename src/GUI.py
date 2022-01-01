@@ -1,7 +1,7 @@
 ## @file   GUI.py
 #  @brief  Implements GUI for selecting songs.
 #  @author Samuel Crawford
-#  @date   12/31/2021
+#  @date   1/1/2022
 
 import PySimpleGUI as sg
 
@@ -190,10 +190,11 @@ def addSongGUI():
 #  @param[in] keys   The key inputs.
 #  @return           True if the output is valid and None otherwise.
 def checkSongGUI(songs, keys):
-    ignoreAll = False
-
     if not any(songs):
         return popupError("You must select at least one song.")
+
+    ignoreEmptyFile = False
+    ignoreDanglingKey = False
 
     validSongs = getValidSongs()
     for song, key in zip(songs, keys):
@@ -204,8 +205,22 @@ def checkSongGUI(songs, keys):
                 return popupError(f"No key specified for \"{song}\".")
             elif key not in validKeys:
                 return popupError(f"\"{key}\" is not a valid key.")
+
+            with Path(f"src/songs/{song}.txt").open() as fp:
+                if len(fp.readlines()) == 1 and not ignoreEmptyFile:
+                    emptyFile = [
+                        [sg.Text(f"File for \"{song}\" has too few lines.")],
+                        buttonRow(["Go Back", "Ignore", "Ignore All"], True)
+                    ]
+
+                    window = sg.Window("WorshipList").Layout(emptyFile)
+                    button, _ = window.Read()
+                    if button == "Go Back":
+                        return
+                    elif button == "Ignore All":
+                        ignoreEmptyFile = True
         else:
-            if key and not ignoreAll:
+            if key and not ignoreDanglingKey:
                 noSongName = [
                     [sg.Text(f"No song name entered for key \"{key}\".")],
                     buttonRow(["Go Back", "Ignore", "Ignore All"], True)
@@ -216,7 +231,7 @@ def checkSongGUI(songs, keys):
                 if button == "Go Back":
                     return
                 elif button == "Ignore All":
-                    ignoreAll = True
+                    ignoreDanglingKey = True
 
     nonEmptySongs = [song for song in songs if song]
     if len(nonEmptySongs) != len(set(nonEmptySongs)):

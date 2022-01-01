@@ -1,7 +1,7 @@
 # WorshipList
 Last Modified: 12/31/2021
 
-Last Compiled: 12/31/2021
+Last Compiled: 1/1/2022
 
 ## Description
 
