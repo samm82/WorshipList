@@ -1,7 +1,7 @@
 ## @file   Document.py
 #  @brief  Contains functions for adding text to document.
 #  @author Samuel Crawford
-#  @date   12/30/2021
+#  @date   12/31/2021
 
 import win32com.client
 
@@ -62,9 +62,8 @@ def docSetup():
 #  @param[in] key       The key of the song.
 #  @return              The document (doc) and line counter (lineCount).
 def writeSong(doc, lineCount, fileName, key):
-    infile = open(Path(f"src/songs/{fileName}.txt"), "r")
-    lines = infile.readlines()
-    infile.close()
+    with Path(f"src/songs/{fileName}.txt").open() as fp:
+        lines = fp.readlines()
 
     # Adds page break if song will get cut off
     newLineLength = len(lines)
@@ -139,7 +138,7 @@ def writeSection(p, line, sep, ind):
 ## @brief           Writes a line to the document.
 #  @param[in] doc   The document to write to.
 #  @param[in] line  The line to write to the document.
-#  @param[in] end   A boolean; True if line is the last line in the song.
+#  @param[in] end   True if line is the last line in the song and False otherwise.
 #  @param[in] notes The list of valid notes.
 #  @param[in] file  The file with the line to write.
 #  @return          The document.
@@ -162,7 +161,8 @@ def writeLine(doc, line, end, notes, file):
     p, i = writeSection(p, line, "\t", 0)
 
     # Adds all chords
-    while i != len(line):
+    lineLength = len(line)
+    while i != lineLength:
         chord = line[i]
         iNext = True
         if chord == "|":
@@ -170,47 +170,48 @@ def writeLine(doc, line, end, notes, file):
         elif chord == "new":
             run = p.add_run("\n")
         elif chord == "same":
-            run = p.add_run("|")
+            run = p.add_run("|  ")
             run, i = writeSection(p, line, "  ", i + 1)
             iNext = False
         elif chord[0] == "x" and len(chord) > 1 and chord[1:].isdecimal():
             run = p.add_run(f"x{chord[1:].lstrip('0')}")
         elif chord.count("/") == 1:
-            # newChord = chord[:-1]
             chord = chord.split("/")
             run = p.add_run(f"{getChord(notes, chord[0], file)}/"
                             f"{getChord(notes, chord[1].upper(), file)}")
-        elif "(" in chord and ")" in chord:
-            newChord = chord[1:-1]
-            run = p.add_run("(" + getChord(notes, newChord, file) + ")")
+        elif chord[0] == "(" and chord[:-1] == ")":
+            run = p.add_run("(" + getChord(notes, chord[1:-1], file) + ")")
             size = Size.SMALL_LAST
-        elif "(" in chord:
-            newChord = chord[1:]
-            run = p.add_run("(" + getChord(notes, newChord, file))
+        elif chord[0] == "(":
+            run = p.add_run("(" + getChord(notes, chord[1:], file))
             size = Size.SMALL
-        elif ")" in chord:
-            newChord = chord[:-1]
-            run = p.add_run(getChord(notes, newChord, file) + ")")
+        elif chord[-1] == ")":
+            run = p.add_run(getChord(notes, chord[:-1], file) + ")")
             size = Size.SMALL_LAST
         else:
             run = p.add_run(getChord(notes, chord, file))
 
         # Set font size for small text
-        if size == Size.SMALL:
+        if size in {Size.SMALL, Size.SMALL_LAST}:
             run.font.size = Pt(22)
-        if size == Size.SMALL_LAST:
-            run.font.size = Pt(22)
-            size = Size.NORMAL
 
         # Increments i if necessary
         if iNext:
             i += 1
 
         # Adds space after chord
-        if chord == "new":
-            run = p.add_run("\t")
-        else:
-            run = p.add_run("  ")
+        if i != lineLength:
+            if chord == "new":
+                run = p.add_run("\t")
+            else:
+                run = p.add_run("  ")
+
+            # Set font size for small text
+            if size == Size.SMALL:
+                run.font.size = Pt(22)
+            elif size == Size.SMALL_LAST:
+                run.font.size = Pt(22)
+                size = Size.NORMAL
 
     # Sets paragraph spacing
     if end:

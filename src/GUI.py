@@ -221,7 +221,6 @@ def checkSongGUI(songs, keys):
     nonEmptySongs = [song for song in songs if song]
     if len(nonEmptySongs) != len(set(nonEmptySongs)):
         return popupError("Each song can only be selected once.")
-
     return True
 
 
