@@ -1,5 +1,5 @@
 # src/
-Last Modified: 12/24/2021
+Last Modified: 12/31/2021
 
 ## Description
 
@@ -8,15 +8,15 @@ This is the source folder for the code and song input files.
 ## Contents
 
 ```
-.  
-└── songs/  
-│  
+.
+└── songs/
 │   COMPILED_README.md
-│   Document.py  
-│   GUI.py  
-│   Helpers.py  
-│   Main.py  
-│   README.md  
+│   Document.py
+│   GUI.py
+│   Helpers.py
+│   icon.ico
+│   Main.py
+│   README.md
 │   Settings.txt  
 ```
 
@@ -27,6 +27,7 @@ This is the source folder for the code and song input files.
 |Document.py|Contains functions for writing to the output document|
 |GUI.py|Contains functions for implementing the GUIs|
 |Helpers.py|Contains helper functions for processing and retrieving information|
+|icon.ico|The icon to be used for the compiled executable|
 |Main.py|The main module that contains the `main()` function|
 |README.md|This file - Gives information about `src/` folder|
 |Settings.txt|Contains the settings for the program (only output file path right now)|

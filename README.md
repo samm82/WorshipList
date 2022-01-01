@@ -1,5 +1,5 @@
 # WorshipList
-Last Modified: 12/30/2021
+Last Modified: 12/31/2021
 
 ## Description
 
@@ -41,19 +41,31 @@ Some assumptions for how the song files are formatted:
 
 ```
 .
-└── src/
-│   │   COMPILED_README.md
-│   │   Document.py 
-│   │   GUI.py 
-│   │   Helpers.py   
-│   │   Main.py  
-│   │   README.md  
-│   │   Settings.txt  
+└── .github/
+│   └── workflows/
+│       │   main.yml
+│
+└── dist
+│   └── src/
+│   │   └── songs/
+│   │   │   Settings.txt
 │   │
+│   │   README.md
+│   │   WorshipList.exe
+│
+└── src/
 │   └── songs/
-│   
+│   │   COMPILED_README.md
+│   │   Document.py
+│   │   GUI.py
+│   │   Helpers.py
+│   │   Main.py
+│   │   README.md
+│   │   Settings.txt
+│
 │   .gitignore
 │   Doxyfile
+│   LICENSE
 │   Makefile
 │   README.md
 |   requirements.txt
@@ -61,9 +73,12 @@ Some assumptions for how the song files are formatted:
 
 | Name | Description |
 |---|---|
+|.github/|Contains jobs for use with GitHub Actions|
+|dist/|Contains the compiled version of the program with all necessary files|
 |src/|Source folder for code and inputs|
 |.gitignore|File for Git to ignore output files|
 |Doxyfile|Configuration file for Doxygen|
+|LICENSE|Contains terms for use and modification|
 |Makefile|Contains commands for building|
 |README.md|This file - Gives information about repo|
 |requirements.txt|The required packages for using WorshipList|
