@@ -161,11 +161,12 @@ def numSongsGUI(n):
 def addSongGUI():
     songCreated = False
     while True:
-        button, songName = popupText("Enter the name of the new song:")
-
-        if button == "Cancel":
-            return songCreated
+        if songCreated:
+            button, songName = popupText("Enter the name of the next song to add:")
         else:
+            button, songName = popupText("Enter the name of the new song:")
+
+        if button == "OK":
             songName = titlecase(songName)
             if not checkFileName(songName):
                 popupError("Invalid file name for a song.")
@@ -180,6 +181,8 @@ def addSongGUI():
                 with open(filePath, "w") as fp:
                     fp.write(songName)
                 songCreated = True
+        else:
+            return songCreated
 
 
 ## @brief            Ensures output of song GUI is valid.

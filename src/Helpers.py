@@ -1,7 +1,7 @@
 ## @file   Helpers.py
 #  @brief  Contains helper functions for the modules.
 #  @author Samuel Crawford
-#  @date   12/27/2021
+#  @date   12/31/2021
 
 from os import listdir
 from pathlib import Path
@@ -30,7 +30,7 @@ def checkFileName(name):
     reserved = {'CON', 'PRN', 'AUX', 'NUL', 'COM1', 'COM2', 'COM3', 'COM4',
                 'COM5', 'COM6', 'COM7', 'COM8', 'COM9', 'LPT1', 'LPT2',
                 'LPT3', 'LPT4', 'LPT5', 'LPT6', 'LPT7', 'LPT8', 'LPT9'}
-    return is_valid_filename(name) and name not in reserved
+    return is_valid_filename(name) and name.upper() not in reserved
 
 
 ## @brief   Gets a list of valid songs from the song directory.
