@@ -14,6 +14,7 @@ run:
 
 compile: $(MAIN)
 	pyinstaller --onefile $^ -n WorshipList -i src/icon.ico #-w
+# Continues execution if WorshipList.spec does not exist
 	rm WorshipList.spec || true
 # Continues execution if dist/ exists
 	mkdir $(DIST_SRC) || true
@@ -30,7 +31,7 @@ doc:
 	cd latex && $(MAKE)
 
 lint:
-	flake8 --ignore=E266,E402,E722,F403,F405,N802,N806,N813,N815,W504 --max-line-length=130 .
+	flake8 --ignore=E266,E402,E722,F403,F405,N802,N806,N813,N815,W504 --max-line-length=130 src/
 
 all: compile lint doc
 

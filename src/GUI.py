@@ -1,7 +1,7 @@
 ## @file   GUI.py
 #  @brief  Implements GUI for selecting songs.
 #  @author Samuel Crawford
-#  @date   1/1/2022
+#  @date   1/6/2022
 
 import PySimpleGUI as sg
 
@@ -208,26 +208,14 @@ def checkSongGUI(songs, keys):
 
             with Path(f"src/songs/{song}.txt").open() as fp:
                 if len(fp.readlines()) == 1 and not ignoreEmptyFile:
-                    emptyFile = [
-                        [sg.Text(f"File for \"{song}\" has too few lines.")],
-                        buttonRow(["Go Back", "Ignore", "Ignore All"], True)
-                    ]
-
-                    window = sg.Window("WorshipList").Layout(emptyFile)
-                    button, _ = window.Read()
+                    button = popupWarn(f"File for \"{song}\" has too few lines.")
                     if button == "Go Back":
                         return
                     elif button == "Ignore All":
                         ignoreEmptyFile = True
         else:
             if key and not ignoreDanglingKey:
-                noSongName = [
-                    [sg.Text(f"No song name entered for key \"{key}\".")],
-                    buttonRow(["Go Back", "Ignore", "Ignore All"], True)
-                ]
-
-                window = sg.Window("WorshipList").Layout(noSongName)
-                button, _ = window.Read()
+                button = popupWarn(f"No song name entered for key \"{key}\".")
                 if button == "Go Back":
                     return
                 elif button == "Ignore All":
@@ -239,12 +227,25 @@ def checkSongGUI(songs, keys):
     return True
 
 
-## @brief            Defines a text input popup.
-#  @param[in] string The prompt string to be printed in dialogue box.
-#  @return           The name of the button pressed and the text entered.
-def popupText(string):
+## @brief       Defines a warning popup that provides the option to ignore.
+#  @param[in] s The warning string to be printed in dialogue box.
+#  @return      The name of the button pressed.
+def popupWarn(s):
     dialogue = [
-        [sg.Text(string)],
+        [sg.Text(s)],
+        buttonRow(["Go Back", "Ignore", "Ignore All"], True)
+    ]
+
+    window = sg.Window("WorshipList").Layout(dialogue)
+    return window.Read()[0]
+
+
+## @brief       Defines a text input popup.
+#  @param[in] s The prompt string to be printed in dialogue box.
+#  @return      The name of the button pressed and the text entered.
+def popupText(s):
+    dialogue = [
+        [sg.Text(s)],
         [sg.InputText("")],
         buttonRow(["OK", "Cancel"], True)
     ]
@@ -254,15 +255,16 @@ def popupText(string):
     return button, values[0]
 
 
-## @brief            Defines an error popup that signifies incorrect input.
-#  @param[in] string The error string to be printed in dialogue box.
-def popupError(string):
-    sg.Popup(string, title="Error")
+## @brief       Defines an error popup that signifies incorrect input.
+#  @param[in] s The error string to be printed in dialogue box.
+def popupError(s):
+    sg.Popup(s, title="Error")
 
 
-## @brief     Creates a row of buttons.
-#  @param[in] A list of names for buttons and a Boolean for if they should close on press.
-#  @return    A list of buttons.
+## @brief           Creates a row of buttons.
+#  @param[in] names A list of names for buttons and a Boolean for if they should close on press.
+#  @param[in] close A Boolean representing if the window should be closed on a button press.
+#  @return          A list of buttons.
 def buttonRow(names, close):
     if close:
         return list(map(lambda n: sg.CloseButton(n), names))
