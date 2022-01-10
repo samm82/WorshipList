@@ -101,4 +101,4 @@ def getChord(noteList, num, fileName):
 #  @param[in] s The string to be processed
 #  @return      The input string with only one space between each "word"
 def reduceWhitespace(s):
-    return " ".join(s.strip().split())
+    return " ".join([x.strip() for x in s.strip().split() if x.strip()])

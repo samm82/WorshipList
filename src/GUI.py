@@ -157,7 +157,8 @@ def numSongsGUI(n):
                 popupError("You must error a number greater than zero.")
 
 
-## @brief   Adds a song file with the specified name and sections.
+## @brief  Adds a song file with the specified name and sections.
+#  @return A Boolean representing whether or not a song file was added.
 def addSongGUI():
     NUM_LINES = 5
     sections = ["", "Verse", "Verse 1", "Verse 2", "Chorus", "Chorus 1",
@@ -207,7 +208,10 @@ def addSongGUI():
                         popupError(f"Section \"{section}\" has no chords defined.")
                         goBack = True
                         break
-                    contents.append(f"{section}: {chords}")
+                    elif contents[-1].endswith("same"):
+                        contents[-1] += f" {section}: {chords}"
+                    else:
+                        contents.append(f"{section}: {chords}")
 
                 else:
                     if chords:
@@ -219,7 +223,11 @@ def addSongGUI():
                             elif button == "Ignore All":
                                 ignoreEmptySection = True
                         else:
-                            contents[-1] += f" new {chords}"
+                            if contents[-1].endswith("same"):
+                                contents[-1] = contents[-1][:-5]
+                            elif not contents[-1].endswith("new"):
+                                contents[-1] += " new"
+                            contents[-1] += f" {chords}"
 
             if len(contents) == 1:
                 button = popupWarn("No sections defined for new song. Ignore?", False)
