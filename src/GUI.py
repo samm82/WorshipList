@@ -183,8 +183,11 @@ def addSongGUI():
         button, values = window.Read()
 
         if button == "OK":
-            songName = titlecase(values["-SONGNAME-"])
-            if not checkFileName(songName):
+            songName = titlecase(reduceWhitespace(values["-SONGNAME-"]))
+            if not songName:
+                popupError("Please enter a song name.")
+                continue
+            elif not checkFileName(songName):
                 popupError("Invalid file name for a song.")
                 continue
             else:
@@ -281,7 +284,7 @@ def checkSongGUI(songs, keys):
 
 ## @brief         Defines a warning popup that provides the option to ignore.
 #  @param[in] s   The warning string to be printed in dialogue box.
-#  @param[in] all A Boolean representing if an "Ignore All" button should be created. 
+#  @param[in] all A Boolean representing if an "Ignore All" button should be created.
 #  @return        The name of the button pressed.
 def popupWarn(s, all=True):
     buttons = ["Go Back", "Ignore"]
