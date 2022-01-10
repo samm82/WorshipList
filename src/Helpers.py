@@ -1,7 +1,7 @@
 ## @file   Helpers.py
 #  @brief  Contains helper functions for the modules.
 #  @author Samuel Crawford
-#  @date   12/31/2021
+#  @date   1/10/2021
 
 from os import listdir
 from pathlib import Path
@@ -95,3 +95,10 @@ def getChord(noteList, num, fileName):
         chord += "m"
 
     return chord
+
+
+## @brief       Removes extraneous spaces from a string
+#  @param[in] s The string to be processed
+#  @return      The input string with only one space between each "word"
+def reduceWhitespace(s):
+    return " ".join(s.strip().split())

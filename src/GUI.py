@@ -1,7 +1,7 @@
 ## @file   GUI.py
 #  @brief  Implements GUI for selecting songs.
 #  @author Samuel Crawford
-#  @date   1/9/2022
+#  @date   1/10/2022
 
 import PySimpleGUI as sg
 
@@ -9,7 +9,7 @@ from datetime import date, timedelta
 from pathlib import Path
 from titlecase import titlecase
 
-from Helpers import checkFileName, getValidSongs, validKeys
+from Helpers import checkFileName, getValidSongs, reduceWhitespace, validKeys
 
 
 ## @brief  Implements GUI for retrieving songs and keys.
@@ -182,11 +182,6 @@ def addSongGUI():
     while True:
         button, values = window.Read()
 
-        # if songCreated:
-        #     button, songName = popupText("Enter the name of the next song to add:")
-        # else:
-        #     button, songName = popupText("Enter the name of the new song:")
-
         if button == "OK":
             songName = titlecase(values["-SONGNAME-"])
             if not checkFileName(songName):
@@ -202,8 +197,8 @@ def addSongGUI():
             contents = [songName]
             goBack = False
             for i in range(int((len(values) - 1) / 2)):
-                section = values[f"-SECTIONNAME{i}-"]
-                chords = values[f"-CHORDS{i}-"]
+                section = reduceWhitespace(values[f"-SECTIONNAME{i}-"])
+                chords = reduceWhitespace(values[f"-CHORDS{i}-"])
                 if section:
                     if not chords and not ignoreEmptySection:
                         popupError(f"Section \"{section}\" has no chords defined.")
@@ -213,13 +208,15 @@ def addSongGUI():
 
                 else:
                     if chords:
-                        contents[-1] += f" new {chords}"
-                        # button = popupWarn(f"Line {i} has not section name and will be ignored.")
-                        # if button == "Go Back":
-                        #     goBack = True
-                        #     break
-                        # elif button == "Ignore All":
-                        #     ignoreEmptySection = True
+                        if len(contents) == 1:
+                            button = popupWarn(f"Line {i + 1} has no section name and will be ignored.")
+                            if button == "Go Back":
+                                goBack = True
+                                break
+                            elif button == "Ignore All":
+                                ignoreEmptySection = True
+                        else:
+                            contents[-1] += f" new {chords}"
 
             if goBack:
                 continue
