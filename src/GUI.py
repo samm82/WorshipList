@@ -218,6 +218,11 @@ def addSongGUI():
                         else:
                             contents[-1] += f" new {chords}"
 
+            if len(contents) == 1:
+                button = popupWarn("No sections defined for new song. Ignore?", False)
+                if button == "Go Back":
+                    goBack = True
+
             if goBack:
                 continue
 
@@ -274,14 +279,16 @@ def checkSongGUI(songs, keys):
     return True
 
 
-## @brief       Defines a warning popup that provides the option to ignore.
-#  @param[in] s The warning string to be printed in dialogue box.
-#  @return      The name of the button pressed.
-def popupWarn(s):
-    dialogue = [
-        [sg.Text(s)],
-        buttonRow(["Go Back", "Ignore", "Ignore All"], True)
-    ]
+## @brief         Defines a warning popup that provides the option to ignore.
+#  @param[in] s   The warning string to be printed in dialogue box.
+#  @param[in] all A Boolean representing if an "Ignore All" button should be created. 
+#  @return        The name of the button pressed.
+def popupWarn(s, all=True):
+    buttons = ["Go Back", "Ignore"]
+    if all:
+        buttons.append("Ignore All")
+
+    dialogue = [[sg.Text(s)], buttonRow(buttons, True)]
 
     window = sg.Window("WorshipList").Layout(dialogue)
     return window.Read()[0]
