@@ -1,7 +1,7 @@
 ## @file   GUI.py
 #  @brief  Implements GUI for selecting songs.
 #  @author Samuel Crawford
-#  @date   1/6/2022
+#  @date   1/9/2022
 
 import PySimpleGUI as sg
 
@@ -157,17 +157,38 @@ def numSongsGUI(n):
                 popupError("You must error a number greater than zero.")
 
 
-## @brief   Adds a blank song file with the specified name.
+## @brief   Adds a song file with the specified name and sections.
 def addSongGUI():
-    songCreated = False
+    NUM_LINES = 5
+    sections = ["", "Verse", "Verse 1", "Verse 2", "Chorus", "Chorus 1",
+                "Chorus 2", "Bridge", "Bridge 1", "Bridge 2"]
+
+    lColumn = [[sg.Text("Name:")]]
+    rColumn = [[sg.InputText(key="-SONGNAME-")]]
+    for i in range(NUM_LINES):
+        lColumn.append([sg.Combo(sections, "", key=f"-SECTIONNAME{i}-")])
+        rColumn.append([sg.InputText(key=f"-CHORDS{i}-")])
+
+    dialogue = [
+        [sg.Text("Add a song:")],
+        [sg.Column(lColumn), sg.Column(rColumn)],
+        buttonRow(["OK", "Cancel"], False)
+    ]
+
+    window = sg.Window("WorshipList").Layout(dialogue)
+
+    ignoreEmptySection = False
+
     while True:
-        if songCreated:
-            button, songName = popupText("Enter the name of the next song to add:")
-        else:
-            button, songName = popupText("Enter the name of the new song:")
+        button, values = window.Read()
+
+        # if songCreated:
+        #     button, songName = popupText("Enter the name of the next song to add:")
+        # else:
+        #     button, songName = popupText("Enter the name of the new song:")
 
         if button == "OK":
-            songName = titlecase(songName)
+            songName = titlecase(values["-SONGNAME-"])
             if not checkFileName(songName):
                 popupError("Invalid file name for a song.")
                 continue
@@ -176,13 +197,42 @@ def addSongGUI():
 
             if filePath.is_file():
                 popupError("Song file already exists.")
-            else:
-                # Create new file with title
-                with open(filePath, "w") as fp:
-                    fp.write(songName)
-                songCreated = True
+                continue
+
+            contents = [songName]
+            goBack = False
+            for i in range(int((len(values) - 1) / 2)):
+                section = values[f"-SECTIONNAME{i}-"]
+                chords = values[f"-CHORDS{i}-"]
+                if section:
+                    if not chords and not ignoreEmptySection:
+                        popupError(f"Section \"{section}\" has no chords defined.")
+                        goBack = True
+                        break
+                    contents.append(f"{section}: {chords}")
+
+                else:
+                    if chords:
+                        contents[-1] += f" new {chords}"
+                        # button = popupWarn(f"Line {i} has not section name and will be ignored.")
+                        # if button == "Go Back":
+                        #     goBack = True
+                        #     break
+                        # elif button == "Ignore All":
+                        #     ignoreEmptySection = True
+
+            if goBack:
+                continue
+
+            with open(filePath, "w") as fp:
+                fp.write("\n".join(contents))
+
+            window.close()
+            return True
+
         else:
-            return songCreated
+            window.close()
+            return False
 
 
 ## @brief            Ensures output of song GUI is valid.
