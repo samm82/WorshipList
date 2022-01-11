@@ -1,7 +1,7 @@
 ## @file   Helpers.py
 #  @brief  Contains helper functions for the modules.
 #  @author Samuel Crawford
-#  @date   1/10/2021
+#  @date   1/11/2021
 
 from os import listdir
 from pathlib import Path
@@ -10,6 +10,8 @@ from pathvalidate import is_valid_filename
 sharpNotes = ['F','F#','G','G#','A','A#','B','C','C#','D','D#','E'] * 2  # noqa: E231
 flatNotes = ['F','Gb','G','Ab','A','Bb','B','C','Db','D','Eb','E'] * 2  # noqa: E231
 validKeys = set(sharpNotes + flatNotes)
+
+numList = ["i", "ii", "iii", "iv", "v", "vi", "vii"]
 
 
 ## @brief   Exception for if a file is incorrectly formatted (invalid chord).
@@ -74,6 +76,25 @@ def getNotes(key):
     return noteList
 
 
+## @brief       Checks if a "chord" is valid.
+#  @param[in] c The "chord" to be checked.
+#  @return      True if the "chord" is valid and False otherwise.
+def checkValidChord(c):
+    if c in {"|", "new", "same"}:
+        return True
+    elif c[0] == "x":
+        return len(c) > 1 and c[1:].isdecimal()
+    elif c[0] == "(":
+        return checkValidChord(c[1:])
+    elif c[-1] == ")":
+        return checkValidChord(c[:-1])
+    elif c.count("/") == 1:
+        c = c.split("/")
+        return checkValidChord(c[0]) and checkValidChord(c[1])
+    else:
+        return c.lower() in numList and (c.islower() or c.isupper())
+
+
 ## @brief              Gets chord from Roman numeral based on list of notes.
 #  @param[in] noteList A list of notes in the key of the song.
 #  @param[in] num      The Roman numeral from the song file.
@@ -82,7 +103,6 @@ def getNotes(key):
 #  @throw              FileError if the chord isn't valid.
 def getChord(noteList, num, fileName):
     lowerNum = num.lower()
-    numList = ["i", "ii", "iii", "iv", "v", "vi", "vii"]
 
     # Checks if chord is valid, and retrieves it from list if it is
     if lowerNum not in numList:

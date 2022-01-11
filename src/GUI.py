@@ -1,7 +1,7 @@
 ## @file   GUI.py
 #  @brief  Implements GUI for selecting songs.
 #  @author Samuel Crawford
-#  @date   1/10/2022
+#  @date   1/11/2022
 
 import PySimpleGUI as sg
 
@@ -9,7 +9,8 @@ from datetime import date, timedelta
 from pathlib import Path
 from titlecase import titlecase
 
-from Helpers import checkFileName, getValidSongs, reduceWhitespace, validKeys
+from Helpers import checkFileName, checkValidChord, getValidSongs, \
+    reduceWhitespace, validKeys
 
 
 ## @brief  Implements GUI for retrieving songs and keys.
@@ -178,6 +179,7 @@ def addSongGUI():
 
     window = sg.Window("WorshipList").Layout(dialogue)
 
+    ignoreInvalidChord = False
     ignoreEmptySection = False
 
     while True:
@@ -201,8 +203,23 @@ def addSongGUI():
             contents = [songName]
             goBack = False
             for i in range(int((len(values) - 1) / 2)):
-                section = reduceWhitespace(values[f"-SECTIONNAME{i}-"])
+                section = titlecase(reduceWhitespace(values[f"-SECTIONNAME{i}-"]))
                 chords = reduceWhitespace(values[f"-CHORDS{i}-"])
+
+                if chords and not ignoreInvalidChord:
+                    for c in chords.split(" "):
+                        if not checkValidChord(c):
+                            button = popupWarn(f"Section \"{section}\" includes invalid chord \"{c}\".")
+                            if button == "Go Back":
+                                goBack = True
+                                break
+                            elif button == "Ignore All":
+                                ignoreInvalidChord = True
+                                break
+
+                if goBack:
+                    break
+
                 if section:
                     if not chords and not ignoreEmptySection:
                         popupError(f"Section \"{section}\" has no chords defined.")
@@ -229,13 +246,13 @@ def addSongGUI():
                                 contents[-1] += " new"
                             contents[-1] += f" {chords}"
 
+            if goBack:
+                continue
+
             if len(contents) == 1:
                 button = popupWarn("No sections defined for new song. Ignore?", False)
                 if button == "Go Back":
-                    goBack = True
-
-            if goBack:
-                continue
+                    continue
 
             with open(filePath, "w") as fp:
                 fp.write("\n".join(contents))
