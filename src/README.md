@@ -1,5 +1,5 @@
 # src/
-Last Modified: 12/31/2021
+Last Modified: 1/11/2021
 
 ## Description
 
@@ -10,6 +10,7 @@ This is the source folder for the code and song input files.
 ```
 .
 └── songs/
+│   CommonSections.py
 │   COMPILED_README.md
 │   Document.py
 │   GUI.py
@@ -22,6 +23,7 @@ This is the source folder for the code and song input files.
 
 | Name | Description |
 |---|---|
+|CommonSections.py|Finds the most common section names from song files|
 |songs/|Contains song input files, with chords stored as Roman numerals|
 |COMPILED_README.md|The template README.md to be populated and included with the built version of the program|
 |Document.py|Contains functions for writing to the output document|

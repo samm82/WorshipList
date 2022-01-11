@@ -1,5 +1,5 @@
 # WorshipList
-Last Modified: 12/31/2021
+Last Modified: 1/11/2021
 
 ## Description
 
@@ -55,6 +55,7 @@ Some assumptions for how the song files are formatted:
 │
 └── src/
 │   └── songs/
+│   │   CommonSections.py
 │   │   COMPILED_README.md
 │   │   Document.py
 │   │   GUI.py

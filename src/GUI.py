@@ -162,8 +162,7 @@ def numSongsGUI(n):
 #  @return A Boolean representing whether or not a song file was added.
 def addSongGUI():
     NUM_LINES = 5
-    sections = ["", "Verse", "Verse 1", "Verse 2", "Chorus", "Chorus 1",
-                "Chorus 2", "Bridge", "Bridge 1", "Bridge 2"]
+    sections = ["", "Verse", "Chorus", "Bridge", "V/Ch", "Intro", "Outro"]
 
     lColumn = [[sg.Text("Name:")]]
     rColumn = [[sg.InputText(key="-SONGNAME-")]]
