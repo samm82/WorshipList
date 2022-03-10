@@ -179,7 +179,7 @@ def writeLine(doc, line, end, notes, file):
             chord = chord.split("/")
             run = p.add_run(f"{getChord(notes, chord[0], file)}/"
                             f"{getChord(notes, chord[1].upper(), file)}")
-        elif chord[0] == "(" and chord[:-1] == ")":
+        elif chord[0] == "(" and chord[-1] == ")":
             run = p.add_run("(" + getChord(notes, chord[1:-1], file) + ")")
             size = Size.SMALL_LAST
         elif chord[0] == "(":
