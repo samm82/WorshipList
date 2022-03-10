@@ -1,7 +1,7 @@
 ## @file   GUI.py
 #  @brief  Implements GUI for selecting songs.
 #  @author Samuel Crawford
-#  @date   1/6/2022
+#  @date   1/11/2022
 
 import PySimpleGUI as sg
 
@@ -9,7 +9,8 @@ from datetime import date, timedelta
 from pathlib import Path
 from titlecase import titlecase
 
-from Helpers import checkFileName, getValidSongs, validKeys
+from Helpers import checkFileName, checkValidChord, getValidSongs, \
+    reduceWhitespace, validKeys
 
 
 ## @brief  Implements GUI for retrieving songs and keys.
@@ -157,18 +158,38 @@ def numSongsGUI(n):
                 popupError("You must error a number greater than zero.")
 
 
-## @brief   Adds a blank song file with the specified name.
+## @brief  Adds a song file with the specified name and sections.
+#  @return A Boolean representing whether or not a song file was added.
 def addSongGUI():
-    songCreated = False
+    NUM_LINES = 5
+    sections = ["", "Verse", "Chorus", "Bridge", "V/Ch", "Intro", "Outro"]
+
+    lColumn = [[sg.Text("Name:")]]
+    rColumn = [[sg.InputText(key="-SONGNAME-")]]
+    for i in range(NUM_LINES):
+        lColumn.append([sg.Combo(sections, "", key=f"-SECTIONNAME{i}-")])
+        rColumn.append([sg.InputText(key=f"-CHORDS{i}-")])
+
+    dialogue = [
+        [sg.Text("Add a song:")],
+        [sg.Column(lColumn), sg.Column(rColumn)],
+        buttonRow(["OK", "Cancel"], False)
+    ]
+
+    window = sg.Window("WorshipList").Layout(dialogue)
+
+    ignoreInvalidChord = False
+    ignoreEmptySection = False
+
     while True:
-        if songCreated:
-            button, songName = popupText("Enter the name of the next song to add:")
-        else:
-            button, songName = popupText("Enter the name of the new song:")
+        button, values = window.Read()
 
         if button == "OK":
-            songName = titlecase(songName)
-            if not checkFileName(songName):
+            songName = titlecase(reduceWhitespace(values["-SONGNAME-"]))
+            if not songName:
+                popupError("Please enter a song name.")
+                continue
+            elif not checkFileName(songName):
                 popupError("Invalid file name for a song.")
                 continue
             else:
@@ -176,13 +197,71 @@ def addSongGUI():
 
             if filePath.is_file():
                 popupError("Song file already exists.")
-            else:
-                # Create new file with title
-                with open(filePath, "w") as fp:
-                    fp.write(songName)
-                songCreated = True
+                continue
+
+            contents = [songName]
+            goBack = False
+            for i in range(int((len(values) - 1) / 2)):
+                section = titlecase(reduceWhitespace(values[f"-SECTIONNAME{i}-"]))
+                chords = reduceWhitespace(values[f"-CHORDS{i}-"])
+
+                if chords and not ignoreInvalidChord:
+                    for c in chords.split(" "):
+                        if not checkValidChord(c):
+                            button = popupWarn(f"Section \"{section}\" includes invalid chord \"{c}\".")
+                            if button == "Go Back":
+                                goBack = True
+                                break
+                            elif button == "Ignore All":
+                                ignoreInvalidChord = True
+                                break
+
+                if goBack:
+                    break
+
+                if section:
+                    if not chords and not ignoreEmptySection:
+                        popupError(f"Section \"{section}\" has no chords defined.")
+                        goBack = True
+                        break
+                    elif contents[-1].endswith("same"):
+                        contents[-1] += f" {section}: {chords}"
+                    else:
+                        contents.append(f"{section}: {chords}")
+
+                else:
+                    if chords:
+                        if len(contents) == 1:
+                            button = popupWarn(f"Line {i + 1} has no section name and will be ignored.")
+                            if button == "Go Back":
+                                goBack = True
+                                break
+                            elif button == "Ignore All":
+                                ignoreEmptySection = True
+                        else:
+                            if contents[-1].endswith("same"):
+                                contents[-1] = contents[-1][:-5]
+                            elif not contents[-1].endswith("new"):
+                                contents[-1] += " new"
+                            contents[-1] += f" {chords}"
+
+            if goBack:
+                continue
+
+            if len(contents) == 1:
+                button = popupWarn("No sections defined for new song. Ignore?", False)
+                if button == "Go Back":
+                    continue
+
+            with open(filePath, "w") as fp:
+                fp.write("\n".join(contents))
+
+            window.close()
+            return True
+
         else:
-            return songCreated
+            window.close()
+            return False
 
 
 ## @brief            Ensures output of song GUI is valid.
@@ -227,14 +306,16 @@ def checkSongGUI(songs, keys):
     return True
 
 
-## @brief       Defines a warning popup that provides the option to ignore.
-#  @param[in] s The warning string to be printed in dialogue box.
-#  @return      The name of the button pressed.
-def popupWarn(s):
-    dialogue = [
-        [sg.Text(s)],
-        buttonRow(["Go Back", "Ignore", "Ignore All"], True)
-    ]
+## @brief         Defines a warning popup that provides the option to ignore.
+#  @param[in] s   The warning string to be printed in dialogue box.
+#  @param[in] all A Boolean representing if an "Ignore All" button should be created.
+#  @return        The name of the button pressed.
+def popupWarn(s, all=True):
+    buttons = ["Go Back", "Ignore"]
+    if all:
+        buttons.append("Ignore All")
+
+    dialogue = [[sg.Text(s)], buttonRow(buttons, True)]
 
     window = sg.Window("WorshipList").Layout(dialogue)
     return window.Read()[0]
