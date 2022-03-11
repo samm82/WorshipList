@@ -202,7 +202,7 @@ def addSongGUI():
             contents = [songName]
             goBack = False
             for i in range(int((len(values) - 1) / 2)):
-                section = titlecase(reduceWhitespace(values[f"-SECTIONNAME{i}-"]))
+                section = reduceWhitespace(values[f"-SECTIONNAME{i}-"])
                 chords = reduceWhitespace(values[f"-CHORDS{i}-"])
 
                 if chords and not ignoreInvalidChord:
