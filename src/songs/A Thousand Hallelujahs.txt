@@ -1,0 +1,6 @@
+A Thousand Hallelujahs
+Intro: I IV I x2
+Verse: I IV I x2 new IV V vi V | IV V I
+Chorus: IV I V vi I x2 new IV V I iii vi V new IV I/III V I
+Bridge 1: I vi new I/III IV I/V V x2
+Bridge 2: vi V/VII new I IV I/V V x2
