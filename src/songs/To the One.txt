@@ -1,6 +1,6 @@
 To the One
 Intro: I I/III IV | IV/VI V/VII I
-Verse 1: I I/III IV | IV/VI V/VII I x2 new IV/VI I/III | IV/VI V/VII I new I I/III IV | IV/VI V/VII
-Chorus: IV I | I/V ii x2
+Verse 1: I I/III IV | IV/VI V/VII I x2 new IV/VI I/III | IV/VI V/VII I new I I/III IV | IV/VI V/VII IV
+Chorus: IV I | V ii x2
 Verse 2: I I/III IV | IV/VI V/VII I x2 new IV/VI I/III | IV/VI V/VII I new IV/VI I/III | IV I
-Bridge: IV V vi | vi VII I I/III new IV | IV 
+Bridge: IV V vi | vi V/VII I I/III new IV | IV 
