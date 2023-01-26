@@ -4,7 +4,7 @@ Last Modified: 1/11/2021
 ## Description
 
 Whenever I'm on worship at LIFT Church, I have to create a chord chart for the songs we're playing that week, so I made a program to automate that process. This program 
-automatically generates that chord chart. This is done through a GUI, by running `make`.
+automatically generates that chord chart. This is done through a GUI, by running `make` or by running the executable in the `dist/` directory.
 
 To generate documentation, run `make doc` in the directory with the Makefile. This will create two folders; the important files are html/index 
 and latex/refman.pdf for documentation.
