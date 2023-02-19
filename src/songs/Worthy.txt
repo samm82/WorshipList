@@ -1,0 +1,5 @@
+Worthy
+Intro: vi I IV V x2
+Verse: I V | I/III IV I/V V x2
+Chorus: IV V | I/III vi x2
+Bridge: IV ii | vi V iii x6
