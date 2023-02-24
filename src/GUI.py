@@ -300,7 +300,7 @@ def checkSongGUI(songs, keys):
                 elif button == "Ignore All":
                     ignoreDanglingKey = True
 
-    nonEmptySongs = [song for song in songs if song]
+    # nonEmptySongs = [song for song in songs if song]
     # if len(nonEmptySongs) != len(set(nonEmptySongs)):
     #     return popupError("Each song can only be selected once.")
     return True
