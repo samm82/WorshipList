@@ -115,7 +115,7 @@ def getChord(noteList, chord, fileName):
         if not chord[:-3].isupper():
             raise FileError(f"Suspended chords aren't minor (see \"{chord}\").")
         chord = f"{getChord(noteList, chord[:-3], fileName)}sus"
- 
+
     else:
         # Checks if chord is valid, and retrieves it from list if it is
         if chord.lower() not in numList:
