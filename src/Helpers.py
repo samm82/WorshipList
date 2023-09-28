@@ -1,7 +1,7 @@
 ## @file   Helpers.py
 #  @brief  Contains helper functions for the modules.
 #  @author Samuel Crawford
-#  @date   1/11/2021
+#  @date   9/28/2023
 
 from os import listdir
 from pathlib import Path
@@ -97,22 +97,27 @@ def checkValidChord(c):
 
 ## @brief              Gets chord from Roman numeral based on list of notes.
 #  @param[in] noteList A list of notes in the key of the song.
-#  @param[in] num      The Roman numeral from the song file.
+#  @param[in] chord    The chord from the song file (represented as a Roman numeral).
 #  @param[in] fileName The name of file with student information.
 #  @return             The chord converted from the Roman numeral.
 #  @throw              FileError if the chord isn't valid.
-def getChord(noteList, num, fileName):
-    lowerNum = num.lower()
-
-    # Checks if chord is valid, and retrieves it from list if it is
-    if lowerNum not in numList:
-        raise FileError(f"The chord \"{num}\" in {fileName} isn't recognized.")
+def getChord(noteList, chord, fileName):
+    if chord.count("/") == 1:
+        chord = chord.split("/")
+        chord = f"{getChord(noteList, chord[0], fileName)}/" + \
+                f"{getChord(noteList, chord[1].upper(), fileName)}"
     else:
-        chord = noteList[numList.index(lowerNum)]
+        lowerNum = chord.lower()
 
-    # Handles if chord is minor
-    if num.islower():
-        chord += "m"
+        # Checks if chord is valid, and retrieves it from list if it is
+        if lowerNum not in numList:
+            raise FileError(f"The chord \"{chord}\" in {fileName} isn't recognized.")
+        else:
+            chord = noteList[numList.index(lowerNum)]
+
+        # Handles if chord is minor
+        if chord.islower():
+            chord += "m"
 
     return chord
 
