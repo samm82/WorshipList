@@ -114,20 +114,14 @@ def getChord(noteList, chord, fileName):
         # Checks if suspended chord is minor, and retrieves it from list if it is NOT
         if not chord[:-3].isupper():
             raise FileError(f"Suspended chords aren't minor (see \"{chord}\").")
-        return f"{getChord(noteList, chord[:-3], fileName)}sus"
+        chord = f"{getChord(noteList, chord[:-3], fileName)}sus"
  
     else:
-        lowerNum = chord.lower()
-
         # Checks if chord is valid, and retrieves it from list if it is
-        if lowerNum not in numList:
+        if chord.lower() not in numList:
             raise FileError(f"The chord \"{chord}\" in {fileName} isn't recognized.")
-        else:
-            chord = noteList[numList.index(lowerNum)]
-
-        # Handles if chord is minor
-        if chord.islower():
-            chord += "m"
+        # Ternary statement handles if chord is minor
+        chord = noteList[numList.index(chord.lower())] + ("m" if chord.islower() else "")
 
     return chord
 
