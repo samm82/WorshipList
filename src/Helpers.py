@@ -91,6 +91,9 @@ def checkValidChord(c):
     elif c.count("/") == 1:
         c = c.split("/")
         return checkValidChord(c[0]) and checkValidChord(c[1])
+    elif c.endswith("sus"):
+        # Suspended chords aren't minor
+        return checkValidChord(c[:-3]) and c.isupper()
     else:
         return c.lower() in numList and (c.islower() or c.isupper())
 
@@ -106,6 +109,13 @@ def getChord(noteList, chord, fileName):
         chord = chord.split("/")
         chord = f"{getChord(noteList, chord[0], fileName)}/" + \
                 f"{getChord(noteList, chord[1].upper(), fileName)}"
+
+    elif chord.endswith("sus"):
+        # Checks if suspended chord is minor, and retrieves it from list if it is NOT
+        if not chord[:-3].isupper():
+            raise FileError(f"Suspended chords aren't minor (see \"{chord}\").")
+        return f"{getChord(noteList, chord[:-3], fileName)}sus"
+ 
     else:
         lowerNum = chord.lower()
 
