@@ -1,4 +1,4 @@
-PY = python
+PY = py
 PYFLAGS = -u
 DOC = doxygen
 DOCFLAGS = 
