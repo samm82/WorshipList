@@ -1,5 +1,4 @@
 Everything That Has Breath (Praise)
 Intro: I Isus x2
-Verse: I (I/III) ii vi IV x3
-Ch/Inst: I ii vi IV
-Bridge: I/III | IV | I/V | vi V
+V/Ch: I ii vi IV x3 (I/iii ii IV)
+Bridge: I/iii | IV | I/V | vi (I/V) V x3

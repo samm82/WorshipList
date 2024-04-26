@@ -1,5 +1,5 @@
 Ancient Gates
 I/PC: I ii IV I x2
-Verse: I I IV I
-Chorus: I | vi | IV ii | I
-Bridge: I ii I/III ii new I IV/I I IV/I new I ii III ii
+Verse: I I IV I x2
+Chorus: I I IV I | I vi IV (ii) I
+Bridge: I ii I/III ii
