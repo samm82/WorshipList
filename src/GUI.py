@@ -101,7 +101,7 @@ def songGUI():
                 elif button == "Use Next Sunday":
                     today = date.today()
                     nextSunday = today + timedelta(days=(6 - today.weekday()) % 7)
-                    filename = f"LIFT Worship {nextSunday.strftime('%F')}"
+                    filename = f"Cornerstone {nextSunday.strftime('%F')}"
 
                 songWindow.close()
                 toDelete = [i for i, s in enumerate(songs) if not s]
