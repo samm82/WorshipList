@@ -10,16 +10,17 @@
     build:
       runs-on: 	ubuntu-latest
       steps:
+      - name: checkout repo
+        uses: actions/checkout@v4
       - name: set up python 3.9
         uses: actions/setup-python@v4
         with:
           python-version: 3.9
-      - name: get pyinstaller
-        run: sudo pip install pyinstaller
-      - name: checkout repo
-        uses: actions/checkout@v4
+          cache: 'pip' # caching pip dependencies
+      - name: get PyInstaller
+        run: pip install PyInstaller
       - name: build application
-        run: make build
+        run: make build PY=python
       - name: remove extra WorshipList file
         run: rm dist/WorshipList
       - name: upload build
