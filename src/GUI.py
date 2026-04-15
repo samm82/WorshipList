@@ -4,6 +4,7 @@
 #  @date   1/11/2022
 
 import PySimpleGUI as sg
+import sys
 
 from datetime import date, timedelta
 from pathlib import Path
@@ -62,7 +63,7 @@ def songGUI():
         makeNewWindow = True
 
         if button in {"Quit", None}:
-            exit()
+            sys.exit()
         else:
             songs, keys = [], []
 
