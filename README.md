@@ -1,14 +1,17 @@
 # WorshipList
-Last Modified: 3/30/2026
+
+Last Modified: 4/15/2026
 
 ## Description
 
-I usually have to create chord charts for the songs we're playing that week
-whenever I'm on worship, so I made a program to automate that process. This program 
-automatically generates that chord chart. This is done through a GUI, by running `make` or by running the executable in the `dist/` directory.
+This program automatically generates a chord chart for the songs being played
+on a given week at my church. This is done through a GUI by running either
+`make` or the executable in the `dist/` directory. More songs can be added to
+the src/songs/ folder following the format outlined below.
 
-To generate documentation, run `make doc` in the directory with the Makefile. This will create two folders; the important files are html/index 
-and latex/refman.pdf for documentation.
+To generate documentation, run `make doc` in the directory with the Makefile.
+This will create two folders; the important files are html/index and
+latex/refman.pdf for documentation.
 
 ## Song Files
 

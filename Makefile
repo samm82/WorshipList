@@ -1,5 +1,7 @@
 PY = py
 PYFLAGS = -u
+INSTALL = PyInstaller
+
 DOC = doxygen
 DOCFLAGS = 
 DOCCONFIG = 
@@ -13,7 +15,7 @@ run:
 	$(PY) $(PYFLAGS) $(MAIN)
 
 compile: $(MAIN)
-	pyinstaller --onefile $^ -n WorshipList -i src/icon.ico #-w
+	$(PY) -m $(INSTALL) --onefile $^ -n WorshipList -i src/icon.ico #-w
 # Continues execution if WorshipList.spec does not exist
 	rm WorshipList.spec || true
 # Continues execution if dist/ exists
