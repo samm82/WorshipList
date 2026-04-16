@@ -11,9 +11,9 @@
       runs-on: 	ubuntu-latest
       steps:
       - name: checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: set up python 3.9
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v6.2.0
         with:
           python-version: 3.9
           cache: 'pip' # caching pip dependencies
@@ -24,7 +24,7 @@
       - name: remove extra WorshipList file
         run: rm dist/WorshipList
       - name: upload build
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: WorshipList
           path: dist
@@ -33,12 +33,12 @@
       runs-on: 	ubuntu-latest
       steps:
       - name: set up python 3.9
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v6.2.0
         with:
           python-version: 3.9
       - name: get flake8
         run: sudo pip install flake8
       - name: checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: lint application
         run: make lint
