@@ -1,4 +1,4 @@
-lxml==4.9.1
+lxml==6.1.0
 docx==0.2.4
 pathvalidate==2.5.0
 PySimpleGUI==4.56.0
