@@ -1,0 +1,4 @@
+Weapon
+Verse: vi I/III IV | vi I V x4
+Chorus: IV I V (vi) x4
+Bridge: IV vi V x4
