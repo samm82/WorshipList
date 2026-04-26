@@ -125,13 +125,26 @@ def getChord(noteList, chord: str, fileName):
         elif chord.startswith("#"):
             acc = 1
             chord = chord[1:]
+        minor: bool = chord.islower()
 
         # Checks if chord is valid, and retrieves it from list if it is
         if chord.lower() not in numList:
             raise FileError(f"The chord \"{chord}\" in {fileName} isn't recognized.")
-        # Ternary statement handles if chord is minor
-        chord = noteList[numList.index(chord.lower())] + ("m" if chord.islower() else "")
+        chord = noteList[numList.index(chord.lower())]
 
+        # Find "out of key" chord when applicable
+        if acc:
+            accList = flatNotes if acc == -1 else sharpNotes
+            # TODO: will this always work?
+            try:
+                chord = accList[flatNotes.index(chord) + acc]
+            except ValueError:
+                chord = accList[sharpNotes.index(chord) + acc]
+
+        # Handle if chord is minor
+        if minor:
+            chord += "m"
+    
     return chord
 
 
