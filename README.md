@@ -1,6 +1,6 @@
 # WorshipList
 
-Last Modified: 4/15/2026
+Last Modified: 4/26/2026
 
 ## Description
 
@@ -15,9 +15,13 @@ latex/refman.pdf for documentation.
 
 ## Song Files
 
-Each song is stored as a text file with chords represented as Roman numerals, where "I" corresponds to the first chord of the scale, "II" to the 
-second, etc. Lower case numerals denote minor chords. The program then automatically translates these numerals to standard chords, depending on 
-the key specified. 
+Each song is stored as a text file with chords represented as Roman numerals,
+where "I" corresponds to the first chord of the scale, "II" to the second, etc.
+Lower case numerals denote minor chords, and "sus" following major chords
+denotes suspended chords. Chords can also be preceded by "b" or "#" to indicate
+that they are flat or sharp chords (i.e., not in the key provided),
+respectively. The program then automatically translates these numerals to
+standard chords in the specified key.
 
 ### Keywords
 
