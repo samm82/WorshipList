@@ -1,7 +1,7 @@
 ## @file   Helpers.py
 #  @brief  Contains helper functions for the modules.
 #  @author Samuel Crawford
-#  @date   9/28/2023
+#  @date   4/26/2026
 
 from os import listdir
 from pathlib import Path
@@ -38,8 +38,7 @@ def checkFileName(name):
 ## @brief   Gets a list of valid songs from the song directory.
 #  @return  A list of all valid songs.
 def getValidSongs():
-    # [:-4] removes ".txt" from filenames
-    return sorted([s[:-4] for s in listdir(Path("src/songs"))])
+    return sorted([s.rstrip(".txt") for s in listdir(Path("src/songs"))])
 
 
 ## @brief         Gets a list of notes in the given key.
@@ -79,7 +78,7 @@ def getNotes(key):
 ## @brief       Checks if a "chord" is valid.
 #  @param[in] c The "chord" to be checked.
 #  @return      True if the "chord" is valid and False otherwise.
-def checkValidChord(c):
+def checkValidChord(c: str):
     if c in {"|", "new", "same"}:
         return True
     elif c[0] == "x":
@@ -89,11 +88,13 @@ def checkValidChord(c):
     elif c[-1] == ")":
         return checkValidChord(c[:-1])
     elif c.count("/") == 1:
-        c = c.split("/")
-        return checkValidChord(c[0]) and checkValidChord(c[1])
+        c, bass = c.split("/")
+        return checkValidChord(c) and checkValidChord(bass)
     elif c.endswith("sus"):
         # Suspended chords aren't minor
         return checkValidChord(c[:-3]) and c.isupper()
+    elif c.startswith(("b", "#")):
+        return checkValidChord(c[1:])
     else:
         return c.lower() in numList and (c.islower() or c.isupper())
 
@@ -104,11 +105,11 @@ def checkValidChord(c):
 #  @param[in] fileName The name of file with student information.
 #  @return             The chord converted from the Roman numeral.
 #  @throw              FileError if the chord isn't valid.
-def getChord(noteList, chord, fileName):
+def getChord(noteList, chord: str, fileName):
     if chord.count("/") == 1:
-        chord = chord.split("/")
-        chord = f"{getChord(noteList, chord[0], fileName)}/" + \
-                f"{getChord(noteList, chord[1].upper(), fileName)}"
+        chord, bass = chord.split("/")
+        chord = f"{getChord(noteList, chord, fileName)}/" + \
+                f"{getChord(noteList, bass.upper(), fileName)}"
 
     elif chord.endswith("sus"):
         # Checks if suspended chord is minor, and retrieves it from list if it is NOT
@@ -117,6 +118,14 @@ def getChord(noteList, chord, fileName):
         chord = f"{getChord(noteList, chord[:-3], fileName)}sus"
 
     else:
+        acc = 0
+        if chord.startswith("b"):
+            acc = -1
+            chord = chord[1:]
+        elif chord.startswith("#"):
+            acc = 1
+            chord = chord[1:]
+
         # Checks if chord is valid, and retrieves it from list if it is
         if chord.lower() not in numList:
             raise FileError(f"The chord \"{chord}\" in {fileName} isn't recognized.")
