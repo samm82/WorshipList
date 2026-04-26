@@ -1,6 +1,6 @@
 # WorshipList
 
-Last Modified: 4/15/2026
+Last Modified: 4/26/2026
 
 Last Compiled: COMPILE_DATE
 
@@ -13,9 +13,11 @@ is in the same folder as the src/ folder before running.
 
 ## Song Files
 
-Each song is stored as a text file with chords represented as Roman numerals, where "I" corresponds to the first chord of the scale, "II" to the
-second, etc. Lower case numerals denote minor chords. The program then automatically translates these numerals to standard chords, depending on
-the key specified.
+Each song is stored as a text file with chords represented as Roman numerals,
+where "I" corresponds to the first chord of the scale, "II" to the second, etc.
+Lower case numerals denote minor chords, and "sus" following major chords
+denotes suspended chords. The program then automatically translates these
+numerals to standard chords in the key specified. 
 
 ### Keywords
 
@@ -28,7 +30,6 @@ The song files also contain some custom symbols that are shorthand for some impo
 |new|Splits a line into two lines, preserving tab stops|
 |same|Denotes that two sections should appear on the same line|
 |/|Denotes a chord over a bass note|
-|sus|Denotes a suspended chord|
 |(|"(" and denotes beginning of small text|
 |)|")" and denotes end of small text|
 
