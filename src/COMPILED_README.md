@@ -16,8 +16,10 @@ is in the same folder as the src/ folder before running.
 Each song is stored as a text file with chords represented as Roman numerals,
 where "I" corresponds to the first chord of the scale, "II" to the second, etc.
 Lower case numerals denote minor chords, and "sus" following major chords
-denotes suspended chords. The program then automatically translates these
-numerals to standard chords in the key specified. 
+denotes suspended chords. Chords can also be preceded by "b" or "#" to indicate
+that they are flat or sharp chords (i.e., not in the key provided),
+respectively. The program then automatically translates these numerals to
+standard chords in the specified key.
 
 ### Keywords
 
