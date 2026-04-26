@@ -144,7 +144,7 @@ def getChord(noteList, chord: str, fileName):
         # Handle if chord is minor
         if minor:
             chord += "m"
-    
+
     return chord
 
 
