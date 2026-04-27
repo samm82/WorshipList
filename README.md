@@ -56,7 +56,7 @@ Some assumptions for how the song files are formatted:
 └── dist
 │   └── src/
 │   │   └── songs/
-│   │   │   Settings.txt
+│   │   │   Settings.json
 │   │
 │   │   README.md
 │   │   WorshipList.exe
@@ -70,7 +70,7 @@ Some assumptions for how the song files are formatted:
 │   │   Helpers.py
 │   │   Main.py
 │   │   README.md
-│   │   Settings.txt
+│   │   Settings.json
 │
 │   .gitignore
 │   Doxyfile

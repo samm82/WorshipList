@@ -21,7 +21,7 @@ compile: $(MAIN)
 # Continues execution if dist/ exists
 	mkdir $(DIST_SRC) || true
 	cp -R src/songs $(DIST_SRC)
-	cp src/Settings.txt $(DIST_SRC)
+	cp src/Settings.json $(DIST_SRC)
 	cp src/COMPILED_README.md dist
 	mv dist/COMPILED_README.md dist/README.md
 	sed -i -- "s@COMPILE_DATE@$$(date "+%-m/%-d/%Y")@g" dist/README.md
