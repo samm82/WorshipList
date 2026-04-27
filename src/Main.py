@@ -1,8 +1,9 @@
 ## @file   Main.py
 #  @brief  Generates a worship chart from specified songs and keys.
 #  @author Samuel Crawford
-#  @date   12/30/2021
+#  @date   4/27/2026
 
+import json
 from pathlib import Path
 
 from Document import docSetup, pdfWrite, writeSong
@@ -25,28 +26,29 @@ def main():
         print(f"Wrote {song}.")
 
     # Gets output file directory from file
-    with Path("src/Settings.txt").open() as fp:
-        filepath = Path(fp.readline().strip())
+    with Path("src/Settings.json").open() as settings_json:
+        settings = json.load(settings_json)
+        outPath = Path(settings["OUTPUT_PATH"])
 
     print()
 
-    if not filepath.is_dir():
-        print("Can't find file path " + str(filepath))
-        print("Make sure your file path is correct in Settings.txt")
+    if not outPath.is_dir():
+        print("Can't find file path " + str(outPath))
+        print("Make sure your file path is correct in Settings.json")
 
-    filepathDOCX = filepath / fileNameDOCX
-    filepathPDF = filepath / fileNamePDF
+    outPathDOCX = outPath / fileNameDOCX
+    outPathPDF = outPath / fileNamePDF
 
     # Saves document as .docx
     try:
-        doc.save(str(filepathDOCX))
+        doc.save(str(outPathDOCX))
         print("Chord sheet saved as .docx file.")
     except:
         # TODO: is this necessary?
         print("Unknown exception with saving .docx file.")
 
     # Saves document as .pdf
-    if pdfWrite(filepathDOCX, filepathPDF):
+    if pdfWrite(outPathDOCX, outPathPDF):
         print("Chord sheet converted to PDF.")
     else:
         print("Error saving chord sheet as PDF.")
