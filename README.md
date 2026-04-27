@@ -7,7 +7,7 @@ Last Modified: 4/27/2026
 This program automatically generates a chord chart for the songs being played
 on a given week at my church. This is done through a GUI by running either
 `make` or the executable in the `dist/` directory. More songs can be added to
-the src/songs/ folder following the format outlined below.
+the dist/songs/ folder following the format outlined below.
 
 To generate documentation, run `make doc` in the directory with the Makefile.
 This will create two folders; the important files are html/index and

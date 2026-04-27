@@ -1,7 +1,7 @@
 ## @file   Document.py
 #  @brief  Contains functions for adding text to document.
 #  @author Samuel Crawford
-#  @date   9/28/2023
+#  @date   4/27/2026
 
 import win32com.client
 
@@ -12,7 +12,7 @@ from docx import Document
 from docx.shared import Inches, Pt
 from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_BREAK, WD_TAB_ALIGNMENT
 
-from Helpers import getChord, getNotes
+from Helpers import getChord, getNotes, getSetting
 
 
 ## @brief          Outputs a .pdf from a .docx file.
@@ -62,7 +62,8 @@ def docSetup():
 #  @param[in] key       The key of the song.
 #  @return              The document (doc) and line counter (lineCount).
 def writeSong(doc, lineCount, fileName, key):
-    with Path(f"src/songs/{fileName}.txt").open() as fp:
+    songPath = Path(getSetting("SONG_PATH"))
+    with (songPath / f"{fileName}.txt").open() as fp:
         lines = fp.readlines()
 
     # Adds page break if song will get cut off

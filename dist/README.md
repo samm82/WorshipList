@@ -7,7 +7,7 @@ Last Compiled: 4/27/2026
 ## Description
 
 This program automatically generates a chord chart for the songs being played
-on a given week at my church. More songs can be added to the src/songs/ folder
+on a given week at my church. More songs can be added to the dist/songs/ folder
 following the format outlined below. Ensure that the program (WorshipList.exe)
 is in the same folder as the src/ folder before running.
 

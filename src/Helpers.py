@@ -49,7 +49,8 @@ def checkFileName(name):
 ## @brief   Gets a list of valid songs from the song directory.
 #  @return  A list of all valid songs.
 def getValidSongs():
-    return sorted([s.rstrip(".txt") for s in listdir(Path("src/songs"))])
+    return sorted([s.rstrip(".txt")
+                   for s in listdir(Path(getSetting("SONG_PATH")))])
 
 
 ## @brief         Gets a list of notes in the given key.

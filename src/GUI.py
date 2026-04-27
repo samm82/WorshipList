@@ -1,7 +1,7 @@
 ## @file   GUI.py
 #  @brief  Implements GUI for selecting songs.
 #  @author Samuel Crawford
-#  @date   1/11/2022
+#  @date   4/27/2026
 
 import PySimpleGUI as sg
 import sys
@@ -10,8 +10,8 @@ from datetime import date, timedelta
 from pathlib import Path
 from titlecase import titlecase
 
-from Helpers import checkFileName, checkValidChord, getValidSongs, \
-    reduceWhitespace, validKeys
+from Helpers import checkFileName, checkValidChord, getSetting, \
+    getValidSongs, reduceWhitespace, validKeys
 
 
 ## @brief  Implements GUI for retrieving songs and keys.
@@ -194,7 +194,7 @@ def addSongGUI():
                 popupError("Invalid file name for a song.")
                 continue
             else:
-                filePath = Path(f"src/songs/{songName}.txt")
+                filePath = Path(getSetting("SONG_PATH")) / f"{songName}.txt"
 
             if filePath.is_file():
                 popupError("Song file already exists.")
@@ -286,7 +286,8 @@ def checkSongGUI(songs, keys):
             elif key not in validKeys:
                 return popupError(f"\"{key}\" is not a valid key.")
 
-            with Path(f"src/songs/{song}.txt").open() as fp:
+            songPath = Path(getSetting("SONG_PATH"))
+            with (songPath / f"{song}.txt").open() as fp:
                 if len(fp.readlines()) == 1 and not ignoreEmptyFile:
                     button = popupWarn(f"File for \"{song}\" has too few lines.")
                     if button == "Go Back":
