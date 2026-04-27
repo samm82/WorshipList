@@ -26,7 +26,7 @@ def main():
         print(f"Wrote {song}.")
 
     # Gets output file directory from file
-    with Path("src/Settings.json").open() as settings_json:
+    with Path("Settings.json").open() as settings_json:
         settings = json.load(settings_json)
         outPath = Path(settings["OUTPUT_PATH"])
 

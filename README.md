@@ -1,6 +1,6 @@
 # WorshipList
 
-Last Modified: 4/26/2026
+Last Modified: 4/27/2026
 
 ## Description
 
@@ -56,9 +56,9 @@ Some assumptions for how the song files are formatted:
 └── dist
 │   └── src/
 │   │   └── songs/
-│   │   │   Settings.json
 │   │
 │   │   README.md
+│   │   Settings.json
 │   │   WorshipList.exe
 │
 └── src/
@@ -70,7 +70,6 @@ Some assumptions for how the song files are formatted:
 │   │   Helpers.py
 │   │   Main.py
 │   │   README.md
-│   │   Settings.json
 │
 │   .gitignore
 │   Doxyfile
@@ -78,6 +77,7 @@ Some assumptions for how the song files are formatted:
 │   Makefile
 │   README.md
 |   requirements.txt
+|   Settings.json
 ```
 
 | Name | Description |
@@ -91,3 +91,4 @@ Some assumptions for how the song files are formatted:
 |Makefile|Contains commands for building|
 |README.md|This file - Gives information about repo|
 |requirements.txt|The required packages for using WorshipList|
+|Settings.json|Contains the settings for the program (only output file path right now)|
