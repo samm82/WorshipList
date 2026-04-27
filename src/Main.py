@@ -3,11 +3,11 @@
 #  @author Samuel Crawford
 #  @date   4/27/2026
 
-import json
 from pathlib import Path
 
 from Document import docSetup, pdfWrite, writeSong
 from GUI import songGUI
+from Helpers import getSetting
 
 
 ## @brief The main function of the program that calls other programs.
@@ -25,10 +25,8 @@ def main():
         doc, lineCount = writeSong(doc, lineCount, song, key)
         print(f"Wrote {song}.")
 
-    # Gets output file directory from file
-    with Path("Settings.json").open() as settings_json:
-        settings = json.load(settings_json)
-        outPath = Path(settings["OUTPUT_PATH"])
+    # Gets output file directory from settings
+    outPath = Path(getSetting("OUTPUT_PATH"))
 
     print()
 
