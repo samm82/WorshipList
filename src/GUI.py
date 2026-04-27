@@ -24,8 +24,8 @@ def songGUI():
     while True:
         if makeNewWindow:
             songsFromFile = getValidSongs()
-            songColumnList = [sg.Text("Song")]
-            keyColumnList = [sg.Text("Key")]
+            songColumnList: list = [sg.Text("Song")]
+            keyColumnList: list = [sg.Text("Key")]
 
             def songCombo(i, input=""):
                 if input and input not in songsFromFile:
@@ -69,13 +69,13 @@ def songGUI():
 
             for i in range(numSongs):
                 songs.append(values[f"-SONG{i}-"].strip())
-                songWindow[f"-SONG{i}-"].update(songs[i])
+                songWindow[f"-SONG{i}-"].update(songs[i])  # pyright: ignore[reportOptionalMemberAccess]
 
                 key = values[f"-KEY{i}-"].strip()
                 if key:
                     key = key[0].upper() + key[1:].lower()
                 keys.append(key)
-                songWindow[f"-KEY{i}-"].update(key)
+                songWindow[f"-KEY{i}-"].update(key)  # pyright: ignore[reportOptionalMemberAccess]
 
             if button == "Change Number of Songs":
                 nonEmptyRows = [i for i in range(len(songs)) if songs[i] or keys[i]]
@@ -165,8 +165,8 @@ def addSongGUI():
     NUM_LINES = 5
     sections = ["", "Verse", "Chorus", "Bridge", "V/Ch", "Intro", "Outro"]
 
-    lColumn = [[sg.Text("Name:")]]
-    rColumn = [[sg.InputText(key="-SONGNAME-")]]
+    lColumn: list[list] = [[sg.Text("Name:")]]
+    rColumn: list[list] = [[sg.InputText(key="-SONGNAME-")]]
     for i in range(NUM_LINES):
         lColumn.append([sg.Combo(sections, "", key=f"-SECTIONNAME{i}-")])
         rColumn.append([sg.InputText(key=f"-CHORDS{i}-")])
