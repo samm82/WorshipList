@@ -1,7 +1,7 @@
 ## @file   GUI.py
 #  @brief  Implements GUI for selecting songs.
 #  @author Samuel Crawford
-#  @date   4/27/2026
+#  @date   5/17/2026
 
 import PySimpleGUI as sg
 import sys
@@ -49,11 +49,11 @@ def songGUI():
             songDialogue = [
                 [sg.Column([[s] for s in songColumnList]),
                  sg.Column([[k] for k in keyColumnList])],
-                [buttonRow(["Change Number of Songs", "Add a New Song"], False),
+                [buttonRow(["Change Number of Songs", "Add a New Song"]),
                  [sg.HorizontalSeparator()],
                  [sg.Text("Enter a filename:")],
                  [sg.InputText("", key="-FILENAME-")],
-                 buttonRow(["OK", "Use Next Sunday", "Quit"], False)
+                 buttonRow(["OK", "Use Next Sunday", "Quit"])
                  ]
             ]
 
@@ -174,7 +174,7 @@ def addSongGUI():
     dialogue = [
         [sg.Text("Add a song:")],
         [sg.Column(lColumn), sg.Column(rColumn)],
-        buttonRow(["OK", "Cancel"], False)
+        buttonRow(["OK", "Cancel"])
     ]
 
     window = sg.Window("WorshipList").Layout(dialogue)
@@ -348,7 +348,5 @@ def popupError(s):
 #  @param[in] names A list of names for buttons and a Boolean for if they should close on press.
 #  @param[in] close A Boolean representing if the window should be closed on a button press.
 #  @return          A list of buttons.
-def buttonRow(names, close):
-    if close:
-        return list(map(lambda n: sg.CloseButton(n), names))
-    return list(map(lambda n: sg.Button(n), names))
+def buttonRow(names: list[str], close: bool = False):
+    return [sg.CloseButton(n) if close else sg.Button(n) for n in names]
