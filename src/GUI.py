@@ -284,7 +284,8 @@ def settingsGUI():
     rColumn: list[list] = []
     for key, val in getSettings().items():
         lColumn.append([sg.Text(processSettingKey(key, True) + ":")])
-        rColumn.append([sg.InputText(key=key, default_text=val)])
+        rColumn.append([sg.InputText(key=key, default_text=val),
+                        sg.FolderBrowse() if "PATH" in key else sg.VPush()])
 
     dialogue = [
         [sg.Text("Settings")],
@@ -296,6 +297,10 @@ def settingsGUI():
 
     while True:
         button, values = window.Read()
+        # The folder browsers populate the text fields
+        # Don't check the browser values since they're either unpopulated or redundant
+        del values["Browse"]
+        del values["Browse0"]
 
         validSettings = True
         if button == "OK":
