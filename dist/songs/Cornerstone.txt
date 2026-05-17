@@ -1,0 +1,4 @@
+Cornerstone
+Intro: I | vi | IV V
+Verse: I | IV V new vi vi/V | IV V I
+Chorus: (I/III) IV vi V I x3
