@@ -26,14 +26,20 @@ class ParamError(Exception):
     pass
 
 
+## @brief  Gets the current values of the settings.
+#  @return The current settings as a dictionary.
+def getSettings():
+    with Path("Settings.json").open() as settings_json:
+        settings = json.load(settings_json)
+    return settings
+
+
 ## @brief          Gets the value of a setting from its key.
 #  @param[in] key  The setting's key.
 #  @return         The setting's value.
 #  @throw          KeyError if the key isn't valid.
 def getSetting(key: str):
-    with Path("Settings.json").open() as settings_json:
-        settings = json.load(settings_json)
-    return settings[key]
+    return getSettings()[key]
 
 
 ## @brief           Checks a file name to ensure it is valid.

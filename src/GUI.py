@@ -4,13 +4,15 @@
 #  @date   5/17/2026
 
 import PySimpleGUI as sg
+
+import json
 import sys
 
 from datetime import date, timedelta
 from pathlib import Path
 from titlecase import titlecase
 
-from Helpers import checkFileName, checkValidChord, getSetting, \
+from Helpers import checkFileName, checkValidChord, getSetting, getSettings, \
     getValidSongs, reduceWhitespace, validKeys
 
 
@@ -49,7 +51,7 @@ def songGUI():
             songDialogue = [
                 [sg.Column([[s] for s in songColumnList]),
                  sg.Column([[k] for k in keyColumnList])],
-                [buttonRow(["Change Number of Songs", "Add a New Song"]),
+                [buttonRow(["Change Number of Songs", "Add a New Song", "Settings"]),
                  [sg.HorizontalSeparator()],
                  [sg.Text("Enter a filename:")],
                  [sg.InputText("", key="-FILENAME-")],
@@ -87,6 +89,9 @@ def songGUI():
 
             elif button == "Add a New Song":
                 makeNewWindow = addSongGUI()
+
+            elif button == "Settings":
+                makeNewWindow = settingsGUI()
 
             else:
                 if not checkSongGUI(songs, keys):
@@ -265,6 +270,55 @@ def addSongGUI():
             return False
 
 
+## @brief Allows the user to view and change settings.
+def settingsGUI():
+    ## @brief           Formats a given settings key for use in dialogues.
+    #  @param[in] s     The settings key to format.
+    #  @param[in] title A Boolean representing if the key should be in titlecase.
+    #  @return          The key in natural language in lowercase if title is False.
+    def processSettingKey(s: str, title: bool) -> str:
+        s = s.replace("_", " ")
+        return titlecase(s) if title else s.lower()
+
+    lColumn: list[list] = []
+    rColumn: list[list] = []
+    for key, val in getSettings().items():
+        lColumn.append([sg.Text(processSettingKey(key, True) + ":")])
+        rColumn.append([sg.InputText(key=key, default_text=val)])
+
+    dialogue = [
+        [sg.Text("Settings")],
+        [sg.Column(lColumn), sg.Column(rColumn)],
+        buttonRow(["OK", "Cancel"])
+    ]
+
+    window = sg.Window("WorshipList").Layout(dialogue)
+
+    while True:
+        button, values = window.Read()
+
+        validSettings = True
+        if button == "OK":
+            for key, val in values.items():
+                lowerKey = processSettingKey(key, False)
+                if not val:
+                    popupError(f"Please enter a{"n" if lowerKey[0] in "aeiou" else ""} {lowerKey}.")
+                    validSettings = False
+                if val and ("PATH" in key and not Path(val).is_dir() or
+                            "NAME" in key and not checkFileName(val)):
+                    popupError(f"Please enter a valid {lowerKey}.")
+                    validSettings = False
+
+            if validSettings:
+                with Path("Settings.json").open("w") as settings_json:
+                    settings_json.write(json.dumps(values, indent=4))
+                break
+        else:
+            break
+
+    window.close()
+
+
 ## @brief            Ensures output of song GUI is valid.
 #  @param[in] songs  The song inputs.
 #  @param[in] keys   The key inputs.
@@ -312,7 +366,7 @@ def checkSongGUI(songs, keys):
 #  @param[in] s   The warning string to be printed in dialogue box.
 #  @param[in] all A Boolean representing if an "Ignore All" button should be created.
 #  @return        The name of the button pressed.
-def popupWarn(s, all=True):
+def popupWarn(s: str, all: bool = True):
     buttons = ["Go Back", "Ignore"]
     if all:
         buttons.append("Ignore All")
@@ -340,7 +394,7 @@ def popupText(s):
 
 ## @brief       Defines an error popup that signifies incorrect input.
 #  @param[in] s The error string to be printed in dialogue box.
-def popupError(s):
+def popupError(s: str):
     sg.Popup(s, title="Error")
 
 
