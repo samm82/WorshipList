@@ -1,13 +1,13 @@
 # WorshipList
 
-Last Modified: 4/26/2026
+Last Modified: 4/27/2026
 
 ## Description
 
 This program automatically generates a chord chart for the songs being played
 on a given week at my church. This is done through a GUI by running either
 `make` or the executable in the `dist/` directory. More songs can be added to
-the src/songs/ folder following the format outlined below.
+the dist/songs/ folder following the format outlined below.
 
 To generate documentation, run `make doc` in the directory with the Makefile.
 This will create two folders; the important files are html/index and
@@ -56,9 +56,9 @@ Some assumptions for how the song files are formatted:
 └── dist
 │   └── src/
 │   │   └── songs/
-│   │   │   Settings.txt
 │   │
 │   │   README.md
+│   │   Settings.json
 │   │   WorshipList.exe
 │
 └── src/
@@ -70,7 +70,6 @@ Some assumptions for how the song files are formatted:
 │   │   Helpers.py
 │   │   Main.py
 │   │   README.md
-│   │   Settings.txt
 │
 │   .gitignore
 │   Doxyfile
@@ -78,6 +77,7 @@ Some assumptions for how the song files are formatted:
 │   Makefile
 │   README.md
 |   requirements.txt
+|   Settings.json
 ```
 
 | Name | Description |
@@ -91,3 +91,4 @@ Some assumptions for how the song files are formatted:
 |Makefile|Contains commands for building|
 |README.md|This file - Gives information about repo|
 |requirements.txt|The required packages for using WorshipList|
+|Settings.json|Contains the settings for the program (only output file path right now)|

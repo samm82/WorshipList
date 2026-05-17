@@ -1,8 +1,9 @@
 ## @file   Helpers.py
 #  @brief  Contains helper functions for the modules.
 #  @author Samuel Crawford
-#  @date   4/26/2026
+#  @date   4/27/2026
 
+import json
 from os import listdir
 from pathlib import Path
 from pathvalidate import is_valid_filename
@@ -25,6 +26,22 @@ class ParamError(Exception):
     pass
 
 
+## @brief  Gets the current values of the settings.
+#  @return The current settings as a dictionary.
+def getSettings():
+    with Path("Settings.json").open() as settings_json:
+        settings = json.load(settings_json)
+    return settings
+
+
+## @brief          Gets the value of a setting from its key.
+#  @param[in] key  The setting's key.
+#  @return         The setting's value.
+#  @throw          KeyError if the key isn't valid.
+def getSetting(key: str):
+    return getSettings()[key]
+
+
 ## @brief           Checks a file name to ensure it is valid.
 #  @param[in] name  The file name.
 #  @return          True if the name is valid, otherwise False.
@@ -38,7 +55,8 @@ def checkFileName(name):
 ## @brief   Gets a list of valid songs from the song directory.
 #  @return  A list of all valid songs.
 def getValidSongs():
-    return sorted([s.rstrip(".txt") for s in listdir(Path("src/songs"))])
+    return sorted([s.rstrip(".txt")
+                   for s in listdir(Path(getSetting("SONG_PATH")))])
 
 
 ## @brief         Gets a list of notes in the given key.

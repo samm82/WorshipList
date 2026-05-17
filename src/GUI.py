@@ -1,17 +1,19 @@
 ## @file   GUI.py
 #  @brief  Implements GUI for selecting songs.
 #  @author Samuel Crawford
-#  @date   1/11/2022
+#  @date   5/17/2026
 
 import PySimpleGUI as sg
+
+import json
 import sys
 
 from datetime import date, timedelta
 from pathlib import Path
 from titlecase import titlecase
 
-from Helpers import checkFileName, checkValidChord, getValidSongs, \
-    reduceWhitespace, validKeys
+from Helpers import checkFileName, checkValidChord, getSetting, getSettings, \
+    getValidSongs, reduceWhitespace, validKeys
 
 
 ## @brief  Implements GUI for retrieving songs and keys.
@@ -24,8 +26,8 @@ def songGUI():
     while True:
         if makeNewWindow:
             songsFromFile = getValidSongs()
-            songColumnList = [sg.Text("Song")]
-            keyColumnList = [sg.Text("Key")]
+            songColumnList: list = [sg.Text("Song")]
+            keyColumnList: list = [sg.Text("Key")]
 
             def songCombo(i, input=""):
                 if input and input not in songsFromFile:
@@ -49,11 +51,11 @@ def songGUI():
             songDialogue = [
                 [sg.Column([[s] for s in songColumnList]),
                  sg.Column([[k] for k in keyColumnList])],
-                [buttonRow(["Change Number of Songs", "Add a New Song"], False),
+                [buttonRow(["Change Number of Songs", "Add a New Song", "Settings"]),
                  [sg.HorizontalSeparator()],
                  [sg.Text("Enter a filename:")],
                  [sg.InputText("", key="-FILENAME-")],
-                 buttonRow(["OK", "Use Next Sunday", "Quit"], False)
+                 buttonRow(["OK", "Use Next Sunday", "Quit"])
                  ]
             ]
 
@@ -69,13 +71,13 @@ def songGUI():
 
             for i in range(numSongs):
                 songs.append(values[f"-SONG{i}-"].strip())
-                songWindow[f"-SONG{i}-"].update(songs[i])
+                songWindow[f"-SONG{i}-"].update(songs[i])  # pyright: ignore[reportOptionalMemberAccess]
 
                 key = values[f"-KEY{i}-"].strip()
                 if key:
                     key = key[0].upper() + key[1:].lower()
                 keys.append(key)
-                songWindow[f"-KEY{i}-"].update(key)
+                songWindow[f"-KEY{i}-"].update(key)  # pyright: ignore[reportOptionalMemberAccess]
 
             if button == "Change Number of Songs":
                 nonEmptyRows = [i for i in range(len(songs)) if songs[i] or keys[i]]
@@ -87,6 +89,9 @@ def songGUI():
 
             elif button == "Add a New Song":
                 makeNewWindow = addSongGUI()
+
+            elif button == "Settings":
+                makeNewWindow = settingsGUI()
 
             else:
                 if not checkSongGUI(songs, keys):
@@ -102,7 +107,7 @@ def songGUI():
                 elif button == "Use Next Sunday":
                     today = date.today()
                     nextSunday = today + timedelta(days=(6 - today.weekday()) % 7)
-                    filename = f"Cornerstone {nextSunday.strftime('%F')}"
+                    filename = f"{getSetting("CHURCH_NAME")} {nextSunday.strftime('%F')}"
 
                 songWindow.close()
                 toDelete = [i for i, s in enumerate(songs) if not s]
@@ -165,8 +170,8 @@ def addSongGUI():
     NUM_LINES = 5
     sections = ["", "Verse", "Chorus", "Bridge", "V/Ch", "Intro", "Outro"]
 
-    lColumn = [[sg.Text("Name:")]]
-    rColumn = [[sg.InputText(key="-SONGNAME-")]]
+    lColumn: list[list] = [[sg.Text("Name:")]]
+    rColumn: list[list] = [[sg.InputText(key="-SONGNAME-")]]
     for i in range(NUM_LINES):
         lColumn.append([sg.Combo(sections, "", key=f"-SECTIONNAME{i}-")])
         rColumn.append([sg.InputText(key=f"-CHORDS{i}-")])
@@ -174,7 +179,7 @@ def addSongGUI():
     dialogue = [
         [sg.Text("Add a song:")],
         [sg.Column(lColumn), sg.Column(rColumn)],
-        buttonRow(["OK", "Cancel"], False)
+        buttonRow(["OK", "Cancel"])
     ]
 
     window = sg.Window("WorshipList").Layout(dialogue)
@@ -194,7 +199,7 @@ def addSongGUI():
                 popupError("Invalid file name for a song.")
                 continue
             else:
-                filePath = Path(f"src/songs/{songName}.txt")
+                filePath = Path(getSetting("SONG_PATH")) / f"{songName}.txt"
 
             if filePath.is_file():
                 popupError("Song file already exists.")
@@ -265,6 +270,60 @@ def addSongGUI():
             return False
 
 
+## @brief Allows the user to view and change settings.
+def settingsGUI():
+    ## @brief           Formats a given settings key for use in dialogues.
+    #  @param[in] s     The settings key to format.
+    #  @param[in] title A Boolean representing if the key should be in titlecase.
+    #  @return          The key in natural language in lowercase if title is False.
+    def processSettingKey(s: str, title: bool) -> str:
+        s = s.replace("_", " ")
+        return titlecase(s) if title else s.lower()
+
+    lColumn: list[list] = []
+    rColumn: list[list] = []
+    for key, val in getSettings().items():
+        lColumn.append([sg.Text(processSettingKey(key, True) + ":")])
+        rColumn.append([sg.InputText(key=key, default_text=val),
+                        sg.FolderBrowse() if "PATH" in key else sg.VPush()])
+
+    dialogue = [
+        [sg.Text("Settings")],
+        [sg.Column(lColumn), sg.Column(rColumn)],
+        buttonRow(["OK", "Cancel"])
+    ]
+
+    window = sg.Window("WorshipList").Layout(dialogue)
+
+    while True:
+        button, values = window.Read()
+        # The folder browsers populate the text fields
+        # Don't check the browser values since they're either unpopulated or redundant
+        del values["Browse"]
+        del values["Browse0"]
+
+        validSettings = True
+        if button == "OK":
+            for key, val in values.items():
+                lowerKey = processSettingKey(key, False)
+                if not val:
+                    popupError(f"Please enter a{"n" if lowerKey[0] in "aeiou" else ""} {lowerKey}.")
+                    validSettings = False
+                if val and ("PATH" in key and not Path(val).is_dir() or
+                            "NAME" in key and not checkFileName(val)):
+                    popupError(f"Please enter a valid {lowerKey}.")
+                    validSettings = False
+
+            if validSettings:
+                with Path("Settings.json").open("w") as settings_json:
+                    settings_json.write(json.dumps(values, indent=4))
+                break
+        else:
+            break
+
+    window.close()
+
+
 ## @brief            Ensures output of song GUI is valid.
 #  @param[in] songs  The song inputs.
 #  @param[in] keys   The key inputs.
@@ -286,7 +345,8 @@ def checkSongGUI(songs, keys):
             elif key not in validKeys:
                 return popupError(f"\"{key}\" is not a valid key.")
 
-            with Path(f"src/songs/{song}.txt").open() as fp:
+            songPath = Path(getSetting("SONG_PATH"))
+            with (songPath / f"{song}.txt").open() as fp:
                 if len(fp.readlines()) == 1 and not ignoreEmptyFile:
                     button = popupWarn(f"File for \"{song}\" has too few lines.")
                     if button == "Go Back":
@@ -311,7 +371,7 @@ def checkSongGUI(songs, keys):
 #  @param[in] s   The warning string to be printed in dialogue box.
 #  @param[in] all A Boolean representing if an "Ignore All" button should be created.
 #  @return        The name of the button pressed.
-def popupWarn(s, all=True):
+def popupWarn(s: str, all: bool = True):
     buttons = ["Go Back", "Ignore"]
     if all:
         buttons.append("Ignore All")
@@ -339,7 +399,7 @@ def popupText(s):
 
 ## @brief       Defines an error popup that signifies incorrect input.
 #  @param[in] s The error string to be printed in dialogue box.
-def popupError(s):
+def popupError(s: str):
     sg.Popup(s, title="Error")
 
 
@@ -347,7 +407,5 @@ def popupError(s):
 #  @param[in] names A list of names for buttons and a Boolean for if they should close on press.
 #  @param[in] close A Boolean representing if the window should be closed on a button press.
 #  @return          A list of buttons.
-def buttonRow(names, close):
-    if close:
-        return list(map(lambda n: sg.CloseButton(n), names))
-    return list(map(lambda n: sg.Button(n), names))
+def buttonRow(names: list[str], close: bool = False):
+    return [sg.CloseButton(n) if close else sg.Button(n) for n in names]

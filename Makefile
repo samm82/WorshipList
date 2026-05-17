@@ -7,7 +7,7 @@ DOCFLAGS =
 DOCCONFIG = 
 
 MAIN = src/Main.py
-DIST_SRC = dist/src
+DIST_PATH = dist
 
 .PHONY: all test doc clean
 
@@ -19,12 +19,10 @@ compile: $(MAIN)
 # Continues execution if WorshipList.spec does not exist
 	rm WorshipList.spec || true
 # Continues execution if dist/ exists
-	mkdir $(DIST_SRC) || true
-	cp -R src/songs $(DIST_SRC)
-	cp src/Settings.txt $(DIST_SRC)
-	cp src/COMPILED_README.md dist
-	mv dist/COMPILED_README.md dist/README.md
-	sed -i -- "s@COMPILE_DATE@$$(date "+%-m/%-d/%Y")@g" dist/README.md
+	mkdir $(DIST_PATH) || true
+	cp src/COMPILED_README.md $(DIST_PATH)
+	mv $(DIST_PATH)/COMPILED_README.md $(DIST_PATH)/README.md
+	sed -i -- "s@COMPILE_DATE@$$(date "+%-m/%-d/%Y")@g" $(DIST_PATH)/README.md
 
 build: compile
 
@@ -40,7 +38,8 @@ all: compile lint doc
 clean:
 # Compilation files
 	rm -rf build/*
-	rm -rf dist/*
+	rm -rf $(DIST_PATH)/README.md
+	rm -rf $(DIST_PATH)/WorshipList.exe
 
 # Documentation files
 	rm -rf html/*

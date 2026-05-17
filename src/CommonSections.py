@@ -1,10 +1,12 @@
 ## @file   CommonSections.py
 #  @brief  Finds the most common section names from song files.
 #  @author Samuel Crawford
-#  @date   1/11/2021
+#  @date   4/27/2026
 
 
-from Helpers import getValidSongs
+from pathlib import Path
+
+from Helpers import getSetting, getValidSongs
 from collections import defaultdict
 
 
@@ -13,7 +15,8 @@ def main():
     sections = defaultdict(int)
 
     for s in getValidSongs():
-        with open(f"src/songs/{s}.txt", "r") as fp:
+        songPath = Path(getSetting("SONG_PATH"))
+        with open(songPath / f"{s}.txt", "r") as fp:
             contents = fp.readlines()
         for i in contents[1:]:
             sections[i.split(":")[0]] += 1
