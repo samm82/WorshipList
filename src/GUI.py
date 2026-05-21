@@ -413,11 +413,11 @@ def statusGUI(songs: list[str], keys: list[str], filename: str):
                        "Make sure your file path is correct in Settings.")
 
         # Writes each song
-        updateStatus(f"song0", sg.SYMBOL_HOURGLASS)
+        updateStatus("song0", sg.SYMBOL_HOURGLASS)
         for i, (song, key) in enumerate(zip(songs, keys)):
             doc, lineCount = writeSong(doc, lineCount, song, key)
             updateStatus(f"song{i}", sg.SYMBOL_CHECK)
-            updateStatus("docx" if i + 1 == len(songs) else f"song{i+1}", sg.SYMBOL_HOURGLASS)
+            updateStatus("docx" if i + 1 == len(songs) else f"song{i + 1}", sg.SYMBOL_HOURGLASS)
 
         # Saves document as .docx
         try:
