@@ -6,8 +6,8 @@
 import PySimpleGUI as sg
 
 import json
-import sys
 import pythoncom
+import sys
 import threading
 
 from datetime import date, timedelta
@@ -374,7 +374,6 @@ def checkSongGUI(songs, keys):
 def statusGUI(songs: list[str], keys: list[str], filename: str):
     lines = [f"Writing {song}..." for song in songs] + [
         "", "Saving chord sheet as .docx file...", "Converting chord sheet to PDF..."]
-    # sg.SYMBOL_HOURGLASS
 
     lColumn: list[list[sg.Text]] = [[sg.Text(line)] for line in lines]
     rColumn: list[list[sg.Text]] = [[sg.Text(" ", key=f"song{i}")]
@@ -387,7 +386,7 @@ def statusGUI(songs: list[str], keys: list[str], filename: str):
         buttonRow(["OK", "Cancel"])
     ]
 
-    window = sg.Window("WorshipList", dialogue)
+    window = sg.Window("WorshipList", dialogue, finalize=True)
 
     ## @brief          Updates the status icon for a given work item.
     #  @param[in] key  The key for the given item to update.
@@ -413,9 +412,11 @@ def statusGUI(songs: list[str], keys: list[str], filename: str):
                        "Make sure your file path is correct in Settings.")
 
         # Writes each song
+        updateStatus(f"song0", sg.SYMBOL_HOURGLASS)
         for i, (song, key) in enumerate(zip(songs, keys)):
             doc, lineCount = writeSong(doc, lineCount, song, key)
             updateStatus(f"song{i}", sg.SYMBOL_CHECK)
+            updateStatus("docx" if i + 1 == len(songs) else f"song{i+1}", sg.SYMBOL_HOURGLASS)
 
         # Saves document as .docx
         try:
@@ -426,6 +427,7 @@ def statusGUI(songs: list[str], keys: list[str], filename: str):
             updateStatus("docx", sg.SYMBOL_X)
 
         # Saves document as .pdf
+        updateStatus("pdf", sg.SYMBOL_HOURGLASS)
         if pdfWrite(outPathDOCX, outPathPDF):
             updateStatus("pdf", sg.SYMBOL_CHECK)
         else:
