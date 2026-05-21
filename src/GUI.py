@@ -7,11 +7,14 @@ import PySimpleGUI as sg
 
 import json
 import sys
+import pythoncom
+import threading
 
 from datetime import date, timedelta
 from pathlib import Path
 from titlecase import titlecase
 
+from Document import docSetup, pdfWrite, writeSong
 from Helpers import checkFileName, checkValidChord, getSetting, getSettings, \
     getValidSongs, reduceWhitespace, validKeys
 
@@ -367,31 +370,76 @@ def checkSongGUI(songs, keys):
     return True
 
 
-## @brief Displays the progress of output to the user.
-def statusGUI(songs: list[str]):
+## @brief  Displays the progress of output to the user.
+def statusGUI(songs: list[str], keys: list[str], filename: str):
     lines = [f"Writing {song}..." for song in songs] + [
         "", "Saving chord sheet as .docx file...", "Converting chord sheet to PDF..."]
-    icons = [sg.SYMBOL_CHECK] * len(songs) + ["", sg.SYMBOL_X, sg.SYMBOL_HOURGLASS]
+    # sg.SYMBOL_HOURGLASS
 
     lColumn: list[list[sg.Text]] = [[sg.Text(line)] for line in lines]
     rColumn: list[list[sg.Text]] = [[sg.Text(" ", key=f"song{i}")]
                                     for i in range(len(songs))] + [
-            [sg.Text(" ")], [sg.Text(" ", key="docx")], [sg.Text(" ", key="pdf")]]
+                                        [sg.Text(" ")], [sg.Text(" ", key="docx")],
+                                        [sg.Text(" ", key="pdf")]]
 
     dialogue = [
         [sg.Column(lColumn), sg.Column(rColumn)],
         buttonRow(["OK", "Cancel"])
     ]
 
-    window = sg.Window("WorshipList").Layout(dialogue)
+    window = sg.Window("WorshipList", dialogue)
+
+    ## @brief          Updates the status icon for a given work item.
+    #  @param[in] key  The key for the given item to update.
+    #  @param[in] val  The new status for the given item (represented by a symbol).
+    def updateStatus(key: str, val: str):
+        window[key].update(val)  # pyright: ignore[reportArgumentType, reportOptionalMemberAccess]
+
+    ## @brief  Defines the thread that outputs chord sheets.
+    def outputChordSheetThread():
+        pythoncom.CoInitialize()
+        doc = docSetup()
+        lineCount = 0
+
+        # Gets output file directory from settings
+        outPath = Path(getSetting("OUTPUT_PATH"))
+        fileNameDOCX, fileNamePDF = f"{filename}.docx", f"{filename}.pdf"
+
+        outPathDOCX = outPath / fileNameDOCX
+        outPathPDF = outPath / fileNamePDF
+
+        if not outPath.is_dir():
+            popupError(f"Can't find file path {str(outPath)}.\n"
+                       "Make sure your file path is correct in Settings.")
+
+        # Writes each song
+        for i, (song, key) in enumerate(zip(songs, keys)):
+            doc, lineCount = writeSong(doc, lineCount, song, key)
+            updateStatus(f"song{i}", sg.SYMBOL_CHECK)
+
+        # Saves document as .docx
+        try:
+            doc.save(str(outPathDOCX))
+            updateStatus("docx", sg.SYMBOL_CHECK)
+        except:
+            # TODO: is this necessary?
+            updateStatus("docx", sg.SYMBOL_X)
+
+        # Saves document as .pdf
+        if pdfWrite(outPathDOCX, outPathPDF):
+            updateStatus("pdf", sg.SYMBOL_CHECK)
+        else:
+            updateStatus("pdf", sg.SYMBOL_X)
+
+    threading.Thread(target=outputChordSheetThread, daemon=True).start()
 
     while True:
-        button, values = window.Read()
+        event, _ = window.Read()
 
-        if button == "OK":
+        if event == sg.WIN_CLOSED or event == 'Cancel':
             break
-        else:
-            break
+        # TODO: add "OK" functionality, along with greyed out when in-progress
+        window.refresh()
 
     window.close()
 
