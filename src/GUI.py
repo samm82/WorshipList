@@ -1,7 +1,7 @@
 ## @file   GUI.py
 #  @brief  Implements GUI for selecting songs.
 #  @author Samuel Crawford
-#  @date   5/17/2026
+#  @date   5/21/2026
 
 import PySimpleGUI as sg
 
@@ -365,6 +365,33 @@ def checkSongGUI(songs, keys):
     # if len(nonEmptySongs) != len(set(nonEmptySongs)):
     #     return popupError("Each song can only be selected once.")
     return True
+
+
+## @brief Displays the progress of output to the user.
+def statusGUI(songs: list[str]):
+    lines = [f"Writing {song}..." for song in songs] + [
+        "", "Saving chord sheet as .docx file...", "Converting chord sheet to PDF..."]
+    icons = [sg.SYMBOL_CHECK] * len(songs) + ["", sg.SYMBOL_X, sg.SYMBOL_HOURGLASS]
+
+    lColumn: list[list[sg.Text]] = [[sg.Text(line)] for line in lines]
+    rColumn: list[list[sg.Text]] = [[sg.Text(icon)] for icon in icons]
+
+    dialogue = [
+        [sg.Column(lColumn), sg.Column(rColumn)],
+        buttonRow(["OK", "Cancel"])
+    ]
+
+    window = sg.Window("WorshipList").Layout(dialogue)
+
+    while True:
+        button, values = window.Read()
+
+        if button == "OK":
+            break
+        else:
+            break
+
+    window.close()
 
 
 ## @brief         Defines a warning popup that provides the option to ignore.

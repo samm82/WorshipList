@@ -1,12 +1,12 @@
 ## @file   Main.py
 #  @brief  Generates a worship chart from specified songs and keys.
 #  @author Samuel Crawford
-#  @date   4/27/2026
+#  @date   5/21/2026
 
 from pathlib import Path
 
 from Document import docSetup, pdfWrite, writeSong
-from GUI import songGUI
+from GUI import songGUI, statusGUI
 from Helpers import getSetting
 
 
@@ -19,6 +19,8 @@ def main():
     # Gets list of songs, keys, and output filename from user
     songs, keys, filename = songGUI()
     fileNameDOCX, fileNamePDF = f"{filename}.docx", f"{filename}.pdf"
+
+    statusGUI(songs)
 
     # Writes each song
     for song, key in zip(songs, keys):
