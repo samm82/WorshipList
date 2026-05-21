@@ -387,6 +387,7 @@ def statusGUI(songs: list[str], keys: list[str], filename: str):
     ]
 
     window = sg.Window("WorshipList", dialogue, finalize=True)
+    window["OK"].update(disabled=True)  # pyright: ignore[reportOptionalMemberAccess]
 
     ## @brief          Updates the status icon for a given work item.
     #  @param[in] key  The key for the given item to update.
@@ -433,14 +434,15 @@ def statusGUI(songs: list[str], keys: list[str], filename: str):
         else:
             updateStatus("pdf", sg.SYMBOL_X)
 
+        window["OK"].update(disabled=False)  # pyright: ignore[reportOptionalMemberAccess]
+
     threading.Thread(target=outputChordSheetThread, daemon=True).start()
 
     while True:
         event, _ = window.Read()
 
-        if event == sg.WIN_CLOSED or event == 'Cancel':
+        if event == sg.WIN_CLOSED or event in {"OK", "Cancel"}:
             break
-        # TODO: add "OK" functionality, along with greyed out when in-progress
         window.refresh()
 
     window.close()
