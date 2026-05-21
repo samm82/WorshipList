@@ -374,7 +374,9 @@ def statusGUI(songs: list[str]):
     icons = [sg.SYMBOL_CHECK] * len(songs) + ["", sg.SYMBOL_X, sg.SYMBOL_HOURGLASS]
 
     lColumn: list[list[sg.Text]] = [[sg.Text(line)] for line in lines]
-    rColumn: list[list[sg.Text]] = [[sg.Text(icon)] for icon in icons]
+    rColumn: list[list[sg.Text]] = [[sg.Text(" ", key=f"song{i}")]
+                                    for i in range(len(songs))] + [
+            [sg.Text(" ")], [sg.Text(" ", key="docx")], [sg.Text(" ", key="pdf")]]
 
     dialogue = [
         [sg.Column(lColumn), sg.Column(rColumn)],
