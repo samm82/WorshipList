@@ -1,7 +1,7 @@
 ## @file   Helpers.py
 #  @brief  Contains helper functions for the modules.
 #  @author Samuel Crawford
-#  @date   4/27/2026
+#  @date   5/24/2026
 
 import json
 from os import listdir
@@ -55,8 +55,8 @@ def checkFileName(name):
 ## @brief   Gets a list of valid songs from the song directory.
 #  @return  A list of all valid songs.
 def getValidSongs():
-    return sorted([s.rstrip(".txt")
-                   for s in listdir(Path(getSetting("SONG_PATH")))])
+    # Remove ".txt" extension
+    return sorted([s[:-4] for s in listdir(Path(getSetting("SONG_PATH")))])
 
 
 ## @brief         Gets a list of notes in the given key.
