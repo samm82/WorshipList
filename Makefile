@@ -15,7 +15,7 @@ run:
 	$(PY) $(PYFLAGS) $(MAIN)
 
 compile: $(MAIN)
-	$(PY) -m $(INSTALL) --onefile $^ -n WorshipList -i src/icon.ico #-w
+	$(PY) -m $(INSTALL) --onefile $^ -n WorshipList -i src/icon.ico -w
 # Continues execution if WorshipList.spec does not exist
 	rm WorshipList.spec || true
 # Continues execution if dist/ exists
