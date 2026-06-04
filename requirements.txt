@@ -1,7 +1,7 @@
-lxml==6.1.0
 docx==0.2.4
-pathvalidate==2.5.0
-PySimpleGUI==4.56.0
-python-docx==0.8.11
-pywin32==303
-titlecase==2.3
+pathvalidate==3.2.0
+pysimplegui==6.0
+python_docx==1.1.0
+pywin32==306
+titlecase==2.4.1
+tkthread==0.5.2
