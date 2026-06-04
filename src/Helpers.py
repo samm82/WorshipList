@@ -1,29 +1,25 @@
 ## @file   Helpers.py
 #  @brief  Contains helper functions for the modules.
 #  @author Samuel Crawford
-#  @date   5/24/2026
+#  @date   6/4/2026
 
 import json
-from os import listdir
+import tkthread
+
+from os import listdir, _exit
+# Use of os._exit inspired by https://stackoverflow.com/a/1489838/10002168
+# "Safer" methods aren't necessary since there are only two threads (GUI and
+#    processing) and only text files are being accessed.
 from pathlib import Path
 from pathvalidate import is_valid_filename
+
+from GUI_Helpers import popupError
 
 sharpNotes = ['F','F#','G','G#','A','A#','B','C','C#','D','D#','E'] * 2  # noqa: E231
 flatNotes = ['F','Gb','G','Ab','A','Bb','B','C','Db','D','Eb','E'] * 2  # noqa: E231
 validKeys = set(sharpNotes + flatNotes)
 
 numList = ["i", "ii", "iii", "iv", "v", "vi", "vii"]
-
-
-## @brief   Exception for if a file is incorrectly formatted (invalid chord).
-class FileError(Exception):
-    pass
-
-
-## @brief   Exception for an invalid parameter (key).
-#  @details GUI automatically checks this - only used when not using GUI.
-class ParamError(Exception):
-    pass
 
 
 ## @brief  Gets the current values of the settings.
@@ -60,14 +56,16 @@ def getValidSongs():
 
 
 ## @brief         Gets a list of notes in the given key.
+#  @details       Exits if it encounters an error.
 #  @param[in] key The key of the song.
 #  @return        A list of notes in the given key.
-#  @throw         ParamError if the key isn't valid.
 def getNotes(key):
     # Checks if key is valid
 
     if key not in validKeys:
-        raise ParamError("The key \"" + key + "\" isn't recognized.")
+        tkthread.call(
+            popupError, "The key \"" + key + "\" isn't recognized.")
+        _exit(-1)
 
     if len(key) > 1:
         if key[1] == "#":
@@ -118,11 +116,11 @@ def checkValidChord(c: str):
 
 
 ## @brief              Gets chord from Roman numeral based on list of notes.
+#  @details            Exits if it encounters an error.
 #  @param[in] noteList A list of notes in the key of the song.
 #  @param[in] chord    The chord from the song file (represented as a Roman numeral).
 #  @param[in] fileName The name of file with student information.
 #  @return             The chord converted from the Roman numeral.
-#  @throw              FileError if the chord isn't valid.
 def getChord(noteList, chord: str, fileName):
     if chord.count("/") == 1:
         chord, bass = chord.split("/")
@@ -132,7 +130,10 @@ def getChord(noteList, chord: str, fileName):
     elif chord.endswith("sus"):
         # Checks if suspended chord is minor, and retrieves it from list if it is NOT
         if not chord[:-3].isupper():
-            raise FileError(f"Suspended chords aren't minor (see \"{chord}\").")
+            tkthread.call(
+                popupError,
+                f"Suspended chords aren't minor (see {fileName}).")
+            _exit(-1)
         chord = f"{getChord(noteList, chord[:-3], fileName)}sus"
 
     else:
@@ -147,7 +148,9 @@ def getChord(noteList, chord: str, fileName):
 
         # Checks if chord is valid, and retrieves it from list if it is
         if chord.lower() not in numList:
-            raise FileError(f"The chord \"{chord}\" in {fileName} isn't recognized.")
+            tkthread.call(
+                popupError, f"The chord \"{chord}\" in {fileName} isn't recognized.")
+            _exit(-1)
         chord = noteList[numList.index(chord.lower())]
 
         # Find "out of key" chord when applicable
