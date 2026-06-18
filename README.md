@@ -1,6 +1,6 @@
 # WorshipList
 
-Last Modified: 4/27/2026
+Last Modified: 6/4/2026
 
 ## Description
 
@@ -54,20 +54,20 @@ Some assumptions for how the song files are formatted:
 │       │   main.yml
 │
 └── dist
-│   └── src/
-│   │   └── songs/
+│   └── songs/
 │   │
 │   │   README.md
 │   │   Settings.json
 │   │   WorshipList.exe
 │
 └── src/
-│   └── songs/
 │   │   CommonSections.py
 │   │   COMPILED_README.md
 │   │   Document.py
 │   │   GUI.py
+│   │   GUI_Helpers.py
 │   │   Helpers.py
+│   │   icon.ico
 │   │   Main.py
 │   │   README.md
 │

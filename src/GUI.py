@@ -1,17 +1,21 @@
 ## @file   GUI.py
 #  @brief  Implements GUI for selecting songs.
 #  @author Samuel Crawford
-#  @date   5/17/2026
+#  @date   6/4/2026
 
 import PySimpleGUI as sg
 
 import json
+import pythoncom
 import sys
+import threading
 
 from datetime import date, timedelta
 from pathlib import Path
 from titlecase import titlecase
 
+from Document import docSetup, pdfWrite, writeSong
+from GUI_Helpers import *
 from Helpers import checkFileName, checkValidChord, getSetting, getSettings, \
     getValidSongs, reduceWhitespace, validKeys
 
@@ -367,45 +371,79 @@ def checkSongGUI(songs, keys):
     return True
 
 
-## @brief         Defines a warning popup that provides the option to ignore.
-#  @param[in] s   The warning string to be printed in dialogue box.
-#  @param[in] all A Boolean representing if an "Ignore All" button should be created.
-#  @return        The name of the button pressed.
-def popupWarn(s: str, all: bool = True):
-    buttons = ["Go Back", "Ignore"]
-    if all:
-        buttons.append("Ignore All")
+## @brief  Displays the progress of output to the user.
+def statusGUI(songs: list[str], keys: list[str], filename: str):
+    lines = [f"Writing {song}..." for song in songs] + [
+        "", "Saving chord sheet as .docx file...", "Converting chord sheet to PDF..."]
 
-    dialogue = [[sg.Text(s)], buttonRow(buttons, True)]
+    lColumn: list[list[sg.Text]] = [[sg.Text(line)] for line in lines]
+    rColumn: list[list[sg.Text]] = [[sg.Text(" ", key=f"song{i}")]
+                                    for i in range(len(songs))] + [
+                                        [sg.Text(" ")], [sg.Text(" ", key="docx")],
+                                        [sg.Text(" ", key="pdf")]]
 
-    window = sg.Window("WorshipList").Layout(dialogue)
-    return window.Read()[0]
-
-
-## @brief       Defines a text input popup.
-#  @param[in] s The prompt string to be printed in dialogue box.
-#  @return      The name of the button pressed and the text entered.
-def popupText(s):
     dialogue = [
-        [sg.Text(s)],
-        [sg.InputText("")],
-        buttonRow(["OK", "Cancel"], True)
+        [sg.Column(lColumn), sg.Column(rColumn)],
+        buttonRow(["OK", "Cancel"])
     ]
 
-    window = sg.Window("WorshipList").Layout(dialogue)
-    button, values = window.Read()
-    return button, values[0]
+    window = sg.Window("WorshipList", dialogue, finalize=True)
+    window["OK"].update(disabled=True)  # pyright: ignore[reportOptionalMemberAccess]
 
+    ## @brief          Updates the status icon for a given work item.
+    #  @param[in] key  The key for the given item to update.
+    #  @param[in] val  The new status for the given item (represented by a symbol).
+    def updateStatus(key: str, val: str):
+        window[key].update(val)  # pyright: ignore[reportArgumentType, reportOptionalMemberAccess]
 
-## @brief       Defines an error popup that signifies incorrect input.
-#  @param[in] s The error string to be printed in dialogue box.
-def popupError(s: str):
-    sg.Popup(s, title="Error")
+    ## @brief  Defines the thread that outputs chord sheets.
+    def outputChordSheetThread():
+        pythoncom.CoInitialize()
+        doc = docSetup()
+        lineCount = 0
 
+        # Gets output file directory from settings
+        outPath = Path(getSetting("OUTPUT_PATH"))
+        fileNameDOCX, fileNamePDF = f"{filename}.docx", f"{filename}.pdf"
 
-## @brief           Creates a row of buttons.
-#  @param[in] names A list of names for buttons and a Boolean for if they should close on press.
-#  @param[in] close A Boolean representing if the window should be closed on a button press.
-#  @return          A list of buttons.
-def buttonRow(names: list[str], close: bool = False):
-    return [sg.CloseButton(n) if close else sg.Button(n) for n in names]
+        outPathDOCX = outPath / fileNameDOCX
+        outPathPDF = outPath / fileNamePDF
+
+        if not outPath.is_dir():
+            popupError(f"Can't find file path {str(outPath)}.\n"
+                       "Make sure your file path is correct in Settings.")
+
+        # Writes each song
+        updateStatus("song0", sg.SYMBOL_HOURGLASS)
+        for i, (song, key) in enumerate(zip(songs, keys)):
+            doc, lineCount = writeSong(doc, lineCount, song, key)
+            updateStatus(f"song{i}", sg.SYMBOL_CHECK)
+            updateStatus("docx" if i + 1 == len(songs) else f"song{i + 1}", sg.SYMBOL_HOURGLASS)
+
+        # Saves document as .docx
+        try:
+            doc.save(str(outPathDOCX))
+            updateStatus("docx", sg.SYMBOL_CHECK)
+        except:
+            # TODO: is this necessary?
+            updateStatus("docx", sg.SYMBOL_X)
+
+        # Saves document as .pdf
+        updateStatus("pdf", sg.SYMBOL_HOURGLASS)
+        if pdfWrite(outPathDOCX, outPathPDF):
+            updateStatus("pdf", sg.SYMBOL_CHECK)
+        else:
+            updateStatus("pdf", sg.SYMBOL_X)
+
+        window["OK"].update(disabled=False)  # pyright: ignore[reportOptionalMemberAccess]
+
+    threading.Thread(target=outputChordSheetThread, daemon=True).start()
+
+    while True:
+        event, _ = window.Read()
+
+        if event == sg.WIN_CLOSED or event in {"OK", "Cancel"}:
+            break
+        window.refresh()
+
+    window.close()
