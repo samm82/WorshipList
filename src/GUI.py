@@ -1,7 +1,7 @@
 ## @file   GUI.py
 #  @brief  Implements GUI for selecting songs.
 #  @author Samuel Crawford
-#  @date   6/4/2026
+#  @date   6/18/2026
 
 import PySimpleGUI as sg
 
@@ -25,6 +25,7 @@ from Helpers import checkFileName, checkValidChord, getSetting, getSettings, \
 def songGUI():
     numSongs = 4
     songs, keys = [""] * numSongs, [""] * numSongs
+    filename = ""
     makeNewWindow = True
 
     while True:
@@ -58,7 +59,7 @@ def songGUI():
                 [buttonRow(["Change Number of Songs", "Add a New Song", "Settings"]),
                  [sg.HorizontalSeparator()],
                  [sg.Text("Enter a filename:")],
-                 [sg.InputText("", key="-FILENAME-")],
+                 [sg.InputText(filename, key="-FILENAME-")],
                  buttonRow(["OK", "Use Next Sunday", "Quit"])
                  ]
             ]
@@ -112,6 +113,8 @@ def songGUI():
                     today = date.today()
                     nextSunday = today + timedelta(days=(6 - today.weekday()) % 7)
                     filename = f"{getSetting("CHURCH_NAME")} {nextSunday.strftime('%F')}"
+                    makeNewWindow = True
+                    continue
 
                 songWindow.close()
                 toDelete = [i for i, s in enumerate(songs) if not s]
