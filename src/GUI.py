@@ -1,7 +1,7 @@
 ## @file   GUI.py
 #  @brief  Implements GUI for selecting songs.
 #  @author Samuel Crawford
-#  @date   6/4/2026
+#  @date   6/18/2026
 
 import PySimpleGUI as sg
 
@@ -25,6 +25,7 @@ from Helpers import checkFileName, checkValidChord, getSetting, getSettings, \
 def songGUI():
     numSongs = 4
     songs, keys = [""] * numSongs, [""] * numSongs
+    filename = ""
     makeNewWindow = True
 
     while True:
@@ -58,7 +59,7 @@ def songGUI():
                 [buttonRow(["Change Number of Songs", "Add a New Song", "Settings"]),
                  [sg.HorizontalSeparator()],
                  [sg.Text("Enter a filename:")],
-                 [sg.InputText("", key="-FILENAME-")],
+                 [sg.InputText(filename, key="-FILENAME-")],
                  buttonRow(["OK", "Use Next Sunday", "Quit"])
                  ]
             ]
@@ -70,59 +71,65 @@ def songGUI():
 
         if button in {"Quit", None}:
             sys.exit()
-        else:
-            songs, keys = [], []
 
-            for i in range(numSongs):
-                songs.append(values[f"-SONG{i}-"].strip())
-                songWindow[f"-SONG{i}-"].update(songs[i])  # pyright: ignore[reportOptionalMemberAccess]
+        songs, keys = [], []
 
-                key = values[f"-KEY{i}-"].strip()
-                if key:
-                    key = key[0].upper() + key[1:].lower()
-                keys.append(key)
-                songWindow[f"-KEY{i}-"].update(key)  # pyright: ignore[reportOptionalMemberAccess]
+        for i in range(numSongs):
+            songs.append(values[f"-SONG{i}-"].strip())
+            songWindow[f"-SONG{i}-"].update(songs[i])  # pyright: ignore[reportOptionalMemberAccess]
 
-            if button == "Change Number of Songs":
-                nonEmptyRows = [i for i in range(len(songs)) if songs[i] or keys[i]]
-                newNS = numSongsGUI(nonEmptyRows)
-                if newNS:
-                    numSongs = newNS
-                else:
-                    makeNewWindow = False
+            key = values[f"-KEY{i}-"].strip()
+            if key:
+                key = key[0].upper() + key[1:].lower()
+            keys.append(key)
+            songWindow[f"-KEY{i}-"].update(key)  # pyright: ignore[reportOptionalMemberAccess]
 
-            elif button == "Add a New Song":
-                makeNewWindow = addSongGUI()
-
-            elif button == "Settings":
-                makeNewWindow = settingsGUI()
-
+        if button == "Change Number of Songs":
+            nonEmptyRows = [i for i in range(len(songs)) if songs[i] or keys[i]]
+            newNS = numSongsGUI(nonEmptyRows)
+            if newNS:
+                numSongs = newNS
             else:
-                if not checkSongGUI(songs, keys):
+                makeNewWindow = False
+
+        elif button == "Add a New Song":
+            makeNewWindow = addSongGUI()
+
+        elif button == "Settings":
+            makeNewWindow = settingsGUI()
+
+        elif button == "Use Next Sunday":
+            today = date.today()
+            nextSunday = today + timedelta(days=(6 - today.weekday()) % 7)
+            filename = f"{getSetting("CHURCH_NAME")} {nextSunday.strftime('%F')}"
+            makeNewWindow = True
+            songWindow.close()
+            continue
+
+        elif button == "OK":
+            validInput = checkSongGUI(songs, keys)
+
+            if checkFileName(values["-FILENAME-"]):
+                filename = values["-FILENAME-"]
+                if not validInput:
                     makeNewWindow = False
                     continue
-
-                if button == "OK":
-                    if checkFileName(values["-FILENAME-"]):
-                        filename = values["-FILENAME-"]
-                    else:
-                        popupError("Invalid file name. Try again.")
-                        continue
-                elif button == "Use Next Sunday":
-                    today = date.today()
-                    nextSunday = today + timedelta(days=(6 - today.weekday()) % 7)
-                    filename = f"{getSetting("CHURCH_NAME")} {nextSunday.strftime('%F')}"
-
+            else:
+                popupError("Invalid file name. Try again.")
+                makeNewWindow = True
                 songWindow.close()
-                toDelete = [i for i, s in enumerate(songs) if not s]
+                continue
 
-                def prune(xs):
-                    return [x for i, x in enumerate(xs) if i not in toDelete]
+            songWindow.close()
+            toDelete = [i for i, s in enumerate(songs) if not s]
 
-                return prune(songs), prune(keys), filename
+            def prune(xs):
+                return [x for i, x in enumerate(xs) if i not in toDelete]
 
-            if makeNewWindow:
-                songWindow.close()
+            return prune(songs), prune(keys), filename
+
+        if makeNewWindow:
+            songWindow.close()
 
 
 ## @brief       Implements a GUI for entering the number of songs to generate.
