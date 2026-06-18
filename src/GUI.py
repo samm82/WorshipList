@@ -102,19 +102,22 @@ def songGUI():
             today = date.today()
             nextSunday = today + timedelta(days=(6 - today.weekday()) % 7)
             filename = f"{getSetting("CHURCH_NAME")} {nextSunday.strftime('%F')}"
-            # makeNewWindow = True
+            makeNewWindow = True
             songWindow.close()
             continue
 
         elif button == "OK":
-            if not checkSongGUI(songs, keys):
-                makeNewWindow = False
-                continue
+            validInput = checkSongGUI(songs, keys)
 
             if checkFileName(values["-FILENAME-"]):
                 filename = values["-FILENAME-"]
+                if not validInput:
+                    makeNewWindow = False
+                    continue
             else:
                 popupError("Invalid file name. Try again.")
+                makeNewWindow = True
+                songWindow.close()
                 continue
 
             songWindow.close()
