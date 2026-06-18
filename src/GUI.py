@@ -99,22 +99,24 @@ def songGUI():
                 makeNewWindow = settingsGUI()
 
             else:
-                if not checkSongGUI(songs, keys):
-                    makeNewWindow = False
+                if button == "Use Next Sunday":
+                    today = date.today()
+                    nextSunday = today + timedelta(days=(6 - today.weekday()) % 7)
+                    filename = f"{getSetting("CHURCH_NAME")} {nextSunday.strftime('%F')}"
+                    # makeNewWindow = True
+                    songWindow.close()
                     continue
 
-                if button == "OK":
+                elif button == "OK":
+                    if not checkSongGUI(songs, keys):
+                        makeNewWindow = False
+                        continue
+
                     if checkFileName(values["-FILENAME-"]):
                         filename = values["-FILENAME-"]
                     else:
                         popupError("Invalid file name. Try again.")
                         continue
-                elif button == "Use Next Sunday":
-                    today = date.today()
-                    nextSunday = today + timedelta(days=(6 - today.weekday()) % 7)
-                    filename = f"{getSetting("CHURCH_NAME")} {nextSunday.strftime('%F')}"
-                    makeNewWindow = True
-                    continue
 
                 songWindow.close()
                 toDelete = [i for i, s in enumerate(songs) if not s]
