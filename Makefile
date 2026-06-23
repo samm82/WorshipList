@@ -7,12 +7,16 @@ DOCFLAGS =
 DOCCONFIG = 
 
 MAIN = src/Main.py
+WEBSITE = src/Website.py
 DIST_PATH = dist
 
 .PHONY: all test doc clean
 
 run: 
 	$(PY) $(PYFLAGS) $(MAIN)
+
+website: 
+	$(PY) $(PYFLAGS) $(WEBSITE)
 
 compile: $(MAIN)
 	$(PY) -m $(INSTALL) --onefile $^ -n WorshipList -i src/icon.ico -w
