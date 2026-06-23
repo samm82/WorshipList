@@ -78,8 +78,7 @@
             <a href="https://github.com/samm82/WorshipList">here</a>.
         </p>
 
-        <!-- TODO: Figure out how to pass this output to Python with flask -->
-        <form action="/action_page.php">
+        <form action="{{url_for('process_filename')}}" method="post">
             <label for="filename">File name:</label><br>
             <input type="text" id="filename" name="filename" value=""><br><br>
             <div>
@@ -92,6 +91,11 @@
     <div class="footer">
         <p>© Samuel Crawford 2019-2026. All rights reserved.</p>
     </div>
+
+    <script>
+        document.getElementById("filename").value = "{{ filenameVal }}";
+        if (!{{ validFileName }}) { alert("Invalid file name. Try again."); }
+    </script>
 
 </body>
 
