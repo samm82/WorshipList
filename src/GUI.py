@@ -1,7 +1,7 @@
 ## @file   GUI.py
 #  @brief  Implements GUI for selecting songs.
 #  @author Samuel Crawford
-#  @date   6/18/2026
+#  @date   6/24/2026
 
 import PySimpleGUI as sg
 
@@ -10,14 +10,13 @@ import pythoncom
 import sys
 import threading
 
-from datetime import date, timedelta
 from pathlib import Path
 from titlecase import titlecase
 
 from Document import docSetup, pdfWrite, writeSong
 from GUI_Helpers import *
 from Helpers import checkFileName, checkValidChord, getSetting, getSettings, \
-    getValidSongs, reduceWhitespace, validKeys
+    getValidSongs, reduceWhitespace, useNextSunday, validKeys
 
 
 ## @brief  Implements GUI for retrieving songs and keys.
@@ -99,9 +98,7 @@ def songGUI():
             makeNewWindow = settingsGUI()
 
         elif button == "Use Next Sunday":
-            today = date.today()
-            nextSunday = today + timedelta(days=(6 - today.weekday()) % 7)
-            filename = f"{getSetting("CHURCH_NAME")} {nextSunday.strftime('%F')}"
+            filename = useNextSunday()
             makeNewWindow = True
             songWindow.close()
             continue

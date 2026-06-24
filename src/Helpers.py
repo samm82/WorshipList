@@ -1,11 +1,12 @@
 ## @file   Helpers.py
 #  @brief  Contains helper functions for the modules.
 #  @author Samuel Crawford
-#  @date   6/4/2026
+#  @date   6/24/2026
 
 import json
 import tkthread
 
+from datetime import date, timedelta
 from os import listdir, _exit
 # Use of os._exit inspired by https://stackoverflow.com/a/1489838/10002168
 # "Safer" methods aren't necessary since there are only two threads (GUI and
@@ -167,6 +168,14 @@ def getChord(noteList, chord: str, fileName):
             chord += "m"
 
     return chord
+
+
+## @brief  Creates a filename for use on the next Sunday
+#  @return A filename consisting of the church specified with the date of the next Sunday
+def useNextSunday() -> str:
+    today = date.today()
+    nextSunday = today + timedelta(days=(6 - today.weekday()) % 7)
+    return f"{getSetting("CHURCH_NAME")} {nextSunday.strftime('%F')}"
 
 
 ## @brief       Removes extraneous spaces from a string
