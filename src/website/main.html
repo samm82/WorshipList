@@ -81,20 +81,20 @@
             <a href="https://github.com/samm82/WorshipList">here</a>.
         </p>
 
-        <form action="{{url_for('process_filename')}}" method="post">
+        <form action="{{url_for('process')}}" method="post">
             <div style="float:left;margin-right:5px;">
-                <label for="song1">Songs:</label><br>
+                <label for="song0">Songs:</label><br>
+                <select id="song0" name="song0" value=""></select><br>
                 <select id="song1" name="song1" value=""></select><br>
                 <select id="song2" name="song2" value=""></select><br>
                 <select id="song3" name="song3" value=""></select><br>
-                <select id="song4" name="song4" value=""></select><br>
             </div>
             <div style="float:left;margin-right:20px;">
-                <label for="key1">Keys:</label><br>
+                <label for="key0">Keys:</label><br>
+                <input type="text" id="key0" name="key0" value=""><br>
                 <input type="text" id="key1" name="key1" value=""><br>
                 <input type="text" id="key2" name="key2" value=""><br>
                 <input type="text" id="key3" name="key3" value=""><br>
-                <input type="text" id="key4" name="key4" value=""><br>
             </div><br>
 
             <label for="filename">File name:</label><br>
@@ -111,7 +111,7 @@
     </div>
 
     <script>
-        const songIDs = ['song1', 'song2', 'song3', 'song4'];
+        const songIDs = ['song0', 'song1', 'song2', 'song3'];
         const validSongs = JSON.parse({{ songs | tojson }})["songs"];
 
         songIDs.forEach(function (songSelect) {

@@ -1,7 +1,7 @@
 ## @file   GUI.py
 #  @brief  Implements GUI for selecting songs.
 #  @author Samuel Crawford
-#  @date   6/24/2026
+#  @date   6/28/2026
 
 import PySimpleGUI as sg
 
@@ -15,8 +15,8 @@ from titlecase import titlecase
 
 from Document import docSetup, pdfWrite, writeSong
 from GUI_Helpers import *
-from Helpers import checkFileName, checkValidChord, getSetting, getSettings, \
-    getValidSongs, reduceWhitespace, useNextSunday, validKeys
+from Helpers import checkFileName, checkValidChord, formatKey, getSetting, \
+    getSettings, getValidSongs, reduceWhitespace, useNextSunday, validKeys
 
 
 ## @brief  Implements GUI for retrieving songs and keys.
@@ -77,11 +77,9 @@ def songGUI():
             songs.append(values[f"-SONG{i}-"].strip())
             songWindow[f"-SONG{i}-"].update(songs[i])  # pyright: ignore[reportOptionalMemberAccess]
 
-            key = values[f"-KEY{i}-"].strip()
-            if key:
-                key = key[0].upper() + key[1:].lower()
+            key = formatKey(values[f"-KEY{i}-"])
             keys.append(key)
-            songWindow[f"-KEY{i}-"].update(key)  # pyright: ignore[reportOptionalMemberAccess]
+            songWindow[f"-KEY{i}-"].update(key)  # pyright: ignore[reportArgumentType, reportOptionalMemberAccess]
 
         if button == "Change Number of Songs":
             nonEmptyRows = [i for i in range(len(songs)) if songs[i] or keys[i]]

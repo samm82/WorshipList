@@ -1,7 +1,7 @@
 ## @file   Helpers.py
 #  @brief  Contains helper functions for the modules.
 #  @author Samuel Crawford
-#  @date   6/24/2026
+#  @date   6/28/2026
 
 import json
 import tkthread
@@ -54,6 +54,14 @@ def checkFileName(name):
 def getValidSongs():
     # Remove ".txt" extension
     return sorted([s[:-4] for s in listdir(Path(getSetting("SONG_PATH")))])
+
+
+## @brief         Correctly capitalizes the key of a song.
+#  @param[in] key The key of the song as inputted.
+#  @return        The key of the song with correct capitalization.
+def formatKey(key: str) -> str:
+    key = key.strip()
+    return key[0].upper() + key[1:].lower()
 
 
 ## @brief         Gets a list of notes in the given key.

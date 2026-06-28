@@ -3,7 +3,7 @@
 from flask import Flask, render_template, request
 from json import dumps
 
-from Helpers import checkFileName, getValidSongs, useNextSunday
+from Helpers import checkFileName, formatKey, getValidSongs, useNextSunday
 
 
 VALID_SONGS = dumps({"songs": [""] + getValidSongs()})
@@ -18,7 +18,12 @@ def main_page():
 
 
 @app.route("/", methods=['POST'])
-def process_filename():
+def process():
+    songs, keys = [], []
+    for i in range(4):
+        if request.form[f"song{i}"].strip() and request.form[f"key{i}"].strip():
+            songs.append(request.form[f"song{i}"])
+            keys.append(formatKey(request.form[f"key{i}"]))
     filenameVal = useNextSunday() if "btn_Sun" in request.form else request.form["filename"]
     return render_template("main.html", songs=VALID_SONGS, filenameVal=filenameVal,
                            validFileName=int(checkFileName(filenameVal)))
