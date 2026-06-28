@@ -119,8 +119,6 @@
             var selectElement = document.getElementById(songSelect);
 
             validSongs.forEach(function (song) {
-                // console.log(song);
-                // selectElement.add(new Option(song));
                 var opt = document.createElement('option');
                 opt.value = song;
                 opt.innerHTML = song;
@@ -128,16 +126,6 @@
             })
 
         });
-
-        // for (let songSelect of songIDs) {
-        //     console.log(songSelect[1]);
-        //     var selectElement = document.getElementById(songSelect);
-
-        //     for (let song of validSongs) {
-        //         // console.log(song);
-        //         selectElement.add(new Option(song));
-        //     }
-        // }
 
         document.getElementById("filename").value = "{{ filenameVal }}";
         if (!{{ validFileName }}) { alert("Invalid file name. Try again."); }
