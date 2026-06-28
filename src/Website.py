@@ -1,21 +1,26 @@
 # Flask template from https://stackoverflow.com/questions/33396064/flask-template-not-found
 
 from flask import Flask, render_template, request
+from json import dumps
 
-from Helpers import checkFileName, useNextSunday
+from Helpers import checkFileName, getValidSongs, useNextSunday
+
+
+VALID_SONGS = dumps({"songs": [""] + getValidSongs()})
 
 app = Flask(__name__, template_folder='website')
 
 
 @app.route("/")
 def main_page():
-    return render_template("main.html", filenameVal="", validFileName=1)
+    return render_template("main.html", songs=VALID_SONGS,
+                           filenameVal="", validFileName=1)
 
 
 @app.route("/", methods=['POST'])
 def process_filename():
     filenameVal = useNextSunday() if "btn_Sun" in request.form else request.form["filename"]
-    return render_template("main.html", filenameVal=filenameVal,
+    return render_template("main.html", songs=VALID_SONGS, filenameVal=filenameVal,
                            validFileName=int(checkFileName(filenameVal)))
 
 

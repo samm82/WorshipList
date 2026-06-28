@@ -84,10 +84,10 @@
         <form action="{{url_for('process_filename')}}" method="post">
             <div style="float:left;margin-right:5px;">
                 <label for="song1">Songs:</label><br>
-                <input type="text" id="song1" name="song1" value=""><br>
-                <input type="text" id="song2" name="song2" value=""><br>
-                <input type="text" id="song3" name="song3" value=""><br>
-                <input type="text" id="song4" name="song4" value=""><br>
+                <select id="song1" name="song1" value=""></select><br>
+                <select id="song2" name="song2" value=""></select><br>
+                <select id="song3" name="song3" value=""></select><br>
+                <select id="song4" name="song4" value=""></select><br>
             </div>
             <div style="float:left;margin-right:20px;">
                 <label for="key1">Keys:</label><br>
@@ -111,6 +111,34 @@
     </div>
 
     <script>
+        const songIDs = ['song1', 'song2', 'song3', 'song4'];
+        const validSongs = JSON.parse({{ songs | tojson }})["songs"];
+
+        songIDs.forEach(function (songSelect) {
+            console.log(songSelect);
+            var selectElement = document.getElementById(songSelect);
+
+            validSongs.forEach(function (song) {
+                // console.log(song);
+                // selectElement.add(new Option(song));
+                var opt = document.createElement('option');
+                opt.value = song;
+                opt.innerHTML = song;
+                selectElement.appendChild(opt);
+            })
+
+        });
+
+        // for (let songSelect of songIDs) {
+        //     console.log(songSelect[1]);
+        //     var selectElement = document.getElementById(songSelect);
+
+        //     for (let song of validSongs) {
+        //         // console.log(song);
+        //         selectElement.add(new Option(song));
+        //     }
+        // }
+
         document.getElementById("filename").value = "{{ filenameVal }}";
         if (!{{ validFileName }}) { alert("Invalid file name. Try again."); }
     </script>
