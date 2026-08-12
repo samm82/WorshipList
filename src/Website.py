@@ -3,6 +3,7 @@
 from flask import Flask, render_template, request
 from json import dumps
 
+from GUI import outputChordSheet
 from Helpers import checkFileName, formatKey, getValidSongs, useNextSunday
 
 
@@ -24,9 +25,10 @@ def process():
         if request.form[f"song{i}"].strip() and request.form[f"key{i}"].strip():
             songs.append(request.form[f"song{i}"])
             keys.append(formatKey(request.form[f"key{i}"]))
-    filenameVal = useNextSunday() if "btn_Sun" in request.form else request.form["filename"]
-    return render_template("main.html", songs=VALID_SONGS, filenameVal=filenameVal,
-                           validFileName=int(checkFileName(filenameVal)))
+    filename = useNextSunday() if "btn_Sun" in request.form else request.form["filename"]
+    outputChordSheet(songs, keys, filename)
+    return render_template("main.html", songs=VALID_SONGS, filenameVal=filename,
+                           validFileName=int(checkFileName(filename)))
 
 
 if __name__ == '__main__':

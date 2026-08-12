@@ -3,6 +3,8 @@
 #  @author Samuel Crawford
 #  @date   6/28/2026
 
+from typing import Optional
+
 import PySimpleGUI as sg
 
 import json
@@ -373,7 +375,65 @@ def checkSongGUI(songs, keys):
     return True
 
 
-## @brief  Displays the progress of output to the user.
+## @brief              Writes and outputs the chord sheet, either from GUI or website.
+#  @param[in] songs    The song inputs.
+#  @param[in] keys     The key inputs.
+#  @param[in] filename The filename to create.
+#  @param[in] fromGUI  The GUI window to update.
+def outputChordSheet(songs: list[str], keys: list[str],
+                     filename: str, window: Optional[sg.Window]=None):
+    ## @brief          Updates the status icon for a given work item.
+    #  @param[in] key  The key for the given item to update.
+    #  @param[in] val  The new status for the given item (represented by a symbol).
+    def updateStatus(key: str, val: str):
+        if window:
+            window[key].update(val)  # pyright: ignore[reportArgumentType, reportOptionalMemberAccess]
+
+    pythoncom.CoInitialize()
+    doc = docSetup()
+    lineCount = 0
+
+    # Gets output file directory from settings
+    outPath = Path(getSetting("OUTPUT_PATH"))
+    fileNameDOCX, fileNamePDF = f"{filename}.docx", f"{filename}.pdf"
+
+    outPathDOCX = outPath / fileNameDOCX
+    outPathPDF = outPath / fileNamePDF
+
+    if not outPath.is_dir():
+        popupError(f"Can't find file path {str(outPath)}.\n"
+                    "Make sure your file path is correct in Settings.")
+
+    # Writes each song
+    updateStatus("song0", sg.SYMBOL_HOURGLASS)
+    for i, (song, key) in enumerate(zip(songs, keys)):
+        doc, lineCount = writeSong(doc, lineCount, song, key)
+        updateStatus(f"song{i}", sg.SYMBOL_CHECK)
+        updateStatus("docx" if i + 1 == len(songs) else f"song{i + 1}", sg.SYMBOL_HOURGLASS)
+
+    # Saves document as .docx
+    try:
+        doc.save(str(outPathDOCX))
+        updateStatus("docx", sg.SYMBOL_CHECK)
+    except:
+        # TODO: is this necessary?
+        updateStatus("docx", sg.SYMBOL_X)
+
+    # Saves document as .pdf
+    updateStatus("pdf", sg.SYMBOL_HOURGLASS)
+    if pdfWrite(outPathDOCX, outPathPDF):
+        updateStatus("pdf", sg.SYMBOL_CHECK)
+    else:
+        updateStatus("pdf", sg.SYMBOL_X)
+
+    if window:
+        window["OK"].update(disabled=False)  # pyright: ignore[reportOptionalMemberAccess]
+
+
+## @brief              Displays the progress of output to the user.
+#  @param[in] songs    The song inputs.
+#  @param[in] keys     The key inputs.
+#  @param[in] filename The filename to create.
 def statusGUI(songs: list[str], keys: list[str], filename: str):
     lines = [f"Writing {song}..." for song in songs] + [
         "", "Saving chord sheet as .docx file...", "Converting chord sheet to PDF..."]
@@ -392,54 +452,8 @@ def statusGUI(songs: list[str], keys: list[str], filename: str):
     window = sg.Window("WorshipList", dialogue, finalize=True)
     window["OK"].update(disabled=True)  # pyright: ignore[reportOptionalMemberAccess]
 
-    ## @brief          Updates the status icon for a given work item.
-    #  @param[in] key  The key for the given item to update.
-    #  @param[in] val  The new status for the given item (represented by a symbol).
-    def updateStatus(key: str, val: str):
-        window[key].update(val)  # pyright: ignore[reportArgumentType, reportOptionalMemberAccess]
-
-    ## @brief  Defines the thread that outputs chord sheets.
-    def outputChordSheetThread():
-        pythoncom.CoInitialize()
-        doc = docSetup()
-        lineCount = 0
-
-        # Gets output file directory from settings
-        outPath = Path(getSetting("OUTPUT_PATH"))
-        fileNameDOCX, fileNamePDF = f"{filename}.docx", f"{filename}.pdf"
-
-        outPathDOCX = outPath / fileNameDOCX
-        outPathPDF = outPath / fileNamePDF
-
-        if not outPath.is_dir():
-            popupError(f"Can't find file path {str(outPath)}.\n"
-                       "Make sure your file path is correct in Settings.")
-
-        # Writes each song
-        updateStatus("song0", sg.SYMBOL_HOURGLASS)
-        for i, (song, key) in enumerate(zip(songs, keys)):
-            doc, lineCount = writeSong(doc, lineCount, song, key)
-            updateStatus(f"song{i}", sg.SYMBOL_CHECK)
-            updateStatus("docx" if i + 1 == len(songs) else f"song{i + 1}", sg.SYMBOL_HOURGLASS)
-
-        # Saves document as .docx
-        try:
-            doc.save(str(outPathDOCX))
-            updateStatus("docx", sg.SYMBOL_CHECK)
-        except:
-            # TODO: is this necessary?
-            updateStatus("docx", sg.SYMBOL_X)
-
-        # Saves document as .pdf
-        updateStatus("pdf", sg.SYMBOL_HOURGLASS)
-        if pdfWrite(outPathDOCX, outPathPDF):
-            updateStatus("pdf", sg.SYMBOL_CHECK)
-        else:
-            updateStatus("pdf", sg.SYMBOL_X)
-
-        window["OK"].update(disabled=False)  # pyright: ignore[reportOptionalMemberAccess]
-
-    threading.Thread(target=outputChordSheetThread, daemon=True).start()
+    threading.Thread(target=outputChordSheet, args=(songs, keys, filename, window),
+                     daemon=True).start()
 
     while True:
         event, _ = window.Read()
