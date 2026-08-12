@@ -42,7 +42,7 @@ def songGUI():
                 return sg.Combo(prepend + songsFromFile, input, 37, key=f"-SONG{i}-")
 
             def keyInput(i, input=""):
-                return sg.InputText(input, (5, None), key=f"-KEY{i}-")
+                return sg.InputText(input, size=(5, None), key=f"-KEY{i}-")
 
             # TODO? Maybe Combo isn't the best implementation
             for i in range(numSongs):
